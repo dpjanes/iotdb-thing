@@ -28,15 +28,16 @@ const util = require('util');
 const iotdb = require("iotdb");
 const _ = iotdb._;
 
-const InputBand = require("./istate").Band;
-const OutputBand = require("./ostate").Band;
-const ModelBand = require("./model").Band;
-const MetaBand = require("./meta").Band;
-const ConnectionBand = require("./connection").Band;
+// const InputBand = require("./istate").Band;
+// const OutputBand = require("./ostate").Band;
+// const ModelBand = require("./model").Band;
+const meta = require("./meta");
+// const ConnectionBand = require("./connection").Band;
 
-const Thing = function (initd) {
-    const self = this;
-    self._initd = _.d.compose.shallow(initd, {
+const make_thing = (initd) => {
+    const self = Object.assign({}, events.EventEmitter.prototype);
+
+    const _initd = _.d.compose.shallow(initd, {
         model: {},
         istate: {},
         ostate: {},
@@ -44,35 +45,44 @@ const Thing = function (initd) {
         connection: {},
     });
 
-    self._bandd = {};
-    self._bandd.model = new ModelBand(self, self._initd.model);
-    self._bandd.meta = new MetaBand(self, self._initd.meta);
-    self._bandd.connection = new ConnectionBand(self, self._initd.connection);
-    self._bandd.istate = new InputBand(self, self._initd.istate);
-    self._bandd.ostate = new OutputBand(self, self._initd.ostate);
+    const _bandd = {};
+    // _bandd.model = new ModelBand(self, _initd.model);
+    _bandd.meta = meta.make(self, _initd.meta);
+    // _bandd.connection = new ConnectionBand(self, _initd.connection);
+    // _bandd.istate = new InputBand(self, _initd.istate);
+    // _bandd.ostate = new OutputBand(self, _initd.ostate);
+    
+    self.band = (band_name) => {
+        return _bandd[band_name] || null;
+    };
 
-    events.EventEmitter.call(self);
-};
+    self.model_id = () => {
+        return self.band("meta").get("iot:model-id");
+    };
 
-util.inherits(Thing, events.EventEmitter);
+    self.thing_id = () => {
+        return self.band("meta").get("iot:thing-id");
+    };
 
-Thing.prototype.band = function(band_name) {
-    return this._bandd[band_name] || null;
-};
+    self.set = (key, value) => {
+        return self.band("ostate").set(key, value);
+    };
 
-Thing.prototype.model_id = function() {
-    return this.band("meta").get("iot:model-id");
-};
-
-Thing.prototype.thing_id = function() {
-    return this.band("meta").get("iot:thing-id");
-};
-
-Thing.prototype.set = function(key, value) {
-    return this.band("ostate").set(key, value);
-};
+    return self;
+}
 
 /**
  *  API
  */
-exports.Thing = Thing;
+exports.make_thing = make_thing;
+
+
+const thing_1 = make_thing()
+thing_1.on("meta", (thing, changed) => {
+    console.log("+", "thing/meta changed", changed);
+});
+const meta_1 = thing_1.band("meta"); 
+meta_1.set("schema:name", "David");
+meta_1.set("schema:age", "51");
+
+console.log(meta_1.state());

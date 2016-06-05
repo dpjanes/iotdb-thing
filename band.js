@@ -25,111 +25,103 @@
 const events = require('events');
 const util = require('util');
 
-const _ = require("../helpers");
+const iotdb = require("iotdb");
+const _ = iotdb._;
 
-const Band = function () {
-};
+const make = (_thing, _d, _band) => {
+    const self = Object.assign({}, events.EventEmitter.prototype);
 
-util.inherits(Band, events.EventEmitter);
+    let _timestamp = null;
 
-Band.prototype._init = function(thing, d, band) {
-    const self = this;
+    self.set = function(key, value) {
+        var ud = {};
+        ud[key] = value;
 
-    self._thing = thing;
-    self._d = d;
-    self._band = band;
-    self._timestamp = null;
+        self.update(ud, {
+            add_timestamp: true,
+        });
+    };
 
-    events.EventEmitter.call(self);
-};
+    self.get = function(key, otherwise) {
+        return _.d.get(_d, key, otherwise);
+    };
 
-Band.prototype.set = function(key, value) {
-    const self = this;
+    self.first = function(key, otherwise) {
+        return _.d.first(_d, key, otherwise);
+    };
 
-    var ud = {};
-    ud[key] = value;
+    self.list = function(key, otherwise) {
+        return _.d.list(_d, key, otherwise);
+    };
 
-    self.update(ud, {
-        add_timestamp: true,
-    });
-};
+    self.update = function(updated, paramd) {
+        paramd = _.d.compose.shallow(paramd, {
+            add_timestamp: true,
+            check_timestamp: true,
+            notify: true,
+        });
 
-Band.prototype.get = function(key, otherwise) {
-    return _.d.get(self._d, key, otherwise);
-};
+        var utimestamp = updated["@timestamp"];
+        if (paramd.add_timestamp && !utimestamp) {
+            utimestamp = _.timestamp.make();
+        }
 
-Band.prototype.first = function(key, otherwise) {
-    return _.d.first(self._d, key, otherwise);
-};
+        if (paramd.check_timestamp && !_.timestamp.check.values(self._timestamp, utimestamp)) {
+            return;
+        }
 
-Band.prototype.list = function(key, otherwise) {
-    return _.d.list(self._d, key, otherwise);
-};
+        updated = _.d.transform(updated, {
+            key: function(key) {
+                if (key.match(/^@/)) {
+                    return;
+                }
 
-Band.prototype.update = function(updated, paramd) {
-    paramd = _.d.compose.shallow(paramd, {
-        add_timestamp: true,
-        check_timestamp: true,
-        notify: true,
-    });
+                return key;
+            },
+        });
 
-    var utimestamp = updated["@timestamp"];
-    if (paramd.add_timestamp && !utimestamp) {
-        utimestamp = _.timestamp.make();
-    }
+        const changed = {};
 
-    if (paramd.check_timestamp && !_.timestamp.check.values(self._timestamp, utimestamp)) {
-        return;
-    }
+        _.mapObject(updated, (uvalue, ukey) => {
+            var uvalue = updated[ukey];
+            var ovalue = _d[ukey];
 
-    updated = _.d.transform(updated, {
-        key: function(key) {
-            if (key.match(/^@/)) {
+            if (_.is.Equal(uvalue, ovalue)) {
                 return;
             }
 
-            return key;
-        },
-    });
+            _d[ukey] = uvalue;
 
-    var is_changed = false;
+            if (paramd.notify) {
+                _.d.set(changed, ukey, uvalue);
 
-    for (var ukey in updated) {
-        var uvalue = updated[ukey];
-        var ovalue = self._d[ukey];
+                process.nextTick(function() {
+                    self.emit(ukey, uvalue);
+                });
+            }
+        });
 
-        if (_.is.Equal(uvalue, ovalue)) {
-            continue;
-        }
-
-        self._d[ukey] = uvalue;
-        is_changed = true;
-
-        if (paramd.emit) {
+        if (!_.is.Empty(changed) && paramd.notify) {
             process.nextTick(function() {
-                self.emit(ukey, uvalue);
+                _thing.emit(_band, _thing, changed);
             });
         }
-    }
 
-    if (is_changed && paramd.emit) {
-        process.nextTick(function() {
-            self._thing.emit(self._band);
-        });
-    }
+        return !_.is.Empty(changed);
+    };
 
-    return is_changed;
-};
+    self.timestamp = function() {
+        return self._timestamp;
+    };
 
-Band.prototype.timestamp = function() {
-    return self._timestamp;
-};
+    self.state = function() {
+        return _.d.clone.deep(_d);
+    };
 
-Band.prototype.state = function() {
-    return _.d.clone.deep(self._d);
+    return self;
 };
 
 /**
  *  API
  */
-exports.Band = Band;
+exports.make = make;

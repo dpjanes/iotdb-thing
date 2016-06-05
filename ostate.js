@@ -22,7 +22,8 @@
 
 "use strict";
 
-const _ = require("../helpers");
+const iotdb = require("iotdb");
+const _ = iotdb._;
 
 const band = require("./band");
 

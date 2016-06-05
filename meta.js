@@ -22,17 +22,18 @@
 
 "use strict";
 
-const _ = require("../helpers");
+const iotdb = require("iotdb");
+const _ = iotdb._;
 
 const band = require("./band");
 
-const Band = function (thing, d) {
-    this._init(thing, d, "meta");
-};
+const make = (_thing, _d) => {
+    const self = Object.assign({}, band.make(_thing, _d, "meta"));
 
-Band.prototype = new band.Band();
+    return self;
+};
 
 /**
  *  API
  */
-exports.Band = Band;
+exports.make = make;

@@ -22,11 +22,13 @@
 
 "use strict";
 
-const _ = require("../helpers");
+const iotdb = require("iotdb");
+const _ = iotdb._;
 
 const band = require("./band");
 
-const Band = function (thing, d) {
+const connection = function (thing, d) {
+    const self = Object.assign({}, events.EventEmitter.prototype);
     this._init(thing, d, "connection");
 };
 
