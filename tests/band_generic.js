@@ -72,8 +72,20 @@ describe("band - generic operations", function() {
                 "age": 24,
             });
         });
+        it("set ignore @ values", function() {
+            const thing_1 = thing.make({ scratch: {} })
+            const scratch_1 = thing_1.band("scratch");
+            scratch_1.set("@name", "David");
+            scratch_1.set("name", "John");
+
+            assert.deepEqual(scratch_1.state(), {
+                "name": "John",
+            });
+        });
     });
     describe("on", function() {
+        describe("model", function() {
+        });
         describe("thing", function() {
             it("emits on set", function(done) {
                 const thing_1 = thing.make({ scratch: {} })
@@ -171,6 +183,111 @@ describe("band - generic operations", function() {
                 process.nextTick(function() {
                     assert.strictEqual(count, 2);
                     done();
+                });
+            });
+        });
+    });
+    describe("update / state", function() {
+        describe("works", function() {
+            it("empty", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+
+                const d = {};
+                scratch_1.update(d);
+                assert.deepEqual(scratch_1.state(), d);
+            });
+            it("one value", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+
+                const d = {
+                    "name": "Sandy Bottom",
+                };
+                scratch_1.update(d);
+                assert.deepEqual(scratch_1.state(), d);
+            });
+            it("multiple value", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+
+                const d = {
+                    "name": "Sponge Bob",
+                    "friend": "Sandy Bottom",
+                };
+                scratch_1.update(d);
+                assert.deepEqual(scratch_1.state(), d);
+            });
+            it("change value", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+
+                scratch_1.update({
+                    "name": "Sponge Bob",
+                    "friend": "Sandy Bottom",
+                });
+                scratch_1.update({
+                    "another friend": "Patrick Star",
+                });
+                assert.deepEqual(scratch_1.state(), {
+                    "name": "Sponge Bob",
+                    "friend": "Sandy Bottom",
+                    "another friend": "Patrick Star",
+                });
+            });
+            it("ignores @ values", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+
+                const d = {
+                    "@something": "Bla",
+                    "@else": "Blurg",
+                    "name": "Sandy Bottom",
+                };
+                scratch_1.update(d);
+                assert.deepEqual(scratch_1.state(), {
+                    "name": "Sandy Bottom",
+                });
+            });
+        });
+        describe("emits", function() {
+            describe("model", function() {
+            });
+            describe("thing", function() {
+                it("works on nextTick", function(done) {
+                    const thing_1 = thing.make({ scratch: {} })
+                    const scratch_1 = thing_1.band("scratch");
+
+                    const d = {
+                        "name": "Sponge Bob",
+                        "friend": "Sandy Bottom",
+                    };
+                    scratch_1.update(d);
+
+                    thing_1.on("scratch", function(_thing, _band, _changed) {
+                        assert.strictEqual(_thing, thing_1);
+                        assert.strictEqual(_band, "scratch");
+
+                        assert.deepEqual(_changed, d);
+                        done();
+                    });
+                });
+                it("can be turned off", function(done) {
+                    const thing_1 = thing.make({ scratch: {} })
+                    const scratch_1 = thing_1.band("scratch");
+
+                    const d = {
+                        "name": "Johnny",
+                    };
+                    scratch_1.update(d, {
+                        notify: false,
+                    });
+
+                    thing_1.on("scratch", function(_thing, _band, _changed) {
+                        assert.ok(false);
+                    });
+
+                    process.nextTick(done);
                 });
             });
         });
