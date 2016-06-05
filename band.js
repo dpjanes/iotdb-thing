@@ -31,7 +31,7 @@ const _ = iotdb._;
 const make = (_thing, _d, _band) => {
     const self = Object.assign({}, events.EventEmitter.prototype);
 
-    let _timestamp = null;
+    let _timestamp = _.timestamp.epoch();
 
     self.set = function(key, value) {
         var ud = {};
@@ -99,9 +99,9 @@ const make = (_thing, _d, _band) => {
             }
 
             _d[ukey] = uvalue;
+            _.d.set(changed, ukey, uvalue);
 
             if (paramd.notify) {
-                _.d.set(changed, ukey, uvalue);
 
                 process.nextTick(function() {
                     self.emit(ukey, uvalue);
@@ -109,17 +109,25 @@ const make = (_thing, _d, _band) => {
             }
         });
 
-        if (!_.is.Empty(changed) && paramd.notify) {
+        if (_.is.Empty(changed)) {
+            return false;
+        }
+        
+        if (paramd.notify) {
             process.nextTick(function() {
                 _thing.emit(_band, _thing, _band, changed);
             });
         }
 
-        return !_.is.Empty(changed);
+        if (paramd.add_timestamp) {
+            _timestamp = utimestamp;
+        }
+
+        return true;
     };
 
     self.timestamp = function() {
-        return self._timestamp;
+        return _timestamp;
     };
 
     self.state = function() {
