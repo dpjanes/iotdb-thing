@@ -201,8 +201,9 @@ describe("band - generic operations", function() {
                 const scratch_1 = thing_1.band("scratch");
 
                 const d = {};
-                scratch_1.update(d);
+                const was_updated = scratch_1.update(d);
                 assert.deepEqual(scratch_1.state(), d);
+                assert.ok(!was_updated);
             });
             it("one value", function() {
                 const thing_1 = thing.make({ scratch: {} })
@@ -211,8 +212,9 @@ describe("band - generic operations", function() {
                 const d = {
                     "name": "Sandy Bottom",
                 };
-                scratch_1.update(d);
+                const was_updated = scratch_1.update(d);
                 assert.deepEqual(scratch_1.state(), d);
+                assert.ok(was_updated);
             });
             it("multiple value", function() {
                 const thing_1 = thing.make({ scratch: {} })
@@ -222,18 +224,19 @@ describe("band - generic operations", function() {
                     "name": "Sponge Bob",
                     "friend": "Sandy Bottom",
                 };
-                scratch_1.update(d);
+                const was_updated = scratch_1.update(d);
                 assert.deepEqual(scratch_1.state(), d);
+                assert.ok(was_updated);
             });
             it("change value", function() {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
 
-                scratch_1.update({
+                const was_updated_1 = scratch_1.update({
                     "name": "Sponge Bob",
                     "friend": "Sandy Bottom",
                 });
-                scratch_1.update({
+                const was_updated_2 = scratch_1.update({
                     "another friend": "Patrick Star",
                 });
                 assert.deepEqual(scratch_1.state(), {
@@ -241,6 +244,8 @@ describe("band - generic operations", function() {
                     "friend": "Sandy Bottom",
                     "another friend": "Patrick Star",
                 });
+                assert.ok(was_updated_1);
+                assert.ok(was_updated_2);
             });
             it("ignores @ values", function() {
                 const thing_1 = thing.make({ scratch: {} })
@@ -251,10 +256,11 @@ describe("band - generic operations", function() {
                     "@else": "Blurg",
                     "name": "Sandy Bottom",
                 };
-                scratch_1.update(d);
+                const was_updated = scratch_1.update(d);
                 assert.deepEqual(scratch_1.state(), {
                     "name": "Sandy Bottom",
                 });
+                assert.ok(was_updated);
             });
         });
         describe("emits", function() {
@@ -269,7 +275,7 @@ describe("band - generic operations", function() {
                         "name": "Sponge Bob",
                         "friend": "Sandy Bottom",
                     };
-                    scratch_1.update(d);
+                    const was_updated = scratch_1.update(d);
 
                     thing_1.on("scratch", function(_thing, _band, _changed) {
                         assert.strictEqual(_thing, thing_1);
@@ -278,6 +284,7 @@ describe("band - generic operations", function() {
                         assert.deepEqual(_changed, d);
                         done();
                     });
+                    assert.ok(was_updated);
                 });
                 it("can be turned off", function(done) {
                     const thing_1 = thing.make({ scratch: {} })
@@ -286,7 +293,7 @@ describe("band - generic operations", function() {
                     const d = {
                         "name": "Johnny",
                     };
-                    scratch_1.update(d, {
+                    const was_updated = scratch_1.update(d, {
                         notify: false,
                     });
 
@@ -295,6 +302,7 @@ describe("band - generic operations", function() {
                     });
 
                     assert.deepEqual(scratch_1.state(), d);
+                    assert.ok(was_updated);
                     process.nextTick(done);
                 });
             });
@@ -331,9 +339,10 @@ describe("band - generic operations", function() {
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                scratch_1.update({
+                const was_updated = scratch_1.update({
                     "name": "Joanne",
                 });
+                assert.ok(was_updated);
                 assert.ok(scratch_1.timestamp() >= now, "timestamp did not advance");
             });
             it("does not update timestamp if no change", function() {
@@ -341,9 +350,10 @@ describe("band - generic operations", function() {
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                scratch_1.update({
+                const was_updated = scratch_1.update({
                     "name": "David",
                 });
+                assert.ok(!was_updated);
                 assert.strictEqual(scratch_1.timestamp(), _.timestamp.epoch());
             });
             it("optional don't update timestamp", function() {
@@ -351,7 +361,7 @@ describe("band - generic operations", function() {
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                scratch_1.update({
+                const was_updated = scratch_1.update({
                     "name": "Joanne",
                 }, {
                     add_timestamp: false,
@@ -364,22 +374,22 @@ describe("band - generic operations", function() {
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                scratch_1.update({
+                const was_updated = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "Joanne",
                 }, {
                     add_timestamp: true,
                 });
-                // assert.strictEqual(scratch_1.timestamp(), _.timestamp.epoch());
                 assert.strictEqual(scratch_1.timestamp(), TS_OLD);
                 assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
+                assert.ok(was_updated);
             });
             it("use @timestamp ... with option to ignore it!", function() {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                scratch_1.update({
+                const was_updated = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "Joanne",
                 }, {
@@ -387,6 +397,183 @@ describe("band - generic operations", function() {
                 });
                 assert.strictEqual(scratch_1.timestamp(), _.timestamp.epoch());
                 assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
+                assert.ok(was_updated);
+            });
+            it("use @timestamp ( old, new ) - expect update", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                const now = _.timestamp.make();
+
+                const was_updated_1 = scratch_1.update({
+                    "@timestamp": TS_OLD,
+                    "name": "Joanne",
+                }, {
+                    add_timestamp: true,
+                });
+                const was_updated_2 = scratch_1.update({
+                    "@timestamp": TS_NEW,
+                    "name": "David",
+                }, {
+                    add_timestamp: true,
+                });
+                assert.ok(was_updated_1);
+                assert.ok(was_updated_2);
+                assert.strictEqual(scratch_1.timestamp(), TS_NEW);
+                assert.deepEqual({ "name": "David" }, scratch_1.state());
+            });
+            it("use @timestamp ( old, old ) - expect NO update", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                const now = _.timestamp.make();
+
+                const was_updated_1 = scratch_1.update({
+                    "@timestamp": TS_OLD,
+                    "name": "Joanne",
+                }, {
+                    add_timestamp: true,
+                });
+                const was_updated_2 = scratch_1.update({
+                    "@timestamp": TS_OLD,
+                    "name": "David",
+                }, {
+                    add_timestamp: true,
+                });
+                assert.ok(was_updated_1);
+                assert.ok(!was_updated_2);
+                assert.strictEqual(scratch_1.timestamp(), TS_OLD);
+                assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
+            });
+            it("use @timestamp ( new, old ) - expect NO update", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                const now = _.timestamp.make();
+
+                const was_updated_1 = scratch_1.update({
+                    "@timestamp": TS_NEW,
+                    "name": "Joanne",
+                }, {
+                    add_timestamp: true,
+                });
+                const was_updated_2 = scratch_1.update({
+                    "@timestamp": TS_OLD,
+                    "name": "David",
+                }, {
+                    add_timestamp: true,
+                });
+                assert.ok(was_updated_1);
+                assert.ok(!was_updated_2);
+                assert.strictEqual(scratch_1.timestamp(), TS_NEW);
+                assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
+            });
+            it("use @timestamp ( new, null ) - expect update", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                const now = _.timestamp.make();
+
+                const was_updated_1 = scratch_1.update({
+                    "@timestamp": TS_NEW,
+                    "name": "Joanne",
+                }, {
+                    add_timestamp: true,
+                });
+                const was_updated_2 = scratch_1.update({
+                    "name": "David",
+                }, {
+                    add_timestamp: true,
+                });
+                assert.ok(was_updated_1);
+                assert.ok(was_updated_2);
+                assert.ok(scratch_1.timestamp() >= now, "timestamp did not advance");
+                assert.deepEqual({ "name": "David" }, scratch_1.state());
+            });
+            it("use @timestamp ( null, new ) - expect NO update", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                const now = _.timestamp.make();
+
+                const was_updated_1 = scratch_1.update({
+                    "name": "Joanne",
+                }, {
+                    add_timestamp: true,
+                });
+                const was_updated_2 = scratch_1.update({
+                    "@timestamp": TS_NEW,
+                    "name": "David",
+                }, {
+                    add_timestamp: true,
+                });
+                assert.ok(was_updated_1);
+                assert.ok(!was_updated_2);
+                assert.ok(scratch_1.timestamp() >= now, "timestamp did not advance");
+                assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
+            });
+            it("use @timestamp ( old, old ) with NO CHECK - expect update", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                const now = _.timestamp.make();
+
+                const was_updated_1 = scratch_1.update({
+                    "@timestamp": TS_OLD,
+                    "name": "Joanne",
+                }, {
+                    add_timestamp: true,
+                });
+                const was_updated_2 = scratch_1.update({
+                    "@timestamp": TS_OLD,
+                    "name": "David",
+                }, {
+                    add_timestamp: true,
+                    check_timestamp: false,
+                });
+                assert.ok(was_updated_1);
+                assert.ok(was_updated_2);
+                assert.strictEqual(scratch_1.timestamp(), TS_OLD);
+                assert.deepEqual({ "name": "David" }, scratch_1.state());
+            });
+            it("use @timestamp ( new, old ) with NO CHECK - expect update", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                const now = _.timestamp.make();
+
+                const was_updated_1 = scratch_1.update({
+                    "@timestamp": TS_NEW,
+                    "name": "Joanne",
+                }, {
+                    add_timestamp: true,
+                });
+                const was_updated_2 = scratch_1.update({
+                    "@timestamp": TS_OLD,
+                    "name": "David",
+                }, {
+                    add_timestamp: true,
+                    check_timestamp: false,
+                });
+                assert.ok(was_updated_1);
+                assert.ok(was_updated_2);
+                assert.strictEqual(scratch_1.timestamp(), TS_OLD);
+                assert.deepEqual({ "name": "David" }, scratch_1.state());
+            });
+            it("use @timestamp ( null, new ) with NO CHECK - expect update", function() {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                const now = _.timestamp.make();
+
+                const was_updated_1 = scratch_1.update({
+                    "name": "Joanne",
+                }, {
+                    add_timestamp: true,
+                });
+                const was_updated_2 = scratch_1.update({
+                    "@timestamp": TS_NEW,
+                    "name": "David",
+                }, {
+                    add_timestamp: true,
+                    check_timestamp: false,
+                });
+                assert.ok(was_updated_1);
+                assert.ok(was_updated_2);
+                assert.strictEqual(scratch_1.timestamp(), TS_NEW);
+                assert.deepEqual({ "name": "David" }, scratch_1.state());
             });
         });
     });

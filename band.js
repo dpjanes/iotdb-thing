@@ -32,6 +32,7 @@ const make = (_thing, _d, _band) => {
     const self = Object.assign({}, events.EventEmitter.prototype);
 
     let _timestamp = _.timestamp.epoch();
+    let _last_now = null;
 
     self.set = function(key, value) {
         var ud = {};
@@ -70,11 +71,17 @@ const make = (_thing, _d, _band) => {
         });
 
         var utimestamp = updated["@timestamp"];
-        if (paramd.add_timestamp && !utimestamp) {
-            utimestamp = _.timestamp.make();
+        if (!utimestamp) {
+            // this allows multiple user actions in the same millisecond … very tricky
+            utimestamp =  _.timestamp.make();
+            if (_last_now === utimestamp) {
+                utimestamp = _.timestamp.advance(utimestamp);
+            }
+
+            _last_now = utimestamp;
         }
 
-        if (paramd.check_timestamp && !_.timestamp.check.values(self._timestamp, utimestamp)) {
+        if (paramd.check_timestamp && !_.timestamp.check.values(_timestamp, utimestamp)) {
             return;
         }
 
