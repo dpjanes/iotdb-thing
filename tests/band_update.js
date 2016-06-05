@@ -28,10 +28,6 @@ const _ = iotdb._;
 const assert = require("assert");
 const thing = require("../thing");
 
-const TS_OLD = '2010-03-25T21:28:43.613Z';
-const TS_NEW = '2012-03-25T21:28:43.613Z';
-const TS_FUTURE = '2299-03-25T21:28:43.613Z';
-
 describe("band - generic operations", function() {
     describe("update / state", function() {
         describe("works", function() {

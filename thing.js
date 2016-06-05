@@ -75,11 +75,11 @@ const make = (initd) => {
     };
 
     self.model_id = () => {
-        return self.band("meta").get("iot:model-id");
+        return self.band("meta").get("iot:model-id", null);
     };
 
     self.thing_id = () => {
-        return self.band("meta").get("iot:thing-id");
+        return self.band("meta").get("iot:thing-id", null);
     };
 
     self.set = (key, value) => {

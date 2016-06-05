@@ -28,10 +28,6 @@ const _ = iotdb._;
 const assert = require("assert");
 const thing = require("../thing");
 
-const TS_OLD = '2010-03-25T21:28:43.613Z';
-const TS_NEW = '2012-03-25T21:28:43.613Z';
-const TS_FUTURE = '2299-03-25T21:28:43.613Z';
-
 describe("band", function() {
     describe("set", function() {
         it("empty at creation", function() {
@@ -78,6 +74,26 @@ describe("band", function() {
 
             assert.deepEqual(scratch_1.state(), {
                 "name": "John",
+            });
+        });
+        it("set /name", function() {
+            const thing_1 = thing.make({ scratch: {} })
+            const scratch_1 = thing_1.band("scratch");
+            scratch_1.set("/name", "David");
+
+            assert.deepEqual(scratch_1.state(), {
+                "name": "David",
+            });
+        });
+        it("set /position/latitude", function() {
+            const thing_1 = thing.make({ scratch: {} })
+            const scratch_1 = thing_1.band("scratch");
+            scratch_1.set("/position/latitude", 54.4);
+
+            assert.deepEqual(scratch_1.state(), {
+                "position": {
+                    "latitude": 54.4,
+                }
             });
         });
     });

@@ -107,7 +107,7 @@ const make = (_thing, _d, _band_name) => {
                     return;
                 }
 
-                _d[ukey] = uvalue;
+                _.d.set(_d, ukey, uvalue);
                 _.d.set(changed, ukey, uvalue);
 
                 if (paramd.notify) {

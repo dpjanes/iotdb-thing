@@ -67,5 +67,57 @@ describe("thing", function() {
                 assert.strictEqual(thing_1.band("connection").thing(), thing_1);
             });
         });
+        describe("arguments", function() {
+            it("non dictionary argument", function() {
+                const thing_1 = thing.make({ x: 1 })
+
+                assert.ok(!thing_1.band("x"));
+            });
+        });
+        describe("helper function", function() {
+            describe("thing-id", function() {
+                it("no meta", function() {
+                    const thing_1 = thing.make();
+
+                    assert.strictEqual(thing_1.thing_id(), null);
+                });
+                it("meta", function() {
+                    const thing_1 = thing.make({
+                        meta: {
+                            "iot:model-id": "some-model-id",
+                            "iot:thing-id": "some-thing-id",
+                        }
+                    });
+
+                    assert.strictEqual(thing_1.thing_id(), "some-thing-id");
+                });
+            });
+            describe("model-id", function() {
+                it("no meta", function() {
+                    const thing_1 = thing.make();
+
+                    assert.strictEqual(thing_1.model_id(), null);
+                });
+                it("meta", function() {
+                    const thing_1 = thing.make({
+                        meta: {
+                            "iot:model-id": "some-model-id",
+                            "iot:thing-id": "some-thing-id",
+                        }
+                    });
+
+                    assert.strictEqual(thing_1.model_id(), "some-model-id");
+                });
+            });
+            describe("set", function() {
+                const thing_1 = thing.make();
+                const ostate_1 = thing_1.band("ostate");
+
+                assert.strictEqual(ostate_1.get("on", null), null);
+                thing_1.set("on", true);
+                console.log(ostate_1.state());
+                assert.strictEqual(ostate_1.get("on", null), true);
+            });
+        });
     })
 });
