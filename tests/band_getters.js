@@ -1,5 +1,5 @@
 /*
- *  band_create.js
+ *  band_getters.js
  *
  *  David Janes
  *  IOTDB

@@ -1,5 +1,5 @@
 /*
- *  band_generic.js
+ *  band_timestamp.js
  *
  *  David Janes
  *  IOTDB
