@@ -111,9 +111,8 @@ const make = (_thing, _d, _band_name) => {
                 _.d.set(changed, ukey, uvalue);
 
                 if (paramd.notify) {
-
                     process.nextTick(function() {
-                        self.emit(ukey, uvalue);
+                        self.emit(ukey, _thing, self, uvalue);
                     });
                 }
             });

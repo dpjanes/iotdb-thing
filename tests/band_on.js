@@ -39,121 +39,204 @@ describe("band", function() {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
 
-                scratch_1.on("name", function(_thing, _band, _changed) {
-                // console.log(arguments)
-                // process.exit()
-                /*
-                assert.strictEqual(_thing, thing_1);
-                assert.strictEqual(_band, scratch_1);
-                assert.deepEqual(_changed, {
-                    "name": "David",
+                scratch_1.on("name", function(_thing, _band, _value) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
+                    assert.strictEqual(_value, "David");
+
+                    done();
                 });
-                */
-                done();
+
+                scratch_1.set("name", "David");
             });
+            it("sets happen on nextTick", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
 
-            scratch_1.set("name", "David");
-        });
-    });
-    describe("thing", function() {
-        it("emits on set", function(done) {
-            const thing_1 = thing.make({ scratch: {} })
-            const scratch_1 = thing_1.band("scratch");
+                scratch_1.set("name", "John");
 
-            thing_1.on("scratch", function(_thing, _band, _changed) {
-                assert.strictEqual(_thing, thing_1);
-                assert.strictEqual(_band, scratch_1);
-                assert.deepEqual(_changed, {
-                    "name": "David",
+                scratch_1.on("name", function(_thing, _band, _value) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
+                    assert.deepEqual(_value, "John");
+                    done();
                 });
-                done();
             });
+            it("emits only the latest change in order", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                let count = 0;
 
-            scratch_1.set("name", "David");
-        });
-        it("sets happen on nextTick", function(done) {
-            const thing_1 = thing.make({ scratch: {} })
-            const scratch_1 = thing_1.band("scratch");
+                scratch_1.on("name", function(_thing, _band, _value) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
+                    assert.strictEqual(_value, "John");
 
-            scratch_1.set("name", "John");
-
-            thing_1.on("scratch", function(_thing, _band, _changed) {
-                assert.strictEqual(_thing, thing_1);
-                assert.strictEqual(_band, scratch_1);
-                assert.deepEqual(_changed, {
-                    "name": "John",
+                    if (++count === 2) {
+                        done();
+                    }
                 });
-                done();
+
+                scratch_1.on("age", function(_thing, _band, _value) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
+                    assert.strictEqual(_value, 52);
+
+                    if (++count === 2) {
+                        done();
+                    }
+                });
+
+                scratch_1.set("age", 52);
+                scratch_1.set("name", "John");
+            });
+            it("doesn't emit no change", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                let count = 0;
+
+                scratch_1.on("name", function(_thing, _band, _value) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
+
+                    assert.deepEqual(_value, "Guido");
+                    count++;
+                });
+
+                scratch_1.set("name", "Guido");
+                scratch_1.set("name", "Guido");
+
+                process.nextTick(function() {
+                    assert.strictEqual(count, 1);
+                    done();
+                });
+            });
+            it("does emit two changes", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                let count = 0;
+
+                scratch_1.on("name", function(_thing, _band, _value) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
+
+                    if (count === 0) {
+                        assert.strictEqual(_value, "Sandy");
+                    } else if (count === 1) {
+                        assert.strictEqual(_value, "Bottom");
+                    }
+
+                    count++;
+                });
+
+                scratch_1.set("name", "Sandy");
+                scratch_1.set("name", "Bottom");
+
+                process.nextTick(function() {
+                    assert.strictEqual(count, 2);
+                    done();
+                });
             });
         });
-        it("emits only the latest change in order", function(done) {
-            const thing_1 = thing.make({ scratch: {} })
-            const scratch_1 = thing_1.band("scratch");
-            let count = 0;
+        describe("thing", function() {
+            it("emits on set", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
 
-            thing_1.on("scratch", function(_thing, _band, _changed) {
-
-                assert.strictEqual(_thing, thing_1);
-                assert.strictEqual(_band, scratch_1);
-
-                if (count++ === 0) {
+                thing_1.on("scratch", function(_thing, _band, _changed) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
                     assert.deepEqual(_changed, {
-                        "age": 52,
+                        "name": "David",
                     });
-                } else {
+                    done();
+                });
+
+                scratch_1.set("name", "David");
+            });
+            it("sets happen on nextTick", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+
+                scratch_1.set("name", "John");
+
+                thing_1.on("scratch", function(_thing, _band, _changed) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
                     assert.deepEqual(_changed, {
                         "name": "John",
                     });
                     done();
-                }
-            });
-
-            scratch_1.set("age", 52);
-            scratch_1.set("name", "John");
-        });
-        it("doesn't emit no change", function(done) {
-            const thing_1 = thing.make({ scratch: {} })
-            const scratch_1 = thing_1.band("scratch");
-            let count = 0;
-
-            thing_1.on("scratch", function(_thing, _band, _changed) {
-                assert.strictEqual(_thing, thing_1);
-                assert.strictEqual(_band, scratch_1);
-
-                assert.deepEqual(_changed, {
-                    "name": "Guido",
                 });
-                count++;
             });
+            it("emits only the latest change in order", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                let count = 0;
 
-            scratch_1.set("name", "Guido");
-            scratch_1.set("name", "Guido");
+                thing_1.on("scratch", function(_thing, _band, _changed) {
 
-            process.nextTick(function() {
-                assert.strictEqual(count, 1);
-                done();
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
+
+                    if (count++ === 0) {
+                        assert.deepEqual(_changed, {
+                            "age": 52,
+                        });
+                    } else {
+                        assert.deepEqual(_changed, {
+                            "name": "John",
+                        });
+                        done();
+                    }
+                });
+
+                scratch_1.set("age", 52);
+                scratch_1.set("name", "John");
             });
-        });
-        it("does emit two changes", function(done) {
-            const thing_1 = thing.make({ scratch: {} })
-            const scratch_1 = thing_1.band("scratch");
-            let count = 0;
+            it("doesn't emit no change", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                let count = 0;
 
-            thing_1.on("scratch", function(_thing, _band, _changed) {
-                assert.strictEqual(_thing, thing_1);
-                assert.strictEqual(_band, scratch_1);
+                thing_1.on("scratch", function(_thing, _band, _changed) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
 
-                count++;
+                    assert.deepEqual(_changed, {
+                        "name": "Guido",
+                    });
+                    count++;
+                });
+
+                scratch_1.set("name", "Guido");
+                scratch_1.set("name", "Guido");
+
+                process.nextTick(function() {
+                    assert.strictEqual(count, 1);
+                    done();
+                });
             });
+            it("does emit two changes", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                let count = 0;
 
-            scratch_1.set("name", "Sandy");
-            scratch_1.set("name", "Bottom");
+                thing_1.on("scratch", function(_thing, _band, _changed) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
 
-            process.nextTick(function() {
-                assert.strictEqual(count, 2);
-                done();
+                    count++;
+                });
+
+                scratch_1.set("name", "Sandy");
+                scratch_1.set("name", "Bottom");
+
+                process.nextTick(function() {
+                    assert.strictEqual(count, 2);
+                    done();
+                });
             });
         });
     });
-});
 });
