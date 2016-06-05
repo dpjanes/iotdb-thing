@@ -26,8 +26,10 @@ const events = require('events');
 const util = require('util');
 
 const iotdb = require("iotdb");
-const errors = require("iotdb-errors");
 const _ = iotdb._;
+
+const errors = require("iotdb-errors");
+const helpers = require("./helpers");
 
 const make = (_thing, _d, _band_name) => {
     const self = Object.assign({}, events.EventEmitter.prototype);
@@ -35,36 +37,7 @@ const make = (_thing, _d, _band_name) => {
     let _timestamp = _.timestamp.epoch();
     let _last_now = null;
 
-    self.set = function(key, value) {
-        var ud = {};
-        ud[key] = value;
-
-        return self.update(ud, {
-            add_timestamp: true,
-        });
-    };
-
-    self.thing = function() {
-        return _thing;
-    };
-
-    self.band_name = function() {
-        return _band_name;
-    };
-
-    self.get = function(key, otherwise) {
-        return _.d.get(_d, key, otherwise);
-    };
-
-    self.first = function(key, otherwise) {
-        return _.d.first(_d, key, otherwise);
-    };
-
-    self.list = function(key, otherwise) {
-        return _.d.list(_d, key, otherwise);
-    };
-
-    self.update = function(updated, paramd) {
+    const _update = function(updated, paramd) {
         return new Promise(( resolve, reject ) => {
             paramd = _.d.compose.shallow(paramd, {
                 add_timestamp: true,
@@ -133,6 +106,39 @@ const make = (_thing, _d, _band_name) => {
 
             return resolve(changed);
         });
+    };
+
+    self.set = function(key, value) {
+        var ud = {};
+        ud[key] = value;
+
+        return _update(ud, {
+            add_timestamp: true,
+        });
+    };
+
+    self.update = function(updated, paramd) {
+        return _update(helpers.unroll(updated), paramd);
+    };
+
+    self.thing = function() {
+        return _thing;
+    };
+
+    self.band_name = function() {
+        return _band_name;
+    };
+
+    self.get = function(key, otherwise) {
+        return _.d.get(_d, key, otherwise);
+    };
+
+    self.first = function(key, otherwise) {
+        return _.d.first(_d, key, otherwise);
+    };
+
+    self.list = function(key, otherwise) {
+        return _.d.list(_d, key, otherwise);
     };
 
     self.timestamp = function() {
