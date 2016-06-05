@@ -28,18 +28,152 @@ const _ = iotdb._;
 const assert = require("assert");
 const thing = require("../thing");
 
-const TS_OLD = '2010-03-25T21:28:43.613Z';
-const TS_NEW = '2012-03-25T21:28:43.613Z';
-const TS_FUTURE = '2299-03-25T21:28:43.613Z';
+const scratchd = {
+    "name": "David",
+    "position": {
+        "latitude": 43.6532,
+        "longitude": -79.3832,
+    },
+    "roles": [ "Boss", "CEO", "Dad" ],
+};
 
 describe("band", function() {
-    describe("create", function() {
-        it("scratch band", function() {
-            const thing_1 = thing.make({ scratch: {} })
+    describe("get", function() {
+        it("initialize", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
 
-            assert.ok(thing_1.band("scratch"));
-            assert.strictEqual(thing_1.band("scratch").band(), "scratch");
-            assert.strictEqual(thing_1.band("scratch").thing(), thing_1);
+            assert.deepEqual(scratch_1.state(), scratchd);
+        });
+        it("get name", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.get("name"), "David");
+        });
+        it("get /name", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.get("/name"), "David");
+        });
+        it("get /position", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.get("/position"), scratchd.position);
+        });
+        it("get /position/latitude", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.get("/position/latitude"), scratchd.position.latitude);
+        });
+        it("get /roles", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.get("/roles"), scratchd.roles);
+        });
+        it("get /xxx - no otherwise", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.get("/xxx"), undefined);
+        });
+        it("get /xxx - otherwise", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.get("/xxx", "expected"), "expected");
+        });
+    });
+    describe("first", function() {
+        it("first name", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.first("name"), "David");
+        });
+        it("first /name", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.first("/name"), "David");
+        });
+        it("first /position", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.first("/position"), scratchd.position);
+        });
+        it("first /position/latitude", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.first("/position/latitude"), scratchd.position.latitude);
+        });
+        it("first /roles", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.first("/roles"), scratchd.roles[0]);
+        });
+        it("first /xxx - no otherwise", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.first("/xxx"), undefined);
+        });
+        it("first /xxx - otherwise", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.first("/xxx", "expected"), "expected");
+        });
+    });
+    describe("list", function() {
+        it("list name", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.list("name"), [ "David" ]);
+        });
+        it("list /name", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.list("/name"), [ "David" ]);
+        });
+        it("list /position", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.list("/position"), [ scratchd.position ]);
+        });
+        it("list /position/latitude", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.list("/position/latitude"), [ scratchd.position.latitude ]);
+        });
+        it("list /roles", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.list("/roles"), scratchd.roles);
+        });
+        it("list /xxx - no otherwise", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.list("/xxx"), undefined);
+        });
+        it("list /xxx - otherwise", function() {
+            const thing_1 = thing.make({ scratch: scratchd })
+            const scratch_1 = thing_1.band("scratch");
+
+            assert.deepEqual(scratch_1.list("/xxx", "expected"), "expected");
         });
     });
 });

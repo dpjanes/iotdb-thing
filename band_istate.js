@@ -28,7 +28,7 @@ const _ = iotdb._;
 const band = require("./band");
 
 const make = (_thing, _d, _band) => {
-    const self = Object.assign({}, band.make(_thing, _d, _band || "istate"));
+    const self = Object.assign({}, band.make(_thing, _d, _band));
 
     return self;
 };
