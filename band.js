@@ -111,7 +111,7 @@ const make = (_thing, _d, _band) => {
 
         if (!_.is.Empty(changed) && paramd.notify) {
             process.nextTick(function() {
-                _thing.emit(_band, _thing, changed);
+                _thing.emit(_band, _thing, _band, changed);
             });
         }
 
