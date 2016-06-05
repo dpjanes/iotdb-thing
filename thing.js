@@ -28,15 +28,17 @@ const util = require('util');
 const iotdb = require("iotdb");
 const _ = iotdb._;
 
-// const InputBand = require("./istate").Band;
-// const OutputBand = require("./ostate").Band;
-// const ModelBand = require("./model").Band;
-const meta = require("./meta");
-// const ConnectionBand = require("./connection").Band;
+const band = require("./band");
+const band_meta = require("./band_meta");
+const band_model = require("./band_model");
+const band_istate = require("./band_istate");
+const band_ostate = require("./band_ostate");
+const band_connection = require("./band_connection");
 
-const make_thing = (initd) => {
+const make = (initd) => {
     const self = Object.assign({}, events.EventEmitter.prototype);
 
+    // variables
     const _initd = _.d.compose.shallow(initd, {
         model: {},
         istate: {},
@@ -46,12 +48,28 @@ const make_thing = (initd) => {
     });
 
     const _bandd = {};
-    // _bandd.model = new ModelBand(self, _initd.model);
-    _bandd.meta = meta.make(self, _initd.meta);
-    // _bandd.connection = new ConnectionBand(self, _initd.connection);
-    // _bandd.istate = new InputBand(self, _initd.istate);
-    // _bandd.ostate = new OutputBand(self, _initd.ostate);
+
+    // make a band object for every band in initd
+    _.mapObject(_initd, ( bvalue, bkey ) => {
+        if (!_.is.Object(bvalue)) {
+            return;
+        }
+
+        let band_make = band.make;
+
+        switch (bkey) {
+        case "meta": band_make = band_meta.make; break;
+        case "model": band_make = band_model.make; break;
+        case "istate": band_make = band_istate.make; break;
+        case "ostate": band_make = band_ostate.make; break;
+        case "connection": band_make = band_connection.make; break;
+        }
+
+        _bandd[bkey] = band_make(self, bvalue, bkey);
+
+    });
     
+    // interface
     self.band = (band_name) => {
         return _bandd[band_name] || null;
     };
@@ -74,10 +92,11 @@ const make_thing = (initd) => {
 /**
  *  API
  */
-exports.make_thing = make_thing;
+exports.make = make;
 
+/*
 
-const thing_1 = make_thing()
+const thing_1 = make()
 thing_1.on("meta", (thing, changed) => {
     console.log("+", "thing/meta changed", changed);
 });
@@ -86,3 +105,4 @@ meta_1.set("schema:name", "David");
 meta_1.set("schema:age", "51");
 
 console.log(meta_1.state());
+*/

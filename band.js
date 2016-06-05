@@ -42,6 +42,14 @@ const make = (_thing, _d, _band) => {
         });
     };
 
+    self.thing = function() {
+        return _thing;
+    };
+
+    self.band = function() {
+        return _band;
+    };
+
     self.get = function(key, otherwise) {
         return _.d.get(_d, key, otherwise);
     };

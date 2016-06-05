@@ -1,5 +1,5 @@
 /*
- *  output.js
+ *  ostate.js
  *
  *  David Janes
  *  IOTDB
@@ -27,13 +27,13 @@ const _ = iotdb._;
 
 const band = require("./band");
 
-const Band = function (thing, d) {
-    this._init(thing, d, "ostate");
-};
+const make = (_thing, _d, _band) => {
+    const self = Object.assign({}, band.make(_thing, _d, _band || "ostate"));
 
-Band.prototype = new band.Band();
+    return self;
+};
 
 /**
  *  API
  */
-exports.Band = Band;
+exports.make = make;

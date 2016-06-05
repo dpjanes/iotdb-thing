@@ -3,7 +3,7 @@
  *
  *  David Janes
  *  IOTDB
- *  2016-06-02
+ *  2016-02-13
  *
  *  Copyright [2013-2016] [David P. Janes]
  *
@@ -27,14 +27,13 @@ const _ = iotdb._;
 
 const band = require("./band");
 
-const connection = function (thing, d) {
-    const self = Object.assign({}, events.EventEmitter.prototype);
-    this._init(thing, d, "connection");
-};
+const make = (_thing, _d, _band) => {
+    const self = Object.assign({}, band.make(_thing, _d, _band || "connection"));
 
-Band.prototype = new band.Band();
+    return self;
+};
 
 /**
  *  API
  */
-exports.Band = Band;
+exports.make = make;
