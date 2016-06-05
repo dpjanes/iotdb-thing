@@ -133,7 +133,7 @@ describe("band - generic operations", function() {
 
                     thing_1.on("scratch", function(_thing, _band, _changed) {
                         assert.strictEqual(_thing, thing_1);
-                        assert.strictEqual(_band, "scratch");
+                        assert.strictEqual(_band, scratch_1);
 
                         assert.deepEqual(_changed, d);
                         done();

@@ -29,7 +29,7 @@ const iotdb = require("iotdb");
 const errors = require("iotdb-errors");
 const _ = iotdb._;
 
-const make = (_thing, _d, _band) => {
+const make = (_thing, _d, _band_name) => {
     const self = Object.assign({}, events.EventEmitter.prototype);
 
     let _timestamp = _.timestamp.epoch();
@@ -48,8 +48,8 @@ const make = (_thing, _d, _band) => {
         return _thing;
     };
 
-    self.band = function() {
-        return _band;
+    self.band_name = function() {
+        return _band_name;
     };
 
     self.get = function(key, otherwise) {
@@ -124,7 +124,7 @@ const make = (_thing, _d, _band) => {
             
             if (paramd.notify) {
                 process.nextTick(function() {
-                    _thing.emit(_band, _thing, _band, changed);
+                    _thing.emit(_band_name, _thing, self, changed);
                 });
             }
 

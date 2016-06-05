@@ -35,35 +35,35 @@ describe("thing", function() {
                 const thing_1 = thing.make()
 
                 assert.ok(thing_1.band("meta"));
-                assert.strictEqual(thing_1.band("meta").band(), "meta");
+                assert.strictEqual(thing_1.band("meta").band_name(), "meta");
                 assert.strictEqual(thing_1.band("meta").thing(), thing_1);
             });
             it("has model band", function() {
                 const thing_1 = thing.make()
 
                 assert.ok(thing_1.band("model"));
-                assert.strictEqual(thing_1.band("model").band(), "model");
+                assert.strictEqual(thing_1.band("model").band_name(), "model");
                 assert.strictEqual(thing_1.band("model").thing(), thing_1);
             });
             it("has istate band", function() {
                 const thing_1 = thing.make()
 
                 assert.ok(thing_1.band("istate"));
-                assert.strictEqual(thing_1.band("istate").band(), "istate");
+                assert.strictEqual(thing_1.band("istate").band_name(), "istate");
                 assert.strictEqual(thing_1.band("istate").thing(), thing_1);
             });
             it("has ostate band", function() {
                 const thing_1 = thing.make()
 
                 assert.ok(thing_1.band("ostate"));
-                assert.strictEqual(thing_1.band("ostate").band(), "ostate");
+                assert.strictEqual(thing_1.band("ostate").band_name(), "ostate");
                 assert.strictEqual(thing_1.band("ostate").thing(), thing_1);
             });
             it("has connection band", function() {
                 const thing_1 = thing.make()
 
                 assert.ok(thing_1.band("connection"));
-                assert.strictEqual(thing_1.band("connection").band(), "connection");
+                assert.strictEqual(thing_1.band("connection").band_name(), "connection");
                 assert.strictEqual(thing_1.band("connection").thing(), thing_1);
             });
         });

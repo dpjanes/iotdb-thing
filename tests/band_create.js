@@ -38,7 +38,7 @@ describe("band", function() {
             const thing_1 = thing.make({ scratch: {} })
 
             assert.ok(thing_1.band("scratch"));
-            assert.strictEqual(thing_1.band("scratch").band(), "scratch");
+            assert.strictEqual(thing_1.band("scratch").band_name(), "scratch");
             assert.strictEqual(thing_1.band("scratch").thing(), thing_1);
         });
     });
