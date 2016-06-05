@@ -35,14 +35,19 @@ const TS_FUTURE = '2299-03-25T21:28:43.613Z';
 describe("band - generic operations", function() {
     describe("update / state", function() {
         describe("works", function() {
-            it("empty", function() {
+            it("empty", function(done) {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
 
                 const d = {};
-                const was_updated = scratch_1.update(d);
+                const update_promise = scratch_1.update(d);
                 assert.deepEqual(scratch_1.state(), d);
-                assert.ok(!was_updated);
+
+                update_promise
+                    .then((ud) => {
+                        assert.deepEqual(d, ud);
+                        done();
+                    });
             });
             it("one value", function() {
                 const thing_1 = thing.make({ scratch: {} })
@@ -51,9 +56,14 @@ describe("band - generic operations", function() {
                 const d = {
                     "name": "Sandy Bottom",
                 };
-                const was_updated = scratch_1.update(d);
+                const update_promise = scratch_1.update(d);
                 assert.deepEqual(scratch_1.state(), d);
-                assert.ok(was_updated);
+
+                update_promise
+                    .then((ud) => {
+                        assert.deepEqual(d, ud);
+                        done();
+                    });
             });
             it("multiple value", function() {
                 const thing_1 = thing.make({ scratch: {} })
@@ -63,19 +73,24 @@ describe("band - generic operations", function() {
                     "name": "Sponge Bob",
                     "friend": "Sandy Bottom",
                 };
-                const was_updated = scratch_1.update(d);
+                const update_promise = scratch_1.update(d);
                 assert.deepEqual(scratch_1.state(), d);
-                assert.ok(was_updated);
+
+                update_promise
+                    .then((ud) => {
+                        assert.deepEqual(d, ud);
+                        done();
+                    });
             });
             it("change value", function() {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
 
-                const was_updated_1 = scratch_1.update({
+                const update_promise_1 = scratch_1.update({
                     "name": "Sponge Bob",
                     "friend": "Sandy Bottom",
                 });
-                const was_updated_2 = scratch_1.update({
+                const update_promise_2 = scratch_1.update({
                     "another friend": "Patrick Star",
                 });
                 assert.deepEqual(scratch_1.state(), {
@@ -83,8 +98,8 @@ describe("band - generic operations", function() {
                     "friend": "Sandy Bottom",
                     "another friend": "Patrick Star",
                 });
-                assert.ok(was_updated_1);
-                assert.ok(was_updated_2);
+                // assert.ok(update_promise_1);
+                // assert.ok(update_promise_2);
             });
             it("ignores @ values", function() {
                 const thing_1 = thing.make({ scratch: {} })
@@ -95,11 +110,11 @@ describe("band - generic operations", function() {
                     "@else": "Blurg",
                     "name": "Sandy Bottom",
                 };
-                const was_updated = scratch_1.update(d);
+                const update_promise = scratch_1.update(d);
                 assert.deepEqual(scratch_1.state(), {
                     "name": "Sandy Bottom",
                 });
-                assert.ok(was_updated);
+                // assert.ok(update_promise);
             });
         });
         describe("emits", function() {
@@ -114,7 +129,7 @@ describe("band - generic operations", function() {
                         "name": "Sponge Bob",
                         "friend": "Sandy Bottom",
                     };
-                    const was_updated = scratch_1.update(d);
+                    const update_promise = scratch_1.update(d);
 
                     thing_1.on("scratch", function(_thing, _band, _changed) {
                         assert.strictEqual(_thing, thing_1);
@@ -123,7 +138,7 @@ describe("band - generic operations", function() {
                         assert.deepEqual(_changed, d);
                         done();
                     });
-                    assert.ok(was_updated);
+                    // assert.ok(update_promise);
                 });
                 it("can be turned off", function(done) {
                     const thing_1 = thing.make({ scratch: {} })
@@ -132,7 +147,7 @@ describe("band - generic operations", function() {
                     const d = {
                         "name": "Johnny",
                     };
-                    const was_updated = scratch_1.update(d, {
+                    const update_promise = scratch_1.update(d, {
                         notify: false,
                     });
 
@@ -141,7 +156,7 @@ describe("band - generic operations", function() {
                     });
 
                     assert.deepEqual(scratch_1.state(), d);
-                    assert.ok(was_updated);
+                    // assert.ok(update_promise);
                     process.nextTick(done);
                 });
             });

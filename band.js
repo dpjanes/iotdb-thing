@@ -26,6 +26,7 @@ const events = require('events');
 const util = require('util');
 
 const iotdb = require("iotdb");
+const errors = require("iotdb-errors");
 const _ = iotdb._;
 
 const make = (_thing, _d, _band) => {
@@ -38,7 +39,7 @@ const make = (_thing, _d, _band) => {
         var ud = {};
         ud[key] = value;
 
-        self.update(ud, {
+        return self.update(ud, {
             add_timestamp: true,
         });
     };
@@ -64,73 +65,75 @@ const make = (_thing, _d, _band) => {
     };
 
     self.update = function(updated, paramd) {
-        paramd = _.d.compose.shallow(paramd, {
-            add_timestamp: true,
-            check_timestamp: true,
-            notify: true,
-        });
+        return new Promise(( resolve, reject ) => {
+            paramd = _.d.compose.shallow(paramd, {
+                add_timestamp: true,
+                check_timestamp: true,
+                notify: true,
+            });
 
-        var utimestamp = updated["@timestamp"];
-        if (!utimestamp) {
-            // this allows multiple user actions in the same millisecond … very tricky
-            utimestamp =  _.timestamp.make();
-            if (_last_now === utimestamp) {
-                utimestamp = _.timestamp.advance(utimestamp);
+            var utimestamp = updated["@timestamp"];
+            if (!utimestamp) {
+                // this allows multiple user actions in the same millisecond … very tricky
+                utimestamp =  _.timestamp.make();
+                if (_last_now === utimestamp) {
+                    utimestamp = _.timestamp.advance(utimestamp);
+                }
+
+                _last_now = utimestamp;
             }
 
-            _last_now = utimestamp;
-        }
+            if (paramd.check_timestamp && !_.timestamp.check.values(_timestamp, utimestamp)) {
+                return reject(new errors.Timestamp());
+            }
 
-        if (paramd.check_timestamp && !_.timestamp.check.values(_timestamp, utimestamp)) {
-            return;
-        }
+            updated = _.d.transform(updated, {
+                key: function(key) {
+                    if (key.match(/^@/)) {
+                        return;
+                    }
 
-        updated = _.d.transform(updated, {
-            key: function(key) {
-                if (key.match(/^@/)) {
+                    return key;
+                },
+            });
+
+            const changed = {};
+
+            _.mapObject(updated, (uvalue, ukey) => {
+                var uvalue = updated[ukey];
+                var ovalue = _d[ukey];
+
+                if (_.is.Equal(uvalue, ovalue)) {
                     return;
                 }
 
-                return key;
-            },
-        });
+                _d[ukey] = uvalue;
+                _.d.set(changed, ukey, uvalue);
 
-        const changed = {};
+                if (paramd.notify) {
 
-        _.mapObject(updated, (uvalue, ukey) => {
-            var uvalue = updated[ukey];
-            var ovalue = _d[ukey];
+                    process.nextTick(function() {
+                        self.emit(ukey, uvalue);
+                    });
+                }
+            });
 
-            if (_.is.Equal(uvalue, ovalue)) {
-                return;
+            if (_.is.Empty(changed)) {
+                return resolve(changed);
             }
-
-            _d[ukey] = uvalue;
-            _.d.set(changed, ukey, uvalue);
-
+            
             if (paramd.notify) {
-
                 process.nextTick(function() {
-                    self.emit(ukey, uvalue);
+                    _thing.emit(_band, _thing, _band, changed);
                 });
             }
+
+            if (paramd.add_timestamp) {
+                _timestamp = utimestamp;
+            }
+
+            return resolve(changed);
         });
-
-        if (_.is.Empty(changed)) {
-            return false;
-        }
-        
-        if (paramd.notify) {
-            process.nextTick(function() {
-                _thing.emit(_band, _thing, _band, changed);
-            });
-        }
-
-        if (paramd.add_timestamp) {
-            _timestamp = utimestamp;
-        }
-
-        return true;
     };
 
     self.timestamp = function() {

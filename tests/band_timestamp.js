@@ -24,6 +24,7 @@
 
 const iotdb = require("iotdb");
 const _ = iotdb._;
+const errors = require("iotdb-errors");
 
 const assert = require("assert");
 const thing = require("../thing");
@@ -64,10 +65,10 @@ describe("band", function() {
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated = scratch_1.update({
+                const update_promise = scratch_1.update({
                     "name": "Joanne",
                 });
-                assert.ok(was_updated);
+                // assert.ok(update_promise);
                 assert.ok(scratch_1.timestamp() >= now, "timestamp did not advance");
             });
             it("does not update timestamp if no change", function() {
@@ -75,10 +76,10 @@ describe("band", function() {
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated = scratch_1.update({
+                const update_promise = scratch_1.update({
                     "name": "David",
                 });
-                assert.ok(!was_updated);
+                // assert.ok(!update_promise);
                 assert.strictEqual(scratch_1.timestamp(), _.timestamp.epoch());
             });
             it("optional don't update timestamp", function() {
@@ -86,7 +87,7 @@ describe("band", function() {
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated = scratch_1.update({
+                const update_promise = scratch_1.update({
                     "name": "Joanne",
                 }, {
                     add_timestamp: false,
@@ -99,7 +100,7 @@ describe("band", function() {
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated = scratch_1.update({
+                const update_promise = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "Joanne",
                 }, {
@@ -107,14 +108,14 @@ describe("band", function() {
                 });
                 assert.strictEqual(scratch_1.timestamp(), TS_OLD);
                 assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
-                assert.ok(was_updated);
+                // assert.ok(update_promise);
             });
             it("use @timestamp ... with option to ignore it!", function() {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated = scratch_1.update({
+                const update_promise = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "Joanne",
                 }, {
@@ -122,136 +123,154 @@ describe("band", function() {
                 });
                 assert.strictEqual(scratch_1.timestamp(), _.timestamp.epoch());
                 assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
-                assert.ok(was_updated);
+                // assert.ok(update_promise);
             });
             it("use @timestamp ( old, new ) - expect update", function() {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated_1 = scratch_1.update({
+                const update_promise_1 = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "Joanne",
                 }, {
                     add_timestamp: true,
                 });
-                const was_updated_2 = scratch_1.update({
+                const update_promise_2 = scratch_1.update({
                     "@timestamp": TS_NEW,
                     "name": "David",
                 }, {
                     add_timestamp: true,
                 });
-                assert.ok(was_updated_1);
-                assert.ok(was_updated_2);
+                // assert.ok(update_promise_1);
+                // assert.ok(update_promise_2);
                 assert.strictEqual(scratch_1.timestamp(), TS_NEW);
                 assert.deepEqual({ "name": "David" }, scratch_1.state());
             });
-            it("use @timestamp ( old, old ) - expect NO update", function() {
+            it("use @timestamp ( old, old ) - expect NO update", function(done) {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated_1 = scratch_1.update({
+                const update_promise_1 = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "Joanne",
                 }, {
                     add_timestamp: true,
                 });
-                const was_updated_2 = scratch_1.update({
+                const update_promise_2 = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "David",
                 }, {
                     add_timestamp: true,
                 });
-                assert.ok(was_updated_1);
-                assert.ok(!was_updated_2);
+                // assert.ok(update_promise_1);
+                // assert.ok(!update_promise_2);
                 assert.strictEqual(scratch_1.timestamp(), TS_OLD);
                 assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
+
+                update_promise_2
+                    .catch((error) => {
+                        assert.ok(error instanceof errors.Timestamp);
+                        done();
+                    });
             });
-            it("use @timestamp ( new, old ) - expect NO update", function() {
+            it("use @timestamp ( new, old ) - expect NO update", function(done) {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated_1 = scratch_1.update({
+                const update_promise_1 = scratch_1.update({
                     "@timestamp": TS_NEW,
                     "name": "Joanne",
                 }, {
                     add_timestamp: true,
                 });
-                const was_updated_2 = scratch_1.update({
+                const update_promise_2 = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "David",
                 }, {
                     add_timestamp: true,
                 });
-                assert.ok(was_updated_1);
-                assert.ok(!was_updated_2);
+                // assert.ok(update_promise_1);
+                // assert.ok(!update_promise_2);
                 assert.strictEqual(scratch_1.timestamp(), TS_NEW);
                 assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
+
+                update_promise_2
+                    .catch((error) => {
+                        assert.ok(error instanceof errors.Timestamp);
+                        done();
+                    });
             });
             it("use @timestamp ( new, null ) - expect update", function() {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated_1 = scratch_1.update({
+                const update_promise_1 = scratch_1.update({
                     "@timestamp": TS_NEW,
                     "name": "Joanne",
                 }, {
                     add_timestamp: true,
                 });
-                const was_updated_2 = scratch_1.update({
+                const update_promise_2 = scratch_1.update({
                     "name": "David",
                 }, {
                     add_timestamp: true,
                 });
-                assert.ok(was_updated_1);
-                assert.ok(was_updated_2);
+                // assert.ok(update_promise_1);
+                // assert.ok(update_promise_2);
                 assert.ok(scratch_1.timestamp() >= now, "timestamp did not advance");
                 assert.deepEqual({ "name": "David" }, scratch_1.state());
             });
-            it("use @timestamp ( null, new ) - expect NO update", function() {
+            it("use @timestamp ( null, new ) - expect NO update", function(done) {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated_1 = scratch_1.update({
+                const update_promise_1 = scratch_1.update({
                     "name": "Joanne",
                 }, {
                     add_timestamp: true,
                 });
-                const was_updated_2 = scratch_1.update({
+                const update_promise_2 = scratch_1.update({
                     "@timestamp": TS_NEW,
                     "name": "David",
                 }, {
                     add_timestamp: true,
                 });
-                assert.ok(was_updated_1);
-                assert.ok(!was_updated_2);
+                // assert.ok(update_promise_1);
+                // assert.ok(!update_promise_2);
                 assert.ok(scratch_1.timestamp() >= now, "timestamp did not advance");
                 assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
+
+                update_promise_2
+                    .catch((error) => {
+                        assert.ok(error instanceof errors.Timestamp);
+                        done();
+                    });
             });
             it("use @timestamp ( old, old ) with NO CHECK - expect update", function() {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated_1 = scratch_1.update({
+                const update_promise_1 = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "Joanne",
                 }, {
                     add_timestamp: true,
                 });
-                const was_updated_2 = scratch_1.update({
+                const update_promise_2 = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "David",
                 }, {
                     add_timestamp: true,
                     check_timestamp: false,
                 });
-                assert.ok(was_updated_1);
-                assert.ok(was_updated_2);
+                // assert.ok(update_promise_1);
+                // assert.ok(update_promise_2);
                 assert.strictEqual(scratch_1.timestamp(), TS_OLD);
                 assert.deepEqual({ "name": "David" }, scratch_1.state());
             });
@@ -260,21 +279,21 @@ describe("band", function() {
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated_1 = scratch_1.update({
+                const update_promise_1 = scratch_1.update({
                     "@timestamp": TS_NEW,
                     "name": "Joanne",
                 }, {
                     add_timestamp: true,
                 });
-                const was_updated_2 = scratch_1.update({
+                const update_promise_2 = scratch_1.update({
                     "@timestamp": TS_OLD,
                     "name": "David",
                 }, {
                     add_timestamp: true,
                     check_timestamp: false,
                 });
-                assert.ok(was_updated_1);
-                assert.ok(was_updated_2);
+                // assert.ok(update_promise_1);
+                // assert.ok(update_promise_2);
                 assert.strictEqual(scratch_1.timestamp(), TS_OLD);
                 assert.deepEqual({ "name": "David" }, scratch_1.state());
             });
@@ -283,20 +302,20 @@ describe("band", function() {
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
 
-                const was_updated_1 = scratch_1.update({
+                const update_promise_1 = scratch_1.update({
                     "name": "Joanne",
                 }, {
                     add_timestamp: true,
                 });
-                const was_updated_2 = scratch_1.update({
+                const update_promise_2 = scratch_1.update({
                     "@timestamp": TS_NEW,
                     "name": "David",
                 }, {
                     add_timestamp: true,
                     check_timestamp: false,
                 });
-                assert.ok(was_updated_1);
-                assert.ok(was_updated_2);
+                // assert.ok(update_promise_1);
+                // assert.ok(update_promise_2);
                 assert.strictEqual(scratch_1.timestamp(), TS_NEW);
                 assert.deepEqual({ "name": "David" }, scratch_1.state());
             });
