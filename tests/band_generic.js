@@ -153,6 +153,26 @@ describe("band - generic operations", function() {
                     done();
                 });
             });
+            it("does emit two changes", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                let count = 0;
+
+                thing_1.on("scratch", function(_thing, _band, _changed) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, "scratch");
+
+                    count++;
+                });
+
+                scratch_1.set("name", "Sandy");
+                scratch_1.set("name", "Bottom");
+
+                process.nextTick(function() {
+                    assert.strictEqual(count, 2);
+                    done();
+                });
+            });
         });
     });
 });
