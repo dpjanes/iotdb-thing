@@ -56,6 +56,16 @@ const a_actuator = {
 
 describe("thing", function() {
     describe("attribute", function() {
+        it("bad", function() {
+            const thing_1 = thing.make({
+                model: model_document,
+            });
+
+            const got = thing_1.attribute(null);
+            const expect = null;
+
+            assert.deepEqual(got, expect);
+        });
         it("temperature", function() {
             const thing_1 = thing.make({
                 model: model_document,
