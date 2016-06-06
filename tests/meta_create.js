@@ -39,34 +39,4 @@ describe("meta", function() {
             assert.strictEqual(meta_1.thing(), thing_1);
         });
     });
-    describe("set", function() {
-        /*
-        it("schema:name", function(done) {
-            const thing_1 = thing.make();
-            const meta_1 = thing_1.band("meta");
-
-            const promise_1 = meta_1.set("schema:name", "David");
-
-            promise_1.then((ud) => {
-                assert.deepEqual(ud, { "schema:name": "David" });
-                done();
-            });
-        });
-        */
-        it("expanded(schema:name)", function(done) {
-            const thing_1 = thing.make();
-            const meta_1 = thing_1.band("meta");
-
-            const promise_1 = meta_1.set(_.ld.expand("schema:name"), "David");
-
-            promise_1.then((ud) => {
-                console.log("HERE:RESULT", ud);
-                assert.deepEqual(ud, { "schema:name": "David" });
-                done();
-            }).catch((error) =>{
-                done(error);
-            });
-        });
-
-    });
 });
