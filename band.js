@@ -127,9 +127,7 @@ const make = (_thing, _d, _band_name) => {
         });
     };
 
-    self.update = function(updated, paramd) {
-        return _update(helpers.unroll(updated), paramd);
-    };
+    self.update = (updated, paramd) => _update(self._unroll(updated), paramd);
 
     self.thing = () => _thing;
     self.band_name = () => _band_name;
@@ -147,6 +145,7 @@ const make = (_thing, _d, _band_name) => {
     self._put = (d, key, value) => _.d.set(d, key, value);
     self._transform_key = (key) => key;
     self._transform_value = (key, value) => value;
+    self._unroll = helpers.unroll;
 
     // emitter section
     self.emitter = () => _emitter;
