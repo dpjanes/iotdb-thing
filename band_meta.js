@@ -37,7 +37,14 @@ const make = (_thing, _d, _band) => {
     self._put = helpers.flat_put;
 
     self._transform_key = (key) => _.ld.compact(key);
-    self._transform_value = (key, value) => value;
+    self._transform_value = (key, value) => {
+        switch (key) {
+            case "schema:name": return value;
+            case "schema:description": return value;
+            case "iot:help": return value;
+            default: return _.ld.compact(value);
+        }
+    }
 
     return self;
 };

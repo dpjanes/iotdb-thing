@@ -116,8 +116,11 @@ const make = (_thing, _d, _band_name) => {
     };
 
     self.set = function(key, value) {
-        var ud = {};
-        ud[self._transform_key(key)] = self._transform_value(key, value);
+        const tkey = self._transform_key(key);
+        const tvalue = self._transform_value(tkey, value);
+
+        const ud = {};
+        ud[tkey] = tvalue;
 
         return _update(ud, {
             add_timestamp: true,
