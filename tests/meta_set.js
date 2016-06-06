@@ -96,6 +96,62 @@ describe("meta", function() {
                     done(error);
                 });
             });
+            it("value number", function(done) {
+                const thing_1 = thing.make();
+                const meta_1 = thing_1.band("meta");
+
+                const promise_1 = meta_1.set("iot:purpose", 12);
+
+                promise_1.then((ud) => {
+                    assert.deepEqual(ud, { "iot:purpose": 12 });
+                    done();
+                }).catch((error) =>{
+                    done(error);
+                });
+            });
+            it("value boolean", function(done) {
+                const thing_1 = thing.make();
+                const meta_1 = thing_1.band("meta");
+
+                const promise_1 = meta_1.set("iot:purpose", false);
+
+                promise_1.then((ud) => {
+                    assert.deepEqual(ud, { "iot:purpose": false });
+                    done();
+                }).catch((error) =>{
+                    done(error);
+                });
+            });
+        });
+        describe("url values", function() {
+            it("iot:purpose", function(done) {
+                const thing_1 = thing.make();
+                const meta_1 = thing_1.band("meta");
+
+                const promise_1 = meta_1.set("iot:purpose", "http://schema.org/something" );
+
+                promise_1.then((ud) => {
+                    assert.deepEqual(ud, { "iot:purpose": "schema:something" });
+                    done();
+                }).catch((error) =>{
+                    done(error);
+                });
+            });
+        });
+        describe("array values", function() {
+            it("iot:purpose", function(done) {
+                const thing_1 = thing.make();
+                const meta_1 = thing_1.band("meta");
+
+                const promise_1 = meta_1.set("iot:purpose", [ "http://schema.org/something", "schema:something-else", ] );
+
+                promise_1.then((ud) => {
+                    assert.deepEqual(ud, { "iot:purpose": [ "schema:something", "schema:something-else" ] });
+                    done();
+                }).catch((error) =>{
+                    done(error);
+                });
+            });
         });
 
     });
