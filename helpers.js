@@ -29,12 +29,15 @@ const _ = iotdb._;
  *  Convert a dictionary into a "unrolled" dictionary,
  *  where the keys are paths into the original dictionary
  */
-const unroll = (d) => {
-    const rd = {};
+const unroll_deep = (d) => {
+    const rds = [];
 
     const _unroller = (o, path) => {
         if (_.is.Array(o) || !_.is.Object(o)) {
-            rd[path.join("/")] = o;
+            rds.push({
+                key: path.join("/"),
+                value: o,
+            })
             return;
         }
 
@@ -48,7 +51,20 @@ const unroll = (d) => {
 
     _unroller(d, []);
 
-    return rd;
+    return rds;
+};
+
+const unroll_shallow = (d) => {
+    const rds = [];
+
+    _.mapObject(d, ( _value, _key ) => {
+        rds.push({
+            key: _key,
+            value: _value,
+        })
+    });
+
+    return rds;
 };
 
 const flat_get = function(d, key, otherwise) {
@@ -91,7 +107,9 @@ const flat_put = function(d, key, value) {
 /**
  *  API
  */
-exports.unroll = unroll;
+exports.unroll_deep = unroll_deep;
+exports.unroll_shallow = unroll_shallow;
+
 exports.flat_get = flat_get;
 exports.flat_first = flat_first;
 exports.flat_list = flat_list;

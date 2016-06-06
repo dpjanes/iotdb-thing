@@ -38,7 +38,7 @@ const make = (_thing, _d, _band_name) => {
     let _pending = {};
     let _emitter = new events.EventEmitter();
 
-    const _update = function(updated, paramd) {
+    const _update = function(uds, paramd) {
         return new Promise(( resolve, reject ) => {
             paramd = _.d.compose.shallow(paramd, {
                 add_timestamp: true,
@@ -46,7 +46,7 @@ const make = (_thing, _d, _band_name) => {
                 notify: true,
             });
 
-            var utimestamp = updated["@timestamp"];
+            var utimestamp = paramd.timestamp;
             if (!utimestamp) {
                 // this allows multiple user actions in the same millisecond … very tricky
                 utimestamp =  _.timestamp.make();
@@ -61,32 +61,25 @@ const make = (_thing, _d, _band_name) => {
                 return reject(new errors.Timestamp());
             }
 
-            updated = _.d.transform(updated, {
-                key: function(key) {
-                    if (key.match(/^@/)) {
-                        return;
-                    }
-
-                    return key;
-                },
-            });
-
             const changed = {};
 
-            _.mapObject(updated, (uvalue, ukey) => {
-                var uvalue = updated[ukey];
-                var ovalue = _d[ukey];
-
-                if (_.is.Equal(uvalue, ovalue)) {
+            uds.map(function(ud) {
+                if (ud.key.match(/^@/)) {
                     return;
                 }
 
-                self._put(_d, ukey, uvalue);
-                self._put(changed, ukey, uvalue);
+                var ovalue = _d[ud.key];
+
+                if (_.is.Equal(ud.value, ovalue)) {
+                    return;
+                }
+
+                self._put(_d, ud.key, ud.value);
+                self._put(changed, ud.key, ud.value);
 
                 if (paramd.notify) {
                     process.nextTick(function() {
-                        _emitter.emit(ukey, _thing, self, uvalue);
+                        _emitter.emit(ud.key, _thing, self, ud.value);
                     });
                 }
             });
@@ -119,15 +112,15 @@ const make = (_thing, _d, _band_name) => {
         const tkey = self._transform_key(key);
         const tvalue = self._transform_value(tkey, value);
 
-        const ud = {};
-        ud[tkey] = tvalue;
-
-        return _update(ud, {
+        return _update([ { key: tkey, value: tvalue } ], {
             add_timestamp: true,
         });
     };
 
-    self.update = (updated, paramd) => _update(self._unroll(updated), paramd);
+    self.update = (updated, paramd) => _update(
+        self._unroll(updated), 
+        _.d.compose.shallow({ timestamp: updated["@timestamp"] }, paramd)
+    );
 
     self.thing = () => _thing;
     self.band_name = () => _band_name;
@@ -145,7 +138,7 @@ const make = (_thing, _d, _band_name) => {
     self._put = (d, key, value) => _.d.set(d, key, value);
     self._transform_key = (key) => key;
     self._transform_value = (key, value) => value;
-    self._unroll = helpers.unroll;
+    self._unroll = helpers.unroll_deep;
 
     // emitter section
     self.emitter = () => _emitter;

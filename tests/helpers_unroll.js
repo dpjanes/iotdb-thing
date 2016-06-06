@@ -26,56 +26,56 @@ const assert = require("assert");
 const helpers = require("../helpers");
 
 describe("helpers", function() {
-    describe("unroll", function() {
+    describe("unroll_deep", function() {
         it("empty", function() {
             const ind = {};
-            const expectd = {};
+            const expectds = [];
 
-            const gotd = helpers.unroll(ind);
-            assert.deepEqual(expectd, gotd);
+            const gotd = helpers.unroll_deep(ind);
+            assert.deepEqual(expectds, gotd);
         });
         it("one level", function() {
             const ind = {
-                a: 1,
-                b: "2",
-                c: "hello",
+                "a": 1,
+                "b": "2", 
+                "c": "hello", 
             };
-            const expectd = {
-                a: 1,
-                b: "2",
-                c: "hello",
-            };
+            const expectds = [
+                { key: "a", value: 1, },
+                { key: "b", value: "2", },
+                { key: "c", value: "hello", },
+            ];
 
-            const gotd = helpers.unroll(ind);
-            assert.deepEqual(expectd, gotd);
+            const gotd = helpers.unroll_deep(ind);
+            assert.deepEqual(expectds, gotd);
         });
         it("multi level", function() {
             const ind = {
-                a: "hello",
-                b: {
+                "a": "hello", 
+                "b": {
                     "x": "world",
                     "y": "!",
-                }
+                },
             };
-            const expectd = {
-                a: "hello",
-                "b/x": "world",
-                "b/y": "!",
-            };
+            const expectds = [
+                { key: "a", value: "hello", },
+                { key: "b/x", value: "world", },
+                { key: "b/y", value: "!", },
+            ];
 
-            const gotd = helpers.unroll(ind);
-            assert.deepEqual(expectd, gotd);
+            const gotd = helpers.unroll_deep(ind);
+            assert.deepEqual(expectds, gotd);
         });
         it("array", function() {
             const ind = {
                 a: [ 1, {}, 3],
             };
-            const expectd = {
-                a: [ 1, {}, 3],
-            };
+            const expectds = [
+                { key: "a", value: [ 1, {}, 3], },
+            ];
 
-            const gotd = helpers.unroll(ind);
-            assert.deepEqual(expectd, gotd);
+            const gotd = helpers.unroll_deep(ind);
+            assert.deepEqual(expectds, gotd);
         });
     })
 });
