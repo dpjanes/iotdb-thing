@@ -35,17 +35,9 @@ const make = (_thing, _d, _band) => {
     self._first = helpers.flat_first;
     self._list = helpers.flat_get;
     self._put = helpers.flat_put;
-    self._unroll = (ud) => _.ld.compact(helpers.unroll_shallow(ud));
+    self._unroll = (ud) => helpers.unroll_shallow(_.ld.compact(ud));
 
     self._transform_key = (key) => _.ld.compact(key);
-    self._transform_value = (key, value) => {
-        switch (key) {
-            case "schema:name": return value;
-            case "schema:description": return value;
-            case "iot:help": return value;
-            default: return _.ld.compact(value);
-        }
-    }
 
     return self;
 };

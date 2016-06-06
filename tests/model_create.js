@@ -31,6 +31,9 @@ const _ = iotdb._;
 const assert = require("assert");
 const thing = require("../thing");
 
+const model_file = path.join(__dirname, './things/thing-basement-heater/model');
+const model_document = JSON.parse(fs.readFileSync(model_file, 'utf-8'));
+
 describe("model", function() {
     describe("create", function() {
         it("default", function() {
@@ -42,8 +45,6 @@ describe("model", function() {
             assert.strictEqual(model_1.thing(), thing_1);
         });
         it("initialized", function() {
-            const model_file = path.join(__dirname, './things/thing-basement-heater/model');
-            const model_document = JSON.parse(fs.readFileSync(model_file, 'utf-8'));
             const thing_1 = thing.make({
                 model: model_document,
             });
@@ -61,8 +62,6 @@ describe("model", function() {
             const thing_1 = thing.make();
             const model_1 = thing_1.band("model");
 
-            const model_file = path.join(__dirname, './things/thing-basement-heater/model');
-            const model_document = JSON.parse(fs.readFileSync(model_file, 'utf-8'));
             model_1.update(model_document);
 
             assert.ok(model_1);
@@ -75,15 +74,39 @@ describe("model", function() {
             const thing_1 = thing.make();
             const model_1 = thing_1.band("model");
 
-            const model_file = path.join(__dirname, './things/thing-basement-heater/model');
-            const model_document = JSON.parse(fs.readFileSync(model_file, 'utf-8'));
             model_1.update(_.ld.expand(model_document));
 
             assert.ok(model_1);
             assert.strictEqual(model_1.band_name(), "model");
             assert.strictEqual(model_1.thing(), thing_1);
+        });
+        it("on", function(done) {
+            const thing_1 = thing.make();
+            const model_1 = thing_1.band("model");
 
-            // console.log(model_1.state());
+            model_1.on("schema:name", function(_thing, _band, _value) {
+                assert.strictEqual(_value, "Generic Heater");
+                done();
+            });
+            model_1.update(_.ld.expand(model_document));
+
+            assert.ok(model_1);
+            assert.strictEqual(model_1.band_name(), "model");
+            assert.strictEqual(model_1.thing(), thing_1);
+        });
+        it("on (expanded)", function(done) {
+            const thing_1 = thing.make();
+            const model_1 = thing_1.band("model");
+
+            model_1.on(_.ld.expand("schema:name"), function(_thing, _band, _value) {
+                assert.strictEqual(_value, "Generic Heater");
+                done();
+            });
+            model_1.update(_.ld.expand(model_document));
+
+            assert.ok(model_1);
+            assert.strictEqual(model_1.band_name(), "model");
+            assert.strictEqual(model_1.thing(), thing_1);
         });
     });
 });

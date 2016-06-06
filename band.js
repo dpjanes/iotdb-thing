@@ -99,10 +99,10 @@ const make = (_thing, _d, _band_name) => {
     };
 
     self.set = (key, value) => {
-        const tkey = self._transform_key(key);
-        const tvalue = self._transform_value(tkey, value);
+        const updated = {};
+        updated[key] = value;
 
-        return _update([ { key: tkey, value: tvalue } ]);
+        return _update(self._unroll(updated))
     };
 
     self.update = (updated, paramd) => _update(
@@ -129,7 +129,6 @@ const make = (_thing, _d, _band_name) => {
     self._list = (d, key, otherwise) => _.d.list(d, key, otherwise);
     self._put = (d, key, value) => _.d.set(d, key, value);
     self._transform_key = (key) => key;
-    self._transform_value = (key, value) => value;
     self._unroll = helpers.unroll_deep;
 
     return self;
