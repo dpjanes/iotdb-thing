@@ -37,7 +37,7 @@ const make = (_thing, _d, _band_name) => {
     let _pending = {};
     let _emitter = new events.EventEmitter();
 
-    const _update = function(uds, paramd) {
+    const _update = (uds, paramd) => {
         return new Promise(( resolve, reject ) => {
             paramd = _.d.compose.shallow(paramd, {
                 add_timestamp: true,
@@ -98,13 +98,11 @@ const make = (_thing, _d, _band_name) => {
         });
     };
 
-    self.set = function(key, value) {
+    self.set = (key, value) => {
         const tkey = self._transform_key(key);
         const tvalue = self._transform_value(tkey, value);
 
-        return _update([ { key: tkey, value: tvalue } ], {
-            add_timestamp: true,
-        });
+        return _update([ { key: tkey, value: tvalue } ]);
     };
 
     self.update = (updated, paramd) => _update(
@@ -121,6 +119,10 @@ const make = (_thing, _d, _band_name) => {
     self.list = (key, otherwise) => self._list(_d, self._transform_key(key), otherwise);
     self.first = (key, otherwise) => self._first(_d, self._transform_key(key), otherwise);
 
+    // emitter section
+    self.emitter = () => _emitter;
+    self.on = (key, listener) => _emitter.on(self._transform_key(key), listener);
+
     // dictionary manipulation - only for internal and descendents
     self._get = (d, key, otherwise) => _.d.get(d, key, otherwise);
     self._first = (d, key, otherwise) => _.d.first(d, key, otherwise);
@@ -129,10 +131,6 @@ const make = (_thing, _d, _band_name) => {
     self._transform_key = (key) => key;
     self._transform_value = (key, value) => value;
     self._unroll = helpers.unroll_deep;
-
-    // emitter section
-    self.emitter = () => _emitter;
-    self.on = (key, listener) => _emitter.on(self._transform_key(key), listener);
 
     return self;
 };
