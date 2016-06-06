@@ -30,10 +30,6 @@ const band = require("./band");
 const make = (_thing, _d, _band) => {
     const self = band.make(_thing, _d, _band);
 
-    self._key = function(key) {
-        return key;
-    };
-
     return self;
 };
 
