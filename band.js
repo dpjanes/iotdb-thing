@@ -36,6 +36,7 @@ const make = (_thing, _d, _band_name) => {
 
     let _timestamp = _.timestamp.epoch();
     let _last_now = null;
+    let _pending = {};
 
     const _update = function(updated, paramd) {
         return new Promise(( resolve, reject ) => {
@@ -95,8 +96,14 @@ const make = (_thing, _d, _band_name) => {
             }
             
             if (paramd.notify) {
+                // thing-level notifications are batched on ticks
+                _pending = _.d.compose.shallow(_pending, changed);
+
                 process.nextTick(function() {
-                    _thing.emit(_band_name, _thing, self, _.keys(changed));
+                    const updated_keys = _.keys(_pending);
+                    _pending = {};
+
+                    _thing.emit(_band_name, _thing, self, updated_keys);
                 });
             }
 

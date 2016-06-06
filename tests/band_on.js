@@ -161,7 +161,23 @@ describe("band", function() {
                     done();
                 });
             });
-            it("emits only the latest change in order", function(done) {
+            it("batches changes on tick - one tick", function(done) {
+                const thing_1 = thing.make({ scratch: {} })
+                const scratch_1 = thing_1.band("scratch");
+                let count = 0;
+
+                thing_1.on("scratch", function(_thing, _band, _changed) {
+                    assert.strictEqual(_thing, thing_1);
+                    assert.strictEqual(_band, scratch_1);
+
+                    assert.deepEqual(_changed, [ "age", "name" ]);
+                    done();
+                });
+
+                scratch_1.set("age", 52);
+                scratch_1.set("name", "John");
+            });
+            it("batches changes on tick - two ticks", function(done) {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 let count = 0;
@@ -171,15 +187,20 @@ describe("band", function() {
                     assert.strictEqual(_band, scratch_1);
 
                     if (count++ === 0) {
-                        assert.deepEqual(_changed, [ "age" ]);
+                        assert.deepEqual(_changed, [ "age", ]);
                     } else {
                         assert.deepEqual(_changed, [ "name" ]);
                         done();
                     }
                 });
 
-                scratch_1.set("age", 52);
-                scratch_1.set("name", "John");
+                process.nextTick(() => {
+                    scratch_1.set("age", 52);
+
+                    process.nextTick(() => {
+                        scratch_1.set("name", "John");
+                    });
+                });
             });
             it("doesn't emit no change", function(done) {
                 const thing_1 = thing.make({ scratch: {} })
