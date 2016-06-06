@@ -78,13 +78,13 @@ Get a particular value semantically. `first` and `list`
 guarentee a non-array or an array respectively, `get`
 just returns what is there
 
-    const is_on = istate_1.get(":on")
+    const is_on_get = istate_1.get(":on")
     const is_on_first = istate_1.first(":on")
     const is_on_list = istate_1.list(":on")
 
 Get a particular value non-semantically
 
-    const is_on = istate_1.get("powered")
+    const is_on_get = istate_1.get("powered")
     const is_on_first = istate_1.first("powered")
     const is_on_list = istate_1.list("powered")
 

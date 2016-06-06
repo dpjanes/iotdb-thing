@@ -23,6 +23,7 @@
 "use strict";
 
 const fs = require("fs");
+const path = require("path");
 
 const iotdb = require("iotdb");
 const _ = iotdb._;
@@ -41,8 +42,10 @@ describe("model", function() {
             assert.strictEqual(model_1.thing(), thing_1);
         });
         it("initialized", function() {
+            const model_file = path.join(__dirname, './things/thing-basement-heater/model');
+            const model_document = JSON.parse(fs.readFileSync(model_file, 'utf-8'));
             const thing_1 = thing.make({
-                model: JSON.parse(fs.readFileSync('./things/thing-basement-heater/model', 'utf-8')),
+                model: model_document,
             });
             const model_1 = thing_1.band("model");
 
@@ -50,31 +53,37 @@ describe("model", function() {
             assert.strictEqual(model_1.band_name(), "model");
             assert.strictEqual(model_1.thing(), thing_1);
 
-            console.log(model_1.state());
+            // console.log(model_1.state());
         });
     });
     describe("update", function() {
         it("load from file", function() {
             const thing_1 = thing.make();
             const model_1 = thing_1.band("model");
-            model_1.update(JSON.parse(fs.readFileSync('./things/thing-basement-heater/model', 'utf-8')));
+
+            const model_file = path.join(__dirname, './things/thing-basement-heater/model');
+            const model_document = JSON.parse(fs.readFileSync(model_file, 'utf-8'));
+            model_1.update(model_document);
 
             assert.ok(model_1);
             assert.strictEqual(model_1.band_name(), "model");
             assert.strictEqual(model_1.thing(), thing_1);
 
-            console.log(model_1.state());
+            // console.log(model_1.state());
         });
         it("load from file (expanded)", function() {
             const thing_1 = thing.make();
             const model_1 = thing_1.band("model");
-            model_1.update(_.ld.expand(JSON.parse(fs.readFileSync('./things/thing-basement-heater/model', 'utf-8'))));
+
+            const model_file = path.join(__dirname, './things/thing-basement-heater/model');
+            const model_document = JSON.parse(fs.readFileSync(model_file, 'utf-8'));
+            model_1.update(_.ld.expand(model_document));
 
             assert.ok(model_1);
             assert.strictEqual(model_1.band_name(), "model");
             assert.strictEqual(model_1.thing(), thing_1);
 
-            console.log(model_1.state());
+            // console.log(model_1.state());
         });
     });
 });
