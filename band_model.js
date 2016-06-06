@@ -25,10 +25,16 @@
 const iotdb = require("iotdb");
 const _ = iotdb._;
 
+const helpers = require("./helpers");
 const band = require("./band");
 
 const make = (_thing, _d, _band) => {
     const self = band.make(_thing, _d, _band);
+
+    self._get = helpers.flat_get;
+    self._first = helpers.flat_first;
+    self._list = helpers.flat_get;
+    self._put = helpers.flat_put;
 
     return self;
 };
