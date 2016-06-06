@@ -31,12 +31,13 @@ const band = require("./band");
 const make = (_thing, _d, _band) => {
     const self = band.make(_thing, _d, _band);
 
-    self.get = (key, otherwise) => helpers.flat_get(_d, self._key(key), otherwise);
-    self.first = (key, otherwise) => helpers.flat_first(_d, self._key(key), otherwise);
-    self.list = (key, otherwise) => helpers.flat_get(_d, self._key(key), otherwise);
-    self._put = (d, key, value) => helpers.flat_put(d, self._key(key), value);
-    self._key = (key) => _.ld.compact(key);
-    self._value = (key, value) => value;
+    self._get = helpers.flat_get;
+    self._first = helpers.flat_first;
+    self._list = helpers.flat_get;
+    self._put = helpers.flat_put;
+
+    self._transform_key = (key) => _.ld.compact(key);
+    self._transform_value = (key, value) => value;
 
     return self;
 };

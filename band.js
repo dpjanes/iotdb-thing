@@ -117,7 +117,7 @@ const make = (_thing, _d, _band_name) => {
 
     self.set = function(key, value) {
         var ud = {};
-        ud[self._key(key)] = value;
+        ud[self._transform_key(key)] = self._transform_value(key, value);
 
         return _update(ud, {
             add_timestamp: true,
@@ -133,20 +133,21 @@ const make = (_thing, _d, _band_name) => {
     self.timestamp = () => _timestamp;
 
     self.state = () => _.d.clone.deep(_d);
-    self.get = (key, otherwise) => self._get(_d, key, otherwise);
-    self.list = (key, otherwise) => self._list(_d, key, otherwise);
-    self.first = (key, otherwise) => self._first(_d, key, otherwise);
+    self.get = (key, otherwise) => self._get(_d, self._transform_key(key), otherwise);
+    self.list = (key, otherwise) => self._list(_d, self._transform_key(key), otherwise);
+    self.first = (key, otherwise) => self._first(_d, self._transform_key(key), otherwise);
 
     // dictionary manipulation - only for internal and descendents
-    self._get = (d, key, otherwise) => _.d.get(d, self._key(key), otherwise);
-    self._first = (d, key, otherwise) => _.d.first(d, self._key(key), otherwise);
-    self._list = (d, key, otherwise) => _.d.list(d, self._key(key), otherwise);
+    self._get = (d, key, otherwise) => _.d.get(d, key, otherwise);
+    self._first = (d, key, otherwise) => _.d.first(d, key, otherwise);
+    self._list = (d, key, otherwise) => _.d.list(d, key, otherwise);
     self._put = (d, key, value) => _.d.set(d, key, value);
-    self._key = (key) => key;
+    self._transform_key = (key) => key;
+    self._transform_value = (key, value) => value;
 
     // emitter section
     self.emitter = () => _emitter;
-    self.on = (key, listener) => _emitter.on(self._key(key), listener);
+    self.on = (key, listener) => _emitter.on(self._transform_key(key), listener);
 
     return self;
 };
