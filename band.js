@@ -81,13 +81,8 @@ const make = (_thing, _d, _band_name) => {
                     return;
                 }
 
-                console.log("CALL PUT", self._put);
-                console.log("CALL PUT", ukey, uvalue);
-
                 self._put(_d, ukey, uvalue);
                 self._put(changed, ukey, uvalue);
-
-                console.log("D", _d, changed);
 
                 if (paramd.notify) {
                     process.nextTick(function() {
@@ -133,33 +128,14 @@ const make = (_thing, _d, _band_name) => {
         return _update(helpers.unroll(updated), paramd);
     };
 
-    self.thing = () => {
-        return _thing;
-    };
+    self.thing = () => _thing;
+    self.band_name = () => _band_name;
+    self.timestamp = () => _timestamp;
 
-    self.band_name = () => {
-        return _band_name;
-    };
-
-    self.get = function(key, otherwise) {
-        return _.d.get(_d, self._key(key), otherwise);
-    };
-
-    self.first = function(key, otherwise) {
-        return _.d.first(_d, self._key(key), otherwise);
-    };
-
-    self.list = function(key, otherwise) {
-        return _.d.list(_d, self._key(key), otherwise);
-    };
-
-    self.timestamp = () => {
-        return _timestamp;
-    };
-
-    self.state = () => {
-        return _.d.clone.deep(_d);
-    };
+    self.state = () => _.d.clone.deep(_d);
+    self.get = (key, otherwise) => self._get(_d, key, otherwise);
+    self.list = (key, otherwise) => self._list(_d, key, otherwise);
+    self.first = (key, otherwise) => self._first(_d, key, otherwise);
 
     // dictionary manipulation - only for internal and descendents
     self._get = (d, key, otherwise) => _.d.get(d, self._key(key), otherwise);
