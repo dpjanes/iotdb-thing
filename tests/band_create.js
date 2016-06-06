@@ -22,6 +22,8 @@
 
 "use strict";
 
+const events = require('events');
+
 const iotdb = require("iotdb");
 const _ = iotdb._;
 
@@ -36,6 +38,11 @@ describe("band", function() {
             assert.ok(thing_1.band("scratch"));
             assert.strictEqual(thing_1.band("scratch").band_name(), "scratch");
             assert.strictEqual(thing_1.band("scratch").thing(), thing_1);
+        });
+        it("emitter", function() {
+            const thing_1 = thing.make();
+
+            assert.ok(thing_1.band("istate").emitter() instanceof events.EventEmitter);
         });
     });
 });

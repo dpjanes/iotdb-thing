@@ -23,7 +23,6 @@
 "use strict";
 
 const events = require('events');
-const util = require('util');
 
 const iotdb = require("iotdb");
 const _ = iotdb._;
@@ -32,11 +31,12 @@ const errors = require("iotdb-errors");
 const helpers = require("./helpers");
 
 const make = (_thing, _d, _band_name) => {
-    const self = Object.assign({}, events.EventEmitter.prototype);
+    const self = Object.assign({});
 
     let _timestamp = _.timestamp.epoch();
     let _last_now = null;
     let _pending = {};
+    let _emitter = new events.EventEmitter();
 
     const _update = function(updated, paramd) {
         return new Promise(( resolve, reject ) => {
@@ -81,12 +81,17 @@ const make = (_thing, _d, _band_name) => {
                     return;
                 }
 
-                _.d.set(_d, ukey, uvalue);
-                _.d.set(changed, ukey, uvalue);
+                console.log("CALL PUT", self._put);
+                console.log("CALL PUT", ukey, uvalue);
+
+                self._put(_d, ukey, uvalue);
+                self._put(changed, ukey, uvalue);
+
+                console.log("D", _d, changed);
 
                 if (paramd.notify) {
                     process.nextTick(function() {
-                        self.emit(ukey, _thing, self, uvalue);
+                        _emitter.emit(ukey, _thing, self, uvalue);
                     });
                 }
             });
@@ -117,7 +122,7 @@ const make = (_thing, _d, _band_name) => {
 
     self.set = function(key, value) {
         var ud = {};
-        ud[key] = value;
+        ud[self._key(key)] = value;
 
         return _update(ud, {
             add_timestamp: true,
@@ -128,33 +133,44 @@ const make = (_thing, _d, _band_name) => {
         return _update(helpers.unroll(updated), paramd);
     };
 
-    self.thing = function() {
+    self.thing = () => {
         return _thing;
     };
 
-    self.band_name = function() {
+    self.band_name = () => {
         return _band_name;
     };
 
     self.get = function(key, otherwise) {
-        return _.d.get(_d, key, otherwise);
+        return _.d.get(_d, self._key(key), otherwise);
     };
 
     self.first = function(key, otherwise) {
-        return _.d.first(_d, key, otherwise);
+        return _.d.first(_d, self._key(key), otherwise);
     };
 
     self.list = function(key, otherwise) {
-        return _.d.list(_d, key, otherwise);
+        return _.d.list(_d, self._key(key), otherwise);
     };
 
-    self.timestamp = function() {
+    self.timestamp = () => {
         return _timestamp;
     };
 
-    self.state = function() {
+    self.state = () => {
         return _.d.clone.deep(_d);
     };
+
+    // dictionary manipulation - only for internal and descendents
+    self._get = (d, key, otherwise) => _.d.get(d, self._key(key), otherwise);
+    self._first = (d, key, otherwise) => _.d.first(d, self._key(key), otherwise);
+    self._list = (d, key, otherwise) => _.d.list(d, self._key(key), otherwise);
+    self._put = (d, key, value) => _.d.set(d, key, value);
+    self._key = (key) => key;
+
+    // emitter section
+    self.emitter = () => _emitter;
+    self.on = (key, listener) => _emitter.on(self._key(key), listener);
 
     return self;
 };

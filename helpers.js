@@ -51,7 +51,48 @@ const unroll = (d) => {
     return rd;
 };
 
+const flat_get = function(d, key, otherwise) {
+    const value = d[key];
+    if (value === undefined) {
+        return otherwise;
+    } else {
+        return value;
+    }
+};
+
+const flat_first = function(d, key, otherwise) {
+    const value = d[key];
+    if (value === undefined) {
+        return otherwise;
+    } else if (!_.is.Array(value)) {
+        return value;
+    } else if (value.length) {
+        return value[0];
+    } else {
+        return otherwise;
+    }
+};
+
+const flat_list = function(d, key, otherwise) {
+    const value = d[key];
+    if (value === undefined) {
+        return otherwise;
+    } else if (_.is.Array(value)) {
+        return value;
+    } else {
+        return [ value ];
+    }
+};
+
+const flat_put = function(d, key, value) {
+    d[key] = value;
+};
+
 /**
  *  API
  */
 exports.unroll = unroll;
+exports.flat_get = flat_get;
+exports.flat_first = flat_first;
+exports.flat_list = flat_list;
+exports.flat_put = flat_put;
