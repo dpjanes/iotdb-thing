@@ -1,4 +1,7 @@
 {
+    "iot:model-id": "model-01",
+    "schema:name": "Generic Heater",
+    "iot:help": "http://schema.org/something",
     "iot:attribute": [
         {
             "@id": "#temperature",
