@@ -104,6 +104,32 @@ const flat_put = function(d, key, value) {
     d[key] = value;
 };
 
+const make_match_rule = function(o) {
+    if (_.is.String(o)) {
+        if (o.match(/^:/)) {                 // :on
+            return {
+                "iot:purpose": "iot-purpose:" + o.substring(1),
+            };
+        } else if (o.match(/^\//)) {         // /powered
+            return {
+                "@id": "#" + o.substring(1),
+            };
+        } else if (o.match(/^[^\/]*:/)) {    // iot-purpose:on
+            return {
+                "iot:purpose": o,
+            };
+        } else {                            // powered
+            return {
+                "@id": "#" + o,
+            };
+        }
+    } else if (_.is.Dictionary(o)) {
+        return o;
+    } else {
+        return null;
+    }
+};
+
 /**
  *  API
  */
@@ -114,3 +140,5 @@ exports.flat_get = flat_get;
 exports.flat_first = flat_first;
 exports.flat_list = flat_list;
 exports.flat_put = flat_put;
+
+exports.make_match_rule = make_match_rule;

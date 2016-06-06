@@ -28,6 +28,7 @@ const util = require('util');
 const iotdb = require("iotdb");
 const _ = iotdb._;
 
+const helpers = require("./helpers");
 const band = require("./band");
 const band_meta = require("./band_meta");
 const band_model = require("./band_model");
@@ -70,21 +71,17 @@ const make = (initd) => {
     });
     
     // interface
-    self.band = (band_name) => {
-        return _bandd[band_name] || null;
-    };
+    self.band = (band_name) => _bandd[band_name] || null;
+    self.model_id = () => self.band("meta").get("iot:model-id", null);
+    self.thing_id = () => self.band("meta").get("iot:thing-id", null);
+    self.set = (key, value) => self.band("ostate").set(key, value);
 
-    self.model_id = () => {
-        return self.band("meta").get("iot:model-id", null);
-    };
+    self.attribute = (o) => {
+        const matchd = helpers.make_match_rule(o);
+        const ads = self.band("model").list("iot:attribute", []);
 
-    self.thing_id = () => {
-        return self.band("meta").get("iot:thing-id", null);
-    };
-
-    self.set = (key, value) => {
-        return self.band("ostate").set(key, value);
-    };
+        return _.find(ads, (ad) => _.d.is.superset(ad, matchd)) || null;
+    }
 
     return self;
 }
@@ -93,16 +90,3 @@ const make = (initd) => {
  *  API
  */
 exports.make = make;
-
-/*
-
-const thing_1 = make()
-thing_1.on("meta", (thing, changed) => {
-    console.log("+", "thing/meta changed", changed);
-});
-const meta_1 = thing_1.band("meta"); 
-meta_1.set("schema:name", "David");
-meta_1.set("schema:age", "51");
-
-console.log(meta_1.state());
-*/
