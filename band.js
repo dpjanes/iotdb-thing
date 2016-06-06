@@ -34,7 +34,6 @@ const make = (_thing, _d, _band_name) => {
     const self = Object.assign({});
 
     let _timestamp = _.timestamp.epoch();
-    let _last_now = null;
     let _pending = {};
     let _emitter = new events.EventEmitter();
 
@@ -46,16 +45,7 @@ const make = (_thing, _d, _band_name) => {
                 notify: true,
             });
 
-            var utimestamp = paramd.timestamp;
-            if (!utimestamp) {
-                // this allows multiple user actions in the same millisecond … very tricky
-                utimestamp =  _.timestamp.make();
-                if (_last_now === utimestamp) {
-                    utimestamp = _.timestamp.advance(utimestamp);
-                }
-
-                _last_now = utimestamp;
-            }
+            var utimestamp = paramd.timestamp || _.timestamp.make();
 
             if (paramd.check_timestamp && !_.timestamp.check.values(_timestamp, utimestamp)) {
                 return reject(new errors.Timestamp());

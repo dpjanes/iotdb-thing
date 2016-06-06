@@ -147,7 +147,7 @@ describe("band", function() {
                 assert.strictEqual(scratch_1.timestamp(), TS_NEW);
                 assert.deepEqual({ "name": "David" }, scratch_1.state());
             });
-            it("use @timestamp ( old, old ) - expect NO update", function(done) {
+            it("use @timestamp ( old, old ) - expect update", function(done) {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 const now = _.timestamp.make();
@@ -167,12 +167,12 @@ describe("band", function() {
                 // assert.ok(update_promise_1);
                 // assert.ok(!update_promise_2);
                 assert.strictEqual(scratch_1.timestamp(), TS_OLD);
-                assert.deepEqual({ "name": "Joanne" }, scratch_1.state());
+                assert.deepEqual({ "name": "David" }, scratch_1.state());
 
                 update_promise_2
+                    .then(() => done())
                     .catch((error) => {
-                        assert.ok(error instanceof errors.Timestamp);
-                        done();
+                        done(error);
                     });
             });
             it("use @timestamp ( new, old ) - expect NO update", function(done) {
