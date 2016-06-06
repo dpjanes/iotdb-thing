@@ -96,7 +96,7 @@ const make = (_thing, _d, _band_name) => {
             
             if (paramd.notify) {
                 process.nextTick(function() {
-                    _thing.emit(_band_name, _thing, self, changed);
+                    _thing.emit(_band_name, _thing, self, _.keys(changed));
                 });
             }
 

@@ -142,9 +142,7 @@ describe("band", function() {
                 thing_1.on("scratch", function(_thing, _band, _changed) {
                     assert.strictEqual(_thing, thing_1);
                     assert.strictEqual(_band, scratch_1);
-                    assert.deepEqual(_changed, {
-                        "name": "David",
-                    });
+                    assert.deepEqual(_changed, [ "name" ]);
                     done();
                 });
 
@@ -159,9 +157,7 @@ describe("band", function() {
                 thing_1.on("scratch", function(_thing, _band, _changed) {
                     assert.strictEqual(_thing, thing_1);
                     assert.strictEqual(_band, scratch_1);
-                    assert.deepEqual(_changed, {
-                        "name": "John",
-                    });
+                    assert.deepEqual(_changed, [ "name" ]);
                     done();
                 });
             });
@@ -171,18 +167,13 @@ describe("band", function() {
                 let count = 0;
 
                 thing_1.on("scratch", function(_thing, _band, _changed) {
-
                     assert.strictEqual(_thing, thing_1);
                     assert.strictEqual(_band, scratch_1);
 
                     if (count++ === 0) {
-                        assert.deepEqual(_changed, {
-                            "age": 52,
-                        });
+                        assert.deepEqual(_changed, [ "age" ]);
                     } else {
-                        assert.deepEqual(_changed, {
-                            "name": "John",
-                        });
+                        assert.deepEqual(_changed, [ "name" ]);
                         done();
                     }
                 });
@@ -199,9 +190,7 @@ describe("band", function() {
                     assert.strictEqual(_thing, thing_1);
                     assert.strictEqual(_band, scratch_1);
 
-                    assert.deepEqual(_changed, {
-                        "name": "Guido",
-                    });
+                    assert.deepEqual(_changed, [ "name" ]);
                     count++;
                 });
 

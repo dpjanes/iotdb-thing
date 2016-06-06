@@ -114,7 +114,7 @@ describe("band - generic operations", function() {
             });
         });
         describe("emits", function() {
-            describe("model", function() {
+            describe("band", function() {
             });
             describe("thing", function() {
                 it("works on nextTick", function(done) {
@@ -131,7 +131,7 @@ describe("band - generic operations", function() {
                         assert.strictEqual(_thing, thing_1);
                         assert.strictEqual(_band, scratch_1);
 
-                        assert.deepEqual(_changed, d);
+                        assert.deepEqual(_changed, [ "name", "friend" ]);
                         done();
                     });
                     // assert.ok(update_promise);
