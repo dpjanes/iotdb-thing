@@ -48,7 +48,7 @@ const a_actuator = {
     "iot:purpose": "iot-purpose:temperature",
     "iot:read": true,
     "iot:write": true,
-    "iot:sensor": true,
+    "iot:sensor": false,
     "iot:actuator": true,
     "iot:type": "iot:type.number",
     "iot:unit": "iot-unit:temperature.si.celsius"
@@ -144,7 +144,6 @@ describe("thing", function() {
 
             const got = thing_1.attribute({
                 "iot:purpose": "iot-purpose:temperature",
-                "iot:actuator": false,
                 "iot:sensor": true,
             });
             const expect = a_sensor;

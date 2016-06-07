@@ -45,6 +45,29 @@ const istated = {
 };
 
 describe("istate", function() {
+                it("iot-purpose:temperature/sensor", function() {
+                    const thing_1 = thing.make({
+                        model: model_document,
+                        istate: istate_document,
+                    });
+                    const istate_1 = thing_1.band("istate");
+
+            const got = thing_1.attribute({
+                "iot:purpose": "iot-purpose:temperature",
+                "iot:sensor": true,
+            });
+            console.log("GOT", got);
+                    istate_1.set({
+                        "iot:purpose": "iot-purpose:temperature", 
+                        "iot:sensor": true,
+                    }, 10);
+
+                    assert.deepEqual(istate_1.state(), {
+                        "temperature": 10,
+                        "set-point": 21,
+                    });
+                });
+                /*
     describe("set", function() {
         describe("general function", function() {
             it("promise success", function(done) {
@@ -211,9 +234,55 @@ describe("istate", function() {
         });
         describe("semantic", function() {
             describe("simple", function() {
+                it(":temperature", function() {
+                    const thing_1 = thing.make({
+                        model: model_document,
+                        istate: istate_document,
+                    });
+                    const istate_1 = thing_1.band("istate");
+
+                    istate_1.set(":temperature", 5);
+                    assert.deepEqual(istate_1.state(), {
+                        "temperature": 5,
+                        "set-point": 21,
+                    });
+                });
+            });
+            describe("full", function() {
+                it("iot-purpose:temperature", function() {
+                    const thing_1 = thing.make({
+                        model: model_document,
+                        istate: istate_document,
+                    });
+                    const istate_1 = thing_1.band("istate");
+
+                    istate_1.set("iot-purpose:temperature", 8);
+                    assert.deepEqual(istate_1.state(), {
+                        "temperature": 8,
+                        "set-point": 21,
+                    });
+                });
             });
             describe("complex", function() {
+                it("iot-purpose:temperature/sensor", function() {
+                    const thing_1 = thing.make({
+                        model: model_document,
+                        istate: istate_document,
+                    });
+                    const istate_1 = thing_1.band("istate");
+
+                    istate_1.set({
+                        "iot:purpose": "iot-purpose:temperature", 
+                        "iot:sensor": true,
+                    }, 10);
+
+                    assert.deepEqual(istate_1.state(), {
+                        "temperature": 10,
+                        "set-point": 21,
+                    });
+                });
             });
         });
     });
+    */
 });

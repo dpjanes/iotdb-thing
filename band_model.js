@@ -35,7 +35,8 @@ const make = (_thing, _d, _band) => {
     self._first = helpers.flat_first;
     self._list = helpers.flat_get;
     self._put = helpers.flat_put;
-    self._unroll = (ud) => helpers.unroll_shallow(_.ld.compact(ud));
+    self._prepare_update = (ud) => helpers.unroll_shallow(_.ld.compact(ud));
+    self._prepare_set = (ud) => helpers.unroll_shallow(_.ld.compact(ud));
 
     self._transform_key = (key) => _.ld.compact(key);
 

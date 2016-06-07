@@ -37,13 +37,17 @@ const make = (_thing, _d, _band) => {
     self._list = helpers.state_list;
     self._transform_key = (key) => helpers.state_lookup_key(key, self.thing());
 
-    self._unroll = (ud) => {
+    self._prepare_update = (ud) => {
         const rds = [];
         const thing = self.thing();
 
+        console.log(ud);
+
         _.mapObject(ud, ( uvalue, ukey ) => {
             const attribute = thing.attribute(ukey);
+            console.log("AT", attribute);
             const key = helpers.state_lookup_key(ukey, thing);
+            console.log("KEY", attribute);
             if (!attribute || !key) {
                 rds.push({
                     key: ukey,
@@ -63,6 +67,7 @@ const make = (_thing, _d, _band) => {
 
         return rds;
     };
+    self._prepare_set = self._prepare_update;
 
     return self;
 };

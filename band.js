@@ -111,11 +111,11 @@ const make = (_thing, d, _band_name) => {
         const updated = {};
         updated[key] = value;
 
-        return _update(self._unroll(updated))
+        return _update(self._prepare_set(updated))
     };
 
     self.update = (updated, paramd) => _update(
-        self._unroll(updated), 
+        self._prepare_update(updated), 
         _.d.compose.shallow({ timestamp: updated["@timestamp"] }, paramd)
     );
 
@@ -138,7 +138,8 @@ const make = (_thing, d, _band_name) => {
     self._list = (d, key, otherwise) => _.d.list(d, key, otherwise);
     self._put = (d, key, value) => _.d.set(d, key, value);
     self._transform_key = (key) => key;
-    self._unroll = helpers.unroll_deep;
+    self._prepare_set = helpers.unroll_deep;
+    self._prepare_update = helpers.unroll_deep;
 
     return self;
 };
