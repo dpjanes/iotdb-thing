@@ -32,8 +32,7 @@ const helpers = require("./helpers");
 const band = require("./band");
 const band_meta = require("./band_meta");
 const band_model = require("./band_model");
-const band_istate = require("./band_istate");
-const band_ostate = require("./band_ostate");
+const band_state = require("./band_state");
 const band_connection = require("./band_connection");
 
 const make = (initd) => {
@@ -61,8 +60,8 @@ const make = (initd) => {
         switch (bkey) {
         case "meta": band_make = band_meta.make; break;
         case "model": band_make = band_model.make; break;
-        case "istate": band_make = band_istate.make; break;
-        case "ostate": band_make = band_ostate.make; break;
+        case "istate": band_make = band_state.make; break;
+        case "ostate": band_make = band_state.make; break;
         case "connection": band_make = band_connection.make; break;
         }
 

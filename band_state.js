@@ -1,5 +1,5 @@
 /*
- *  istate.js
+ *  band_state.js
  *
  *  David Janes
  *  IOTDB
