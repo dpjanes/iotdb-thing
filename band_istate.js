@@ -28,7 +28,46 @@ const _ = iotdb._;
 const band = require("./band");
 
 const make = (_thing, _d, _band) => {
-    const self = Object.assign({}, band.make(_thing, _d, _band));
+    const self = band.make(_thing, _d, _band);
+
+    self._get = (d, key, otherwise) => {
+        if (!key) {
+            return undefined;
+        }
+
+        return _.d.get(d, key, otherwise || null);
+    };
+    
+    self._first = (d, key, otherwise) => {
+        if (!key) {
+            return undefined;
+        }
+
+        return _.d.first(d, key, otherwise || null);
+    };
+
+    self._list = (d, key, otherwise) => {
+        if (!key) {
+            return undefined;
+        }
+
+        return _.d.list(d, key, otherwise || null);
+    };
+
+    self._transform_key = (key) => {
+        const thing = self.thing();
+        const attribute = thing.attribute(key);
+        if (!attribute) {
+            return null;
+        }
+
+        const id = _.ld.first(attribute, "@id");
+        if (!id) {
+            return null;
+        }
+
+        return id.replace(/^.*#/, '');
+    };
 
     return self;
 };

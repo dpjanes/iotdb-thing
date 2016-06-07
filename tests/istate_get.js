@@ -117,6 +117,54 @@ describe("istate", function() {
 
                 assert.strictEqual(got, expect);
             });
+            it("temperature - but no istate (expect null, not undefined)", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: {},
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.get("temperature");
+                const expect = null;
+
+                assert.strictEqual(got, expect);
+            });
+        });
+        describe("semantic", function() {
+            describe("leading colon", function() {
+                it("temperature", function() {
+                    const thing_1 = thing.make({
+                        model: model_document,
+                        istate: istate_document,
+                    });
+                    const istate_1 = thing_1.band("istate");
+
+                    const got = istate_1.get(":temperature");
+                    const expect = 20;
+
+                    assert.strictEqual(got, expect);
+                });
+                it("broken attribute", function() {
+                    const d = _.d.clone.deep(model_document);
+                    delete d["iot:attribute"][0]["@id"];
+                    delete d["iot:attribute"][1]["@id"];
+
+                    const thing_1 = thing.make({
+                        model: d,
+                        istate: istate_document,
+                    });
+                    const istate_1 = thing_1.band("istate");
+
+                    const got = istate_1.get(":temperature");
+                    const expect = undefined;
+
+                    assert.strictEqual(got, expect);
+                });
+            });
+            describe("simple", function() {
+            });
+            describe("complex", function() {
+            });
         });
     });
 });

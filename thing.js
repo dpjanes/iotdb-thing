@@ -80,7 +80,7 @@ const make = (initd) => {
         const matchd = helpers.make_match_rule(o);
         const ads = self.band("model").list("iot:attribute", []);
 
-        return _.find(ads, (ad) => _.d.is.superset(ad, matchd)) || null;
+        return _.find(ads, (ad) => _.d.is.superset(ad, matchd));
     }
 
     return self;
