@@ -22,8 +22,16 @@
 
 "use strict";
 
+const fs = require("fs");
+const path = require("path");
+
 const assert = require("assert");
 const thing = require("../thing");
+
+const errors = require("iotdb-errors");
+
+const model_file = path.join(__dirname, './things/thing-basement-heater/model');
+const model_document = JSON.parse(fs.readFileSync(model_file, 'utf-8'));
 
 describe("thing", function() {
     describe("create", function() {
@@ -109,6 +117,41 @@ describe("thing", function() {
                     assert.strictEqual(thing_1.model_id(), "some-model-id");
                 });
             });
+            describe("set", function() {
+                it("promise success", function(done) {
+                    const thing_1 = thing.make({
+                        model: model_document,
+                    });
+
+                    const promise = thing_1.set("temperature", 0);
+                    promise
+                        .then((ud) => {
+                            assert.deepEqual(ud, { "temperature": 0 });
+                            done();
+                        })
+                        .catch((error) => {
+                            done(error);
+                        });
+                });
+                it("promise fail", function(done) {
+                    const thing_1 = thing.make({
+                        model: model_document,
+                    });
+
+                    const promise = thing_1.set("bad", 0);
+                    promise
+                        .then((ud) => {
+                            assert(false, "shouldn't reach here");
+                        })
+                        .catch((error) => {
+                            if (error instanceof errors.Invalid) {
+                                return done();
+                            }
+
+                            done(error);
+                        });
+                });
+            })
         });
     })
 });

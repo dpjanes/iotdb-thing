@@ -109,4 +109,16 @@ describe("model", function() {
             assert.strictEqual(model_1.thing(), thing_1);
         });
     });
+    describe("set", function() {
+        it("set", function() {
+            const thing_1 = thing.make({
+                model: model_document,
+            });
+            const model_1 = thing_1.band("model");
+
+            model_1.set("iot:name", "David");
+
+            assert.strictEqual(model_1.state()["iot:name"], "David");
+        });
+    });
 });
