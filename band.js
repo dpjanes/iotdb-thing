@@ -107,21 +107,15 @@ const make = (_thing, d, _band_name) => {
         });
     };
 
-    self.set = (key, value) => {
-        const updated = {};
-        updated[key] = value;
+    self.thing = () => _thing;
+    self.band_name = () => _band_name;
+    self.timestamp = () => _timestamp;
 
-        return _update(self._prepare_set(updated))
-    };
-
+    self.set = (key, value) => _update(self._prepare_set(key, value));
     self.update = (updated, paramd) => _update(
         self._prepare_update(updated), 
         _.d.compose.shallow({ timestamp: updated["@timestamp"] }, paramd)
     );
-
-    self.thing = () => _thing;
-    self.band_name = () => _band_name;
-    self.timestamp = () => _timestamp;
 
     self.state = () => _.d.clone.deep(_d);
     self.get = (key, otherwise) => self._get(_d, self._transform_key(key), otherwise);
@@ -138,8 +132,13 @@ const make = (_thing, d, _band_name) => {
     self._list = (d, key, otherwise) => _.d.list(d, key, otherwise);
     self._put = (d, key, value) => _.d.set(d, key, value);
     self._transform_key = (key) => key;
-    self._prepare_set = helpers.unroll_deep;
     self._prepare_update = helpers.unroll_deep;
+    self._prepare_set = (key, value) => {
+        const updated = {};
+        updated[key] = value;
+
+        return helpers.unroll_deep(updated);
+    };
 
     return self;
 };
