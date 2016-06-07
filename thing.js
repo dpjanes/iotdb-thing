@@ -25,8 +25,7 @@
 const events = require('events');
 const util = require('util');
 
-const iotdb = require("iotdb");
-const _ = iotdb._;
+const _ = require("iotdb-helpers");
 
 const helpers = require("./helpers");
 const band = require("./band");

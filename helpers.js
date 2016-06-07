@@ -22,8 +22,7 @@
 
 "use strict";
 
-const iotdb = require("iotdb");
-const _ = iotdb._;
+const _ = require("iotdb-helpers");
 
 /**
  *  Convert a dictionary into a "unrolled" dictionary,

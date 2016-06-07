@@ -4,7 +4,8 @@
         "url": "https://github.com/dpjanes/iotdb-thing/issues"
     }, 
     "dependencies": {
-        "iotdb": ">=0.14.0"
+        "iotdb-errors": "",
+        "iotdb-helpers": ""
     }, 
     "description": "Generic function for ", 
     "devDependencies": {
