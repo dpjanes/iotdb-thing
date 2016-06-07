@@ -121,6 +121,34 @@ describe("istate", function() {
                     "set-point": 21
                 });
             });
+            it("force bad value into array", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const promise = istate_1.update({
+                    "bad": 12,
+                }, {
+                    validate: false,
+                });
+                promise
+                    .then((ud) => {
+                        assert.deepEqual(ud, {
+                            "bad": 12,
+                        });
+                        assert.deepEqual(istate_1.state(), {
+                            "temperature": 20,
+                            "set-point": 21,
+                            "bad": 12,
+                        });
+                        done()
+                    })
+                    .catch((error) => {
+                        done(error);
+                    });
+            });
         });
     });
 });
