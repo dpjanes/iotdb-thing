@@ -1,5 +1,5 @@
 /*
- *  istate_create.js
+ *  istate_get.js
  *
  *  David Janes
  *  IOTDB
