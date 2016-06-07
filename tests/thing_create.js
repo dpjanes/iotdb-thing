@@ -115,7 +115,6 @@ describe("thing", function() {
 
                 assert.strictEqual(ostate_1.get("on", null), null);
                 thing_1.set("on", true);
-                console.log(ostate_1.state());
                 assert.strictEqual(ostate_1.get("on", null), true);
             });
         });
