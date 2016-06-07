@@ -109,14 +109,6 @@ describe("thing", function() {
                     assert.strictEqual(thing_1.model_id(), "some-model-id");
                 });
             });
-            describe("set", function() {
-                const thing_1 = thing.make();
-                const ostate_1 = thing_1.band("ostate");
-
-                assert.strictEqual(ostate_1.get("on", null), null);
-                thing_1.set("on", true);
-                assert.strictEqual(ostate_1.get("on", null), true);
-            });
         });
     })
 });

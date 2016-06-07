@@ -22,13 +22,20 @@
 
 "use strict";
 
+const helpers = require("./helpers");
+
 const iotdb = require("iotdb");
 const _ = iotdb._;
 
 const band = require("./band");
 
 const make = (_thing, _d, _band) => {
-    const self = Object.assign({}, band.make(_thing, _d, _band));
+    const self = band.make(_thing, _d, _band);
+
+    self._get = helpers.state_get;
+    self._first = helpers.state_first;
+    self._list = helpers.state_list;
+    self._transform_key = (key) => helpers.state_lookup_key(key, self.thing());
 
     return self;
 };
