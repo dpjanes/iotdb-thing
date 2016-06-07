@@ -57,6 +57,30 @@ describe("istate", function() {
 
                 assert.strictEqual(got, expect);
             });
+            it("first(temperature)", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.first("temperature");
+                const expect = 20;
+
+                assert.strictEqual(got, expect);
+            });
+            it("list(temperature)", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.list("temperature");
+                const expect = [ 20 ];
+
+                assert.deepEqual(got, expect);
+            });
             it("/temperature", function() {
                 const thing_1 = thing.make({
                     model: model_document,
@@ -105,6 +129,30 @@ describe("istate", function() {
 
                 assert.strictEqual(got, expect);
             });
+            it("first(bad)", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.first("bad");
+                const expect = undefined;
+
+                assert.strictEqual(got, expect);
+            });
+            it("list(bad)", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.list("bad");
+                const expect = undefined;
+
+                assert.strictEqual(got, expect);
+            });
             it("/bad", function() {
                 const thing_1 = thing.make({
                     model: model_document,
@@ -117,7 +165,9 @@ describe("istate", function() {
 
                 assert.strictEqual(got, expect);
             });
-            it("temperature - but no istate (expect null, not undefined)", function() {
+        });
+        describe("missing istate date - expect null, not undefined", function() {
+            it("get", function() {
                 const thing_1 = thing.make({
                     model: model_document,
                     istate: {},
@@ -126,6 +176,66 @@ describe("istate", function() {
 
                 const got = istate_1.get("temperature");
                 const expect = null;
+
+                assert.strictEqual(got, expect);
+            });
+            it("get with otherwise", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: {},
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.get("temperature", "otherwise");
+                const expect = "otherwise";
+
+                assert.strictEqual(got, expect);
+            });
+            it("first", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: {},
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.first("temperature");
+                const expect = null;
+
+                assert.strictEqual(got, expect);
+            });
+            it("first with otherwise", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: {},
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.first("temperature", "otherwise");
+                const expect = "otherwise";
+
+                assert.strictEqual(got, expect);
+            });
+            it("list", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: {},
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.list("temperature");
+                const expect = null;
+
+                assert.strictEqual(got, expect);
+            });
+            it("list with otherwise", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: {},
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.list("temperature", "otherwise");
+                const expect = "otherwise";
 
                 assert.strictEqual(got, expect);
             });
