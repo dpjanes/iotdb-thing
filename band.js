@@ -30,9 +30,10 @@ const _ = iotdb._;
 const errors = require("iotdb-errors");
 const helpers = require("./helpers");
 
-const make = (_thing, _d, _band_name) => {
+const make = (_thing, d, _band_name) => {
     const self = Object.assign({});
 
+    let _d = _.d.clone.deep(d);
     let _timestamp = _.timestamp.epoch();
     let _pending = {};
     let _emitter = new events.EventEmitter();
@@ -43,12 +44,20 @@ const make = (_thing, _d, _band_name) => {
                 add_timestamp: true,
                 check_timestamp: true,
                 notify: true,
+                validate: true,
             });
 
             var utimestamp = paramd.timestamp || _.timestamp.make();
 
             if (paramd.check_timestamp && !_.timestamp.check.values(_timestamp, utimestamp)) {
                 return reject(new errors.Timestamp());
+            }
+
+            if (paramd.validate) {
+                const invalids = _.map(_.filter(uds, (ud) => ud.is_validated === false), (ud) => ud.key);
+                if (invalids.length) {
+                    return reject(new errors.Invalid("invalid updates"));
+                }
             }
 
             const changed = {};

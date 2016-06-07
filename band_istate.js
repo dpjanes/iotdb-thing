@@ -37,6 +37,33 @@ const make = (_thing, _d, _band) => {
     self._list = helpers.state_list;
     self._transform_key = (key) => helpers.state_lookup_key(key, self.thing());
 
+    self._unroll = (ud) => {
+        const rds = [];
+        const thing = self.thing();
+
+        _.mapObject(ud, ( uvalue, ukey ) => {
+            const attribute = thing.attribute(ukey);
+            const key = helpers.state_lookup_key(ukey, thing);
+            if (!attribute || !key) {
+                rds.push({
+                    key: ukey,
+                    value: uvalue,
+                    is_validated: false,
+                });
+                return;
+            }
+
+            const rd = _.d.compose.shallow({
+                key: key,
+                value: uvalue,
+            }, attribute);
+
+            rds.push(rd);
+        });
+
+        return rds;
+    };
+
     return self;
 };
 

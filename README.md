@@ -55,7 +55,8 @@ set a value non-semantically
 
     const promise = ostate_1.set("power", true);
 
-change a whole bunch of values (non-semantic)
+change a whole bunch of values (non-semantic). Note that
+`update` is always non-semantic, it's dealing the raw underlying data.
 
     const promise = ostate_1.update({
         "power": true,
