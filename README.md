@@ -63,6 +63,7 @@ change a whole bunch of values (non-semantic). Note that
         "level": 50,
     })
 
+
 ### istate
 
 The **istate** is used to current the current readings from a thing - it's the **input state**.
@@ -98,6 +99,39 @@ Listen for a change non-semantically
 
     istate_1.on("powered", function(_thing, _band, _new_value) {
     });
+
+## Paramaterized Data
+
+Because we have a strong idea of data types, you can parameterize
+values being passed into things; and you can coerce output values.
+
+### Raw parameterization
+
+    ostate_1.set("level", {
+        "@value": 80,
+        "iot:unit": "iot-unit:math.fraction.percent"
+    });
+
+### Helper functions parametization
+
+    ostate_1.set("level", thing.parameter.percent(50));
+    ostate_1.set("level", thing.parameter.unit(.5));
+    ostate_1.set("temperature", thing.parameter.celsius(22));
+
+### Coercing output value
+
+    istate_1.get("temperature", null, thing.parameter.celsius());
+
+### Getting type definitions
+
+This will return a semantic description describing this 
+particular **attribute** of the Thing.
+
+    thing_1.attribute("temperature")
+
+or with a coercion
+
+    thing_1.attribute("temperature", thing.parameter.celsius());
 
 ## Shortcuts
 

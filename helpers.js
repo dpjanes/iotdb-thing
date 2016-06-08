@@ -66,39 +66,9 @@ const unroll_shallow = (d) => {
     return rds;
 };
 
-const flat_get = function(d, key, otherwise) {
-    const value = d[key];
-    if (value === undefined) {
-        return otherwise;
-    } else {
-        return value;
-    }
-};
-
-const flat_first = function(d, key, otherwise) {
-    const value = d[key];
-    if (value === undefined) {
-        return otherwise;
-    } else if (!_.is.Array(value)) {
-        return value;
-    } else if (value.length) {
-        return value[0];
-    } else {
-        return otherwise;
-    }
-};
-
-const flat_list = function(d, key, otherwise) {
-    const value = d[key];
-    if (value === undefined) {
-        return otherwise;
-    } else if (_.is.Array(value)) {
-        return value;
-    } else {
-        return [ value ];
-    }
-};
-
+const flat_get = (d, key, otherwise) => _.coerce.value(d[key], otherwise);
+const flat_first = (d, key, otherwise) => _.coerce.first(d[key], otherwise);
+const flat_list = (d, key, otherwise) => _.coerce.list(d[key], otherwise);
 const flat_put = function(d, key, value) {
     d[key] = value;
 };
