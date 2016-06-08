@@ -131,13 +131,3 @@ const cast = ( value, attribute ) => {
  *  API
  */
 exports.cast = cast;
-exports.hooks = {
-    _prepare_value: _prepare_value,
-    _prepare_attribute: _prepare_attribute,
-    _coerce_value: _coerce_value,
-    _convert_unit: _convert_unit,
-    _bound_minumum: _bound_minumum,
-    _bound_maximum: _bound_maximum,
-    _format_value: _format_value,
-    _enumerate_value: _enumerate_value,
-};
