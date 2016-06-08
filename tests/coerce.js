@@ -222,5 +222,101 @@ describe("coerce", function() {
                 assert.strictEqual(got, expect);
             });
         });
+        describe("to number", function() {
+            const attribute = {
+                "iot:type": "iot:type.number",
+            };
+
+            it("null", function() {
+                const value = null;
+                const expect = 0;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("boolean", function() {
+                const value = false;
+                const expect = 0;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("integer", function() {
+                const value = 10;
+                const expect = 10;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("number", function() {
+                const value = 100.1;
+                const expect = 100.1;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("string", function() {
+                const value = "hello world";
+                const expect = undefined;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("number string", function() {
+                const value = "123.3";
+                const expect = 123.3;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+        });
+        describe("to string", function() {
+            const attribute = {
+                "iot:type": "iot:type.string",
+            };
+
+            it("null", function() {
+                const value = null;
+                const expect = "";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("boolean", function() {
+                const value = false;
+                const expect = "0";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("integer", function() {
+                const value = 10;
+                const expect = "10";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("number", function() {
+                const value = 100.1;
+                const expect = "100.1";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("string", function() {
+                const value = "hello world";
+                const expect = "hello world";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("number string", function() {
+                const value = "123.3";
+                const expect = "123.3";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+        });
     });
 });
