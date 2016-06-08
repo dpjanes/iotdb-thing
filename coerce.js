@@ -51,19 +51,19 @@ const _convert_unit = (self) => {
         return;
     }
 
-    const unit_value = _.d.first(self.valued, "iot:unit");
-    if (!unit_value) {
+    const unit_of_value = _.d.first(self.valued, "iot:unit");
+    if (!unit_of_value) {
         return;
     }
 
-    const unit_attribute = _.d.first(self.attribute, "iot:unit");
-    if (!unit_value) {
+    const unit_of_attribute = _.d.first(self.attribute, "iot:unit");
+    if (!unit_of_attribute) {
         return;
     }
 
     self.value = _.convert.convert({
-        from: unit_value,
-        to: unit_attribute,
+        from: unit_of_value,
+        to: unit_of_attribute,
         value: self.value,
     });
 };

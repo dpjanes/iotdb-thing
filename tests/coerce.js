@@ -42,6 +42,32 @@ const gotd = {
 }
 
 describe("coerce", function() {
+    describe("simple basics", function() {
+        it("undefined value", function() {
+            const value = undefined;
+            const expect = value;
+            const attribute = {};
+            const got = coerce.cast(value, attribute);
+
+            assert.strictEqual(got, expect);
+        });
+        it("undefined attribute", function() {
+            const value = 10;
+            const expect = value;
+            const attribute = undefined;
+            const got = coerce.cast(value, attribute);
+
+            assert.strictEqual(got, expect);
+        });
+        it("dictionary value", function() {
+            const value = { "@value": 50 };
+            const expect = 50;
+            const attribute = {};
+            const got = coerce.cast(value, attribute);
+
+            assert.strictEqual(got, expect);
+        });
+    });
     describe("empty attribute", function() {
         it("null", function() {
             const value = null;
@@ -313,6 +339,201 @@ describe("coerce", function() {
             it("number string", function() {
                 const value = "123.3";
                 const expect = "123.3";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+        });
+    });
+    describe("unit conversion", function() {
+        it("no input unit", function() {
+            const value = {
+                "@value": 50,
+            }
+            const attribute = {
+                "iot:unit": "iot-unit:temperature.si.celsius",
+            };
+            const expect = 50;
+            const got = coerce.cast(value, attribute);
+
+            assert.strictEqual(got, expect);
+        });
+        it("no output unit", function() {
+            const value = {
+                "@value": 40,
+                "iot:unit": "iot-unit:temperature.si.celsius",
+            }
+            const attribute = {
+            };
+            const expect = 40;
+            const got = coerce.cast(value, attribute);
+
+            assert.strictEqual(got, expect);
+        });
+        it("input and output unit", function() {
+            const value = {
+                "@value": 212,
+                "iot:unit": "iot-unit:temperature.imperial.fahrenheit",
+            }
+            const attribute = {
+                "iot:unit": "iot-unit:temperature.si.celsius",
+            };
+            const expect = 100;
+            const got = coerce.cast(value, attribute);
+
+            assert.strictEqual(got, expect);
+        });
+    });
+    describe("minumum", function() {
+        describe("integer", function() {
+            it("above minimum", function() {
+                const value = {
+                    "@value": 50,
+                }
+                const attribute = {
+                    "iot:minimum": 10,
+                };
+                const expect = 50;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("at minimum", function() {
+                const value = {
+                    "@value": 10,
+                }
+                const attribute = {
+                    "iot:minimum": 10,
+                };
+                const expect = 10;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("below minimum", function() {
+                const value = {
+                    "@value": -50,
+                }
+                const attribute = {
+                    "iot:minimum": 10,
+                };
+                const expect = 10;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+        });
+        describe("string", function() {
+            it("above minimum", function() {
+                const value = {
+                    "@value": "t",
+                }
+                const attribute = {
+                    "iot:minimum": "h",
+                };
+                const expect = "t";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("at minimum", function() {
+                const value = {
+                    "@value": "h",
+                }
+                const attribute = {
+                    "iot:minimum": "h",
+                };
+                const expect = "h";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("below minimum", function() {
+                const value = {
+                    "@value": "a",
+                }
+                const attribute = {
+                    "iot:minimum": "h",
+                };
+                const expect = "h";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+        });
+    });
+    describe("minumum", function() {
+        describe("integer", function() {
+            it("above maximum", function() {
+                const value = {
+                    "@value": 50,
+                }
+                const attribute = {
+                    "iot:maximum": 10,
+                };
+                const expect = 10;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("at maximum", function() {
+                const value = {
+                    "@value": 10,
+                }
+                const attribute = {
+                    "iot:maximum": 10,
+                };
+                const expect = 10;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("below maximum", function() {
+                const value = {
+                    "@value": -50,
+                }
+                const attribute = {
+                    "iot:maximum": 10,
+                };
+                const expect = -50;
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+        });
+        describe("string", function() {
+            it("above maximum", function() {
+                const value = {
+                    "@value": "t",
+                }
+                const attribute = {
+                    "iot:maximum": "h",
+                };
+                const expect = "h";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("at maximum", function() {
+                const value = {
+                    "@value": "h",
+                }
+                const attribute = {
+                    "iot:maximum": "h",
+                };
+                const expect = "h";
+                const got = coerce.cast(value, attribute);
+
+                assert.strictEqual(got, expect);
+            });
+            it("below maximum", function() {
+                const value = {
+                    "@value": "a",
+                }
+                const attribute = {
+                    "iot:maximum": "h",
+                };
+                const expect = "a";
                 const got = coerce.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
