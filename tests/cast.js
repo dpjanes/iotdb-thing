@@ -1,5 +1,5 @@
 /*
- *  coerce.js
+ *  cast.js
  *
  *  David Janes
  *  IOTDB
@@ -23,7 +23,7 @@
 "use struct";
 
 const _ = require("iotdb-helpers");
-const coerce = require("../coerce")
+const cast = require("../cast")
 
 const assert = require("assert");
 
@@ -41,13 +41,13 @@ const gotd = {
     "iot:unit": "iot-unit:temperature.imperial.fahrenheit"
 }
 
-describe("coerce", function() {
+describe("cast", function() {
     describe("simple basics", function() {
         it("undefined value", function() {
             const value = undefined;
             const expect = value;
             const attribute = {};
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -55,7 +55,7 @@ describe("coerce", function() {
             const value = 10;
             const expect = value;
             const attribute = undefined;
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -63,7 +63,7 @@ describe("coerce", function() {
             const value = { "@value": 50 };
             const expect = 50;
             const attribute = {};
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -73,7 +73,7 @@ describe("coerce", function() {
             const value = null;
             const expect = value;
             const attribute = {};
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -81,7 +81,7 @@ describe("coerce", function() {
             const value = false;
             const expect = value;
             const attribute = {};
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -89,7 +89,7 @@ describe("coerce", function() {
             const value = 10;
             const expect = value;
             const attribute = {};
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -97,7 +97,7 @@ describe("coerce", function() {
             const value = 100.1;
             const expect = value;
             const attribute = {};
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -105,7 +105,7 @@ describe("coerce", function() {
             const value = "hello world";
             const expect = value;
             const attribute = {};
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -119,35 +119,35 @@ describe("coerce", function() {
             it("null", function() {
                 const value = null;
                 const expect = null;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("boolean", function() {
                 const value = false;
                 const expect = null;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("integer", function() {
                 const value = 10;
                 const expect = null;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("number", function() {
                 const value = 100.1;
                 const expect = null;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("string", function() {
                 const value = "hello world";
                 const expect = null;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -160,42 +160,42 @@ describe("coerce", function() {
             it("null", function() {
                 const value = null;
                 const expect = false;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("boolean", function() {
                 const value = false;
                 const expect = false;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("integer", function() {
                 const value = 10;
                 const expect = true;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("number", function() {
                 const value = 100.1;
                 const expect = true;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("string", function() {
                 const value = "hello world";
                 const expect = true;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("falsey string", function() {
                 const value = "false";
                 const expect = false;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -208,42 +208,42 @@ describe("coerce", function() {
             it("null", function() {
                 const value = null;
                 const expect = 0;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("boolean", function() {
                 const value = false;
                 const expect = 0;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("integer", function() {
                 const value = 10;
                 const expect = 10;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("number", function() {
                 const value = 100.1;
                 const expect = 100;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("string", function() {
                 const value = "hello world";
                 const expect = undefined;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("number string", function() {
                 const value = "123.3";
                 const expect = 123;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -256,42 +256,42 @@ describe("coerce", function() {
             it("null", function() {
                 const value = null;
                 const expect = 0;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("boolean", function() {
                 const value = false;
                 const expect = 0;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("integer", function() {
                 const value = 10;
                 const expect = 10;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("number", function() {
                 const value = 100.1;
                 const expect = 100.1;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("string", function() {
                 const value = "hello world";
                 const expect = undefined;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("number string", function() {
                 const value = "123.3";
                 const expect = 123.3;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -304,42 +304,42 @@ describe("coerce", function() {
             it("null", function() {
                 const value = null;
                 const expect = "";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("boolean", function() {
                 const value = false;
                 const expect = "0";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("integer", function() {
                 const value = 10;
                 const expect = "10";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("number", function() {
                 const value = 100.1;
                 const expect = "100.1";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("string", function() {
                 const value = "hello world";
                 const expect = "hello world";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
             it("number string", function() {
                 const value = "123.3";
                 const expect = "123.3";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -354,7 +354,7 @@ describe("coerce", function() {
                 "iot:unit": "iot-unit:temperature.si.celsius",
             };
             const expect = 50;
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -366,7 +366,7 @@ describe("coerce", function() {
             const attribute = {
             };
             const expect = 40;
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -379,7 +379,7 @@ describe("coerce", function() {
                 "iot:unit": "iot-unit:temperature.si.celsius",
             };
             const expect = 100;
-            const got = coerce.cast(value, attribute);
+            const got = cast.cast(value, attribute);
 
             assert.strictEqual(got, expect);
         });
@@ -394,7 +394,7 @@ describe("coerce", function() {
                     "iot:minimum": 10,
                 };
                 const expect = 50;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -406,7 +406,7 @@ describe("coerce", function() {
                     "iot:minimum": 10,
                 };
                 const expect = 10;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -418,7 +418,7 @@ describe("coerce", function() {
                     "iot:minimum": 10,
                 };
                 const expect = 10;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -432,7 +432,7 @@ describe("coerce", function() {
                     "iot:minimum": "h",
                 };
                 const expect = "t";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -444,7 +444,7 @@ describe("coerce", function() {
                     "iot:minimum": "h",
                 };
                 const expect = "h";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -456,7 +456,7 @@ describe("coerce", function() {
                     "iot:minimum": "h",
                 };
                 const expect = "h";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -472,7 +472,7 @@ describe("coerce", function() {
                     "iot:maximum": 10,
                 };
                 const expect = 10;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -484,7 +484,7 @@ describe("coerce", function() {
                     "iot:maximum": 10,
                 };
                 const expect = 10;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -496,7 +496,7 @@ describe("coerce", function() {
                     "iot:maximum": 10,
                 };
                 const expect = -50;
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -510,7 +510,7 @@ describe("coerce", function() {
                     "iot:maximum": "h",
                 };
                 const expect = "h";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -522,7 +522,7 @@ describe("coerce", function() {
                     "iot:maximum": "h",
                 };
                 const expect = "h";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });
@@ -534,7 +534,7 @@ describe("coerce", function() {
                     "iot:maximum": "h",
                 };
                 const expect = "a";
-                const got = coerce.cast(value, attribute);
+                const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
             });

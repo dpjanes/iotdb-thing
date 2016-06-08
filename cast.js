@@ -1,5 +1,5 @@
 /*
- *  coerce.js
+ *  cast.js
  *
  *  David Janes
  *  IOTDB
