@@ -30,6 +30,7 @@ const _ = iotdb._;
 
 const assert = require("assert");
 const thing = require("../thing");
+const as = require("../as");
 
 const model_file = path.join(__dirname, './things/thing-basement-heater/model');
 const model_document = JSON.parse(fs.readFileSync(model_file, 'utf-8'));
@@ -93,6 +94,24 @@ describe("thing", function() {
 
             const got = thing_1.attribute("/temperature");
             const expect = a_sensor;
+
+            assert.deepEqual(got, expect);
+        });
+        it("/temperature cast to fahrenheit", function() {
+            const thing_1 = thing.make({
+                model: model_document,
+            });
+
+            const got = thing_1.attribute("/temperature", as.fahrenheit());
+            const expect = {
+                "@id": "#temperature",
+                "iot:purpose": "iot-purpose:temperature",
+                "iot:read": true,
+                "iot:sensor": true,
+                "iot:actuator": false,
+                "iot:type": "iot:type.number",
+                "iot:unit": "iot-unit:temperature.imperial.fahrenheit"
+            };
 
             assert.deepEqual(got, expect);
         });

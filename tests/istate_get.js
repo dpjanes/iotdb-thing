@@ -149,9 +149,9 @@ describe("istate", function() {
                 const istate_1 = thing_1.band("istate");
 
                 const got = istate_1.list("bad");
-                const expect = undefined;
+                const expect = [];
 
-                assert.strictEqual(got, expect);
+                assert.deepEqual(got, expect);
             });
             it("/bad", function() {
                 const thing_1 = thing.make({
@@ -227,9 +227,9 @@ describe("istate", function() {
                 const istate_1 = thing_1.band("istate");
 
                 const got = istate_1.list("temperature");
-                const expect = null;
+                const expect = [];
 
-                assert.strictEqual(got, expect);
+                assert.deepEqual(got, expect);
             });
             /*
             it("list with otherwise", function() {

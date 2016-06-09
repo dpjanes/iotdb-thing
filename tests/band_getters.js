@@ -171,7 +171,7 @@ describe("band", function() {
             const thing_1 = thing.make({ scratch: scratchd })
             const scratch_1 = thing_1.band("scratch");
 
-            assert.deepEqual(scratch_1.list("/xxx"), undefined);
+            assert.deepEqual(scratch_1.list("/xxx"), []);
         });
         /*
         it("list /xxx - otherwise", function() {

@@ -118,7 +118,9 @@ const make = (_thing, d, _band_name) => {
 
     self.state = () => _.d.clone.deep(_d);
     self.get = (key, as_type) => self._cast(key, as_type, self._get(_d, self._transform_key(key)));
-    self.list = (key, as_type) => self._cast(key, as_type, self._list(_d, self._transform_key(key)));
+    self.list = (key, as_type) => (self._list(_d, self._transform_key(key)) || []) 
+        .map(item => self._cast(key, as_type, item))
+        .filter(item => (item !== undefined));
     self.first = (key, as_type) => self._cast(key, as_type, self._first(_d, self._transform_key(key)));
 
     // emitter section
