@@ -117,9 +117,9 @@ const make = (_thing, d, _band_name) => {
     );
 
     self.state = () => _.d.clone.deep(_d);
-    self.get = (key, as_type, otherwise) => self._cast(key, as_type, self._get(_d, self._transform_key(key), otherwise));
-    self.list = (key, as_type, otherwise) => self._cast(key, as_type, self._list(_d, self._transform_key(key), otherwise));
-    self.first = (key, as_type, otherwise) => self._cast(key, as_type, self._first(_d, self._transform_key(key), otherwise));
+    self.get = (key, as_type) => self._cast(key, as_type, self._get(_d, self._transform_key(key)));
+    self.list = (key, as_type) => self._cast(key, as_type, self._list(_d, self._transform_key(key)));
+    self.first = (key, as_type) => self._cast(key, as_type, self._first(_d, self._transform_key(key)));
 
     // emitter section
     self.emitter = () => _emitter;
@@ -127,9 +127,9 @@ const make = (_thing, d, _band_name) => {
 
     // dictionary manipulation - only for internal and descendents
     self._cast = (key, as_type, value) => value;
-    self._get = (d, key, otherwise) => _.d.get(d, key, otherwise);
-    self._first = (d, key, otherwise) => _.d.first(d, key, otherwise);
-    self._list = (d, key, otherwise) => _.d.list(d, key, otherwise);
+    self._get = (d, key) => _.d.get(d, key);
+    self._first = (d, key) => _.d.first(d, key);
+    self._list = (d, key) => _.d.list(d, key);
     self._put = (d, key, value) => _.d.set(d, key, value);
     self._transform_key = (key) => key;
     self._prepare_update = helpers.unroll_deep;

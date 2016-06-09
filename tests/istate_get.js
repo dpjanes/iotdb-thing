@@ -179,6 +179,7 @@ describe("istate", function() {
 
                 assert.strictEqual(got, expect);
             });
+            /*
             it("get with otherwise", function() {
                 const thing_1 = thing.make({
                     model: model_document,
@@ -191,6 +192,7 @@ describe("istate", function() {
 
                 assert.strictEqual(got, expect);
             });
+            */
             it("first", function() {
                 const thing_1 = thing.make({
                     model: model_document,
@@ -203,6 +205,7 @@ describe("istate", function() {
 
                 assert.strictEqual(got, expect);
             });
+            /*
             it("first with otherwise", function() {
                 const thing_1 = thing.make({
                     model: model_document,
@@ -215,6 +218,7 @@ describe("istate", function() {
 
                 assert.strictEqual(got, expect);
             });
+            */
             it("list", function() {
                 const thing_1 = thing.make({
                     model: model_document,
@@ -227,6 +231,7 @@ describe("istate", function() {
 
                 assert.strictEqual(got, expect);
             });
+            /*
             it("list with otherwise", function() {
                 const thing_1 = thing.make({
                     model: model_document,
@@ -239,6 +244,7 @@ describe("istate", function() {
 
                 assert.strictEqual(got, expect);
             });
+            */
         });
         describe("semantic", function() {
             describe("leading colon", function() {

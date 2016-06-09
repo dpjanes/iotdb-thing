@@ -81,12 +81,14 @@ describe("band", function() {
 
             assert.deepEqual(scratch_1.get("/xxx"), undefined);
         });
+        /*
         it("get /xxx - otherwise", function() {
             const thing_1 = thing.make({ scratch: scratchd })
             const scratch_1 = thing_1.band("scratch");
 
             assert.deepEqual(scratch_1.get("/xxx", null, "expected"), "expected");
         });
+        */
     });
     describe("first", function() {
         it("first name", function() {
@@ -125,12 +127,14 @@ describe("band", function() {
 
             assert.deepEqual(scratch_1.first("/xxx"), undefined);
         });
+        /*
         it("first /xxx - otherwise", function() {
             const thing_1 = thing.make({ scratch: scratchd })
             const scratch_1 = thing_1.band("scratch");
 
             assert.deepEqual(scratch_1.first("/xxx", null, "expected"), "expected");
         });
+        */
     });
     describe("list", function() {
         it("list name", function() {
@@ -169,11 +173,13 @@ describe("band", function() {
 
             assert.deepEqual(scratch_1.list("/xxx"), undefined);
         });
+        /*
         it("list /xxx - otherwise", function() {
             const thing_1 = thing.make({ scratch: scratchd })
             const scratch_1 = thing_1.band("scratch");
 
             assert.deepEqual(scratch_1.list("/xxx", null, "expected"), "expected");
         });
+        */
     });
 });

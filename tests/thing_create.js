@@ -87,7 +87,7 @@ describe("thing", function() {
                 it("no meta", function() {
                     const thing_1 = thing.make();
 
-                    assert.strictEqual(thing_1.thing_id(), null);
+                    assert.strictEqual(thing_1.thing_id(), undefined);
                 });
                 it("meta", function() {
                     const thing_1 = thing.make({
@@ -104,7 +104,7 @@ describe("thing", function() {
                 it("no meta", function() {
                     const thing_1 = thing.make();
 
-                    assert.strictEqual(thing_1.model_id(), null);
+                    assert.strictEqual(thing_1.model_id(), undefined);
                 });
                 it("meta", function() {
                     const thing_1 = thing.make({
