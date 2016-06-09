@@ -24,26 +24,12 @@
 
 const _ = require("iotdb-helpers");
 
-const _prepare_value = (self, value) => {
-    if (_.is.Dictionary(value)) {
-        self.value = value["@value"];
-        self.valued = value;
-    } else {
-        self.value = value;
-        self.valued = {};
-    }
-};
-
-const _prepare_attribute = (self, attribute) => {
-    self.attribute = attribute || {};
-};
-
 const _coerce_value = (self) => {
     if (_.is.Undefined(self.value)) {
         return;
     }
 
-    self.value = _.coerce.coerce(self.value, _.coerce.list(self.attribute["iot:type"]))
+    self.value = _.coerce.coerce(self.value, _.coerce.list(self.to["iot:type"]))
 };
 
 const _convert_unit = (self) => {
@@ -51,19 +37,19 @@ const _convert_unit = (self) => {
         return;
     }
 
-    const unit_of_value = _.d.first(self.valued, "iot:unit");
-    if (!unit_of_value) {
+    const unit_of_from = _.d.first(self.from, "iot:unit");
+    if (!unit_of_from) {
         return;
     }
 
-    const unit_of_attribute = _.d.first(self.attribute, "iot:unit");
-    if (!unit_of_attribute) {
+    const unit_of_to = _.d.first(self.to, "iot:unit");
+    if (!unit_of_to) {
         return;
     }
 
     self.value = _.convert.convert({
-        from: unit_of_value,
-        to: unit_of_attribute,
+        from: unit_of_from,
+        to: unit_of_to,
         value: self.value,
     });
 };
@@ -73,7 +59,7 @@ const _bound_minumum = (self) => {
         return;
     }
 
-    const bound = _.coerce.coerce(self.attribute["iot:minimum"], _.coerce.classify(self.value));
+    const bound = _.coerce.coerce(self.to["iot:minimum"], _.coerce.classify(self.value));
     if (_.is.Undefined(bound)) {
         return;
     }
@@ -88,7 +74,7 @@ const _bound_maximum = (self) => {
         return;
     }
 
-    const bound = _.coerce.coerce(self.attribute["iot:maximum"], _.coerce.classify(self.value));
+    const bound = _.coerce.coerce(self.to["iot:maximum"], _.coerce.classify(self.value));
     if (_.is.Undefined(bound)) {
         return;
     }
@@ -112,11 +98,20 @@ const _enumerate_value = (self) => {
 
 };
 
-const cast = ( value, attribute ) => {
-    const self = {};
+const cast = ( value, from, to ) => {
+    if (_.is.Undefined(value)) {
+        return value
+    }
+    if (!to) {
+        return value;
+    }
 
-    _prepare_value(self, value);
-    _prepare_attribute(self, attribute);
+    const self = {
+        value: value,
+        from: from,
+        to: to,
+    };
+
     _coerce_value(self);
     _convert_unit(self);
     _bound_minumum(self);

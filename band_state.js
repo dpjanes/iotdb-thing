@@ -36,19 +36,7 @@ const make = (_thing, _d, _band) => {
     self._first = helpers.state_first;
     self._list = helpers.state_list;
     self._transform_key = (key) => helpers.state_lookup_key(key, self.thing());
-
-    self._cast = (key, parameter, value) => {
-        if (!parameter) {
-            return value;
-        }
-
-        parameter = _.d.clone.shallow(parameter);
-
-        const attribute = _.d.clone.shallow(self.thing().attribute(key));
-        attribute["@value"] = value;
-
-        return cast.cast(attribute, parameter);
-    };
+    self._cast = (key, parameter, value) => cast.cast(value, self.thing().attribute(key), parameter);
 
     self._prepare_update = (ud) => {
         const rds = [];

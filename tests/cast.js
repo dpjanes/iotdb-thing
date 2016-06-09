@@ -27,7 +27,7 @@ const cast = require("../cast")
 
 const assert = require("assert");
 
-const attribute_temperature = {
+const to_temperature = {
     "@id": "#temperature",
     "iot:purpose": "iot-purpose:temperature",
     "iot:type": "iot:type.integer",
@@ -42,28 +42,30 @@ const gotd = {
 }
 
 describe("cast", function() {
+    const from = null;
     describe("simple basics", function() {
         it("undefined value", function() {
             const value = undefined;
             const expect = value;
-            const attribute = {};
-            const got = cast.cast(value, attribute);
+            const to = {};
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
         it("undefined attribute", function() {
             const value = 10;
             const expect = value;
-            const attribute = undefined;
-            const got = cast.cast(value, attribute);
+            const to = undefined;
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
         it("dictionary value", function() {
-            const value = { "@value": 50 };
+            const value = 50;
+            const from = { "@value": 50 };
             const expect = 50;
-            const attribute = {};
-            const got = cast.cast(value, attribute);
+            const to = {};
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
@@ -72,274 +74,285 @@ describe("cast", function() {
         it("null", function() {
             const value = null;
             const expect = value;
-            const attribute = {};
-            const got = cast.cast(value, attribute);
+            const to = {};
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
         it("boolean", function() {
             const value = false;
             const expect = value;
-            const attribute = {};
-            const got = cast.cast(value, attribute);
+            const to = {};
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
         it("integer", function() {
             const value = 10;
             const expect = value;
-            const attribute = {};
-            const got = cast.cast(value, attribute);
+            const to = {};
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
         it("number", function() {
             const value = 100.1;
             const expect = value;
-            const attribute = {};
-            const got = cast.cast(value, attribute);
+            const to = {};
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
         it("string", function() {
             const value = "hello world";
             const expect = value;
-            const attribute = {};
-            const got = cast.cast(value, attribute);
+            const to = {};
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
     });
     describe("type conversion", function() {
+        const from = null;
         describe("to null", function() {
-            const attribute = {
+            const to = {
                 "iot:type": "iot:type.null",
             };
 
             it("null", function() {
                 const value = null;
                 const expect = null;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("boolean", function() {
                 const value = false;
                 const expect = null;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("integer", function() {
                 const value = 10;
                 const expect = null;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("number", function() {
                 const value = 100.1;
                 const expect = null;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("string", function() {
                 const value = "hello world";
                 const expect = null;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
         });
         describe("to boolean", function() {
-            const attribute = {
+            const to = {
                 "iot:type": "iot:type.boolean",
             };
 
             it("null", function() {
                 const value = null;
                 const expect = undefined;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("boolean", function() {
                 const value = false;
                 const expect = false;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("integer", function() {
                 const value = 10;
                 const expect = true;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("number", function() {
                 const value = 100.1;
                 const expect = true;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("string", function() {
                 const value = "hello world";
                 const expect = true;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("falsey string", function() {
                 const value = "false";
                 const expect = false;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
         });
         describe("to integer", function() {
-            const attribute = {
+            const to = {
                 "iot:type": "iot:type.integer",
             };
 
             it("null", function() {
                 const value = null;
                 const expect = undefined;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("boolean", function() {
                 const value = false;
                 const expect = 0;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("integer", function() {
                 const value = 10;
                 const expect = 10;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("number", function() {
                 const value = 100.1;
                 const expect = 100;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("string", function() {
                 const value = "hello world";
                 const expect = undefined;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("number string", function() {
                 const value = "123.3";
                 const expect = 123;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
         });
         describe("to number", function() {
-            const attribute = {
+            const to = {
                 "iot:type": "iot:type.number",
             };
 
             it("null", function() {
                 const value = null;
+                const from = null;
                 const expect = undefined;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("boolean", function() {
                 const value = false;
+                const from = null;
                 const expect = 0;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("integer", function() {
                 const value = 10;
+                const from = null;
                 const expect = 10;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("number", function() {
                 const value = 100.1;
+                const from = null;
                 const expect = 100.1;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("string", function() {
                 const value = "hello world";
+                const from = null;
                 const expect = undefined;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("number string", function() {
                 const value = "123.3";
                 const expect = 123.3;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
         });
         describe("to string", function() {
-            const attribute = {
+            const to = {
                 "iot:type": "iot:type.string",
             };
 
             it("null", function() {
                 const value = null;
                 const expect = undefined;
-                const got = cast.cast(value, attribute);
+                const from = null;
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("boolean", function() {
                 const value = false;
                 const expect = "0";
-                const got = cast.cast(value, attribute);
+                const from = null;
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("integer", function() {
                 const value = 10;
                 const expect = "10";
-                const got = cast.cast(value, attribute);
+                const from = null;
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("number", function() {
                 const value = 100.1;
                 const expect = "100.1";
-                const got = cast.cast(value, attribute);
+                const from = null;
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("string", function() {
                 const value = "hello world";
                 const expect = "hello world";
-                const got = cast.cast(value, attribute);
+                const from = null;
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("number string", function() {
                 const value = "123.3";
                 const expect = "123.3";
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
@@ -347,39 +360,39 @@ describe("cast", function() {
     });
     describe("unit conversion", function() {
         it("no input unit", function() {
-            const value = {
-                "@value": 50,
+            const value = 50;
+            const from = {
             }
-            const attribute = {
+            const to = {
                 "iot:unit": "iot-unit:temperature.si.celsius",
             };
             const expect = 50;
-            const got = cast.cast(value, attribute);
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
         it("no output unit", function() {
-            const value = {
-                "@value": 40,
+            const value = 40;
+            const from = {
                 "iot:unit": "iot-unit:temperature.si.celsius",
             }
-            const attribute = {
+            const to = {
             };
             const expect = 40;
-            const got = cast.cast(value, attribute);
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
         it("input and output unit", function() {
-            const value = {
-                "@value": 212,
+            const value = 212;
+            const from = {
                 "iot:unit": "iot-unit:temperature.imperial.fahrenheit",
             }
-            const attribute = {
+            const to = {
                 "iot:unit": "iot-unit:temperature.si.celsius",
             };
             const expect = 100;
-            const got = cast.cast(value, attribute);
+            const got = cast.cast(value, from, to);
 
             assert.strictEqual(got, expect);
         });
@@ -387,76 +400,76 @@ describe("cast", function() {
     describe("minumum", function() {
         describe("integer", function() {
             it("above minimum", function() {
-                const value = {
-                    "@value": 50,
+                const value = 50;
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:minimum": 10,
                 };
                 const expect = 50;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("at minimum", function() {
-                const value = {
-                    "@value": 10,
+                const value = 10;
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:minimum": 10,
                 };
                 const expect = 10;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("below minimum", function() {
-                const value = {
-                    "@value": -50,
+                const value = -50;
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:minimum": 10,
                 };
                 const expect = 10;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
         });
         describe("string", function() {
             it("above minimum", function() {
-                const value = {
-                    "@value": "t",
+                const value = "t";
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:minimum": "h",
                 };
                 const expect = "t";
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("at minimum", function() {
-                const value = {
-                    "@value": "h",
+                const value = "h";
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:minimum": "h",
                 };
                 const expect = "h";
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("below minimum", function() {
-                const value = {
-                    "@value": "a",
+                const value = "a";
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:minimum": "h",
                 };
                 const expect = "h";
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
@@ -465,76 +478,76 @@ describe("cast", function() {
     describe("minumum", function() {
         describe("integer", function() {
             it("above maximum", function() {
-                const value = {
-                    "@value": 50,
+                const value = 50;
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:maximum": 10,
                 };
                 const expect = 10;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("at maximum", function() {
-                const value = {
-                    "@value": 10,
+                const value = 10;
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:maximum": 10,
                 };
                 const expect = 10;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("below maximum", function() {
-                const value = {
-                    "@value": -50,
+                const value = -50;
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:maximum": 10,
                 };
                 const expect = -50;
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
         });
         describe("string", function() {
             it("above maximum", function() {
-                const value = {
-                    "@value": "t",
+                const value = "t";
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:maximum": "h",
                 };
                 const expect = "h";
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("at maximum", function() {
-                const value = {
-                    "@value": "h",
+                const value = "h";
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:maximum": "h",
                 };
                 const expect = "h";
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
             it("below maximum", function() {
-                const value = {
-                    "@value": "a",
+                const value = "a";
+                const from = {
                 }
-                const attribute = {
+                const to = {
                     "iot:maximum": "h",
                 };
                 const expect = "a";
-                const got = cast.cast(value, attribute);
+                const got = cast.cast(value, from, to);
 
                 assert.strictEqual(got, expect);
             });
