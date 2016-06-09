@@ -47,56 +47,85 @@ const istated = {
 
 describe("istate", function() {
     describe("set", function() {
-        it("temperature (baseline)", function() {
-            const thing_1 = thing.make({
-                model: model_document,
-                istate: istate_document,
-            });
-            const istate_1 = thing_1.band("istate");
+        describe("cast", function() {
+            it("temperature (baseline)", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
 
-            istate_1.set("temperature", 0);
-            assert.deepEqual(istate_1.state(), {
-                "temperature": 0,
-                "set-point": 21,
+                istate_1.set("temperature", 0);
+                assert.deepEqual(istate_1.state(), {
+                    "temperature": 0,
+                    "set-point": 21,
+                });
             });
-        });
-        it("temperature (celsius)", function() {
-            const thing_1 = thing.make({
-                model: model_document,
-                istate: istate_document,
-            });
-            const istate_1 = thing_1.band("istate");
+            it("temperature (celsius)", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
 
-            istate_1.set("temperature", 32, as.celsius());
-            assert.deepEqual(istate_1.state(), {
-                "temperature": 32,
-                "set-point": 21,
+                istate_1.set("temperature", 32, as.celsius());
+                assert.deepEqual(istate_1.state(), {
+                    "temperature": 32,
+                    "set-point": 21,
+                });
             });
-        });
-        it("temperature (fahrenheit)", function() {
-            const thing_1 = thing.make({
-                model: model_document,
-                istate: istate_document,
-            });
-            const istate_1 = thing_1.band("istate");
+            it("temperature (fahrenheit)", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
 
-            istate_1.set("temperature", 32, as.fahrenheit());
-            assert.deepEqual(istate_1.state(), {
-                "temperature": 0,
-                "set-point": 21,
+                istate_1.set("temperature", 32, as.fahrenheit());
+                assert.deepEqual(istate_1.state(), {
+                    "temperature": 0,
+                    "set-point": 21,
+                });
             });
-        });
-        it("temperature (kelvin)", function() {
-            const thing_1 = thing.make({
-                model: model_document,
-                istate: istate_document,
-            });
-            const istate_1 = thing_1.band("istate");
+            it("temperature (kelvin)", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
 
-            istate_1.set("temperature", 32, as.kelvin());
-            assert.deepEqual(istate_1.state(), {
-                "temperature": -241.15,
-                "set-point": 21,
+                istate_1.set("temperature", 32, as.kelvin());
+                assert.deepEqual(istate_1.state(), {
+                    "temperature": -241.15,
+                    "set-point": 21,
+                });
+            });
+            it("temperature (bad)", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const promise = istate_1.set("temperature", 32, {
+                    "iot:unit": "iot-unit:temperature.imperial.doesnotexist",
+                });
+                assert.deepEqual(istate_1.state(), {
+                    "temperature": 20,
+                    "set-point": 21,
+                });
+
+                promise
+                    .then((ud) => {
+                        assert(false, "shouldn't reach here");
+                    })
+                    .catch((error) => {
+                        if (error instanceof errors.Invalid) {
+                            return done();
+                        }
+
+                        done(error);
+                    });
             });
         });
     });

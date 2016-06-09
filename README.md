@@ -21,7 +21,12 @@ The goals are:
 
 # Examples
 
-## Creation
+## General Use
+
+There are much deeper ways of using these objects, but 
+these are the most common you'll want to use
+
+### Creation
 
     const thing = require("iotdb-thing").thing;
     const thing_1 = thing.make()
@@ -32,6 +37,16 @@ The goals are:
         "ostate": …,
         "connection": …,
     });
+
+### Getting Values
+
+    thing_1.get(":temperature");
+    thing_1.get(":temperature", thing.as.fahrenheit());
+
+### Setting Values
+
+    thing_1.set(":on", true);
+    thing_1.set(":temperature", 20, thing.as.fahrenheit());
 
 ## Bands
 
@@ -62,7 +77,6 @@ change a whole bunch of values (non-semantic). Note that
         "power": true,
         "level": 50,
     })
-
 
 ### istate
 
@@ -126,11 +140,3 @@ or with a coercion
 
     thing_1.attribute("temperature", thing.as.celsius());
 
-## Shortcuts
-
-### Turn a light on
-
-    thing_1 = thing.make()
-    thing_1.set(":on", true);
-
-### get
