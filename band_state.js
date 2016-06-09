@@ -36,7 +36,7 @@ const make = (_thing, _d, _band) => {
     self._first = helpers.state_first;
     self._list = helpers.state_list;
     self._transform_key = (key) => helpers.state_lookup_key(key, self.thing());
-    self._cast = (key, parameter, value) => cast.cast(value, self.thing().attribute(key), parameter);
+    self._cast = (key, as_type, value) => cast.cast(value, self.thing().attribute(key), as_type);
 
     self._prepare_update = (ud) => {
         const rds = [];
@@ -64,7 +64,7 @@ const make = (_thing, _d, _band) => {
 
         return rds;
     };
-    self._prepare_set = ( ukey, uvalue ) => {
+    self._prepare_set = ( ukey, uvalue, as_type ) => {
         const rds = [];
         const thing = self.thing();
 
@@ -76,11 +76,25 @@ const make = (_thing, _d, _band) => {
                 value: uvalue,
                 is_validated: false,
             });
+        } else if (as_type) {
+            const value = cast.cast(uvalue, as_type, attribute);
+            if (_.is.Undefined(value)) {
+                rds.push({
+                    key: key,
+                    value: uvalue,
+                    is_validated: false,
+                });
+            } else {
+                rds.push({
+                    key: key,
+                    value: value,
+                });
+            }
         } else {
-            rds.push(_.d.compose.shallow({
+            rds.push({
                 key: key,
                 value: uvalue,
-            }, attribute));
+            });
         }
 
         return rds;

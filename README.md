@@ -68,7 +68,7 @@ change a whole bunch of values (non-semantic). Note that
 
 The **istate** is used to current the current readings from a thing - it's the **input state**.
 
-Get the istate
+Get the istate object
 
     const istate_1 = thing_1.band("istate");
 

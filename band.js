@@ -110,30 +110,30 @@ const make = (_thing, d, _band_name) => {
     self.band_name = () => _band_name;
     self.timestamp = () => _timestamp;
 
-    self.set = (key, value) => _update(self._prepare_set(key, value));
+    self.set = (key, value, as_type) => _update(self._prepare_set(key, value, as_type));
     self.update = (updated, paramd) => _update(
         self._prepare_update(updated), 
         _.d.compose.shallow({ timestamp: updated["@timestamp"] }, paramd)
     );
 
     self.state = () => _.d.clone.deep(_d);
-    self.get = (key, parameter, otherwise) => self._cast(key, parameter, self._get(_d, self._transform_key(key), otherwise));
-    self.list = (key, parameter, otherwise) => self._cast(key, parameter, self._list(_d, self._transform_key(key), otherwise));
-    self.first = (key, parameter, otherwise) => self._cast(key, parameter, self._first(_d, self._transform_key(key), otherwise));
+    self.get = (key, as_type, otherwise) => self._cast(key, as_type, self._get(_d, self._transform_key(key), otherwise));
+    self.list = (key, as_type, otherwise) => self._cast(key, as_type, self._list(_d, self._transform_key(key), otherwise));
+    self.first = (key, as_type, otherwise) => self._cast(key, as_type, self._first(_d, self._transform_key(key), otherwise));
 
     // emitter section
     self.emitter = () => _emitter;
     self.on = (key, listener) => _emitter.on(self._transform_key(key), listener);
 
     // dictionary manipulation - only for internal and descendents
-    self._cast = (key, parameter, value) => value;
+    self._cast = (key, as_type, value) => value;
     self._get = (d, key, otherwise) => _.d.get(d, key, otherwise);
     self._first = (d, key, otherwise) => _.d.first(d, key, otherwise);
     self._list = (d, key, otherwise) => _.d.list(d, key, otherwise);
     self._put = (d, key, value) => _.d.set(d, key, value);
     self._transform_key = (key) => key;
     self._prepare_update = helpers.unroll_deep;
-    self._prepare_set = (key, value) => {
+    self._prepare_set = (key, value, as_type) => {
         const updated = {};
         updated[key] = value;
 
