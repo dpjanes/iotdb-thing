@@ -83,6 +83,34 @@ describe("thing", function() {
             });
         });
         describe("helper function", function() {
+            describe("reachable", function() {
+                it("no connection", function() {
+                    const thing_1 = thing.make();
+
+                    assert.strictEqual(thing_1.reachable(), false);
+                });
+                it("reachable:false", function() {
+                    const thing_1 = thing.make({
+                        connection: { "iot:reachable": false },
+                    });
+
+                    assert.strictEqual(thing_1.reachable(), false);
+                });
+                it("reachable:true", function() {
+                    const thing_1 = thing.make({
+                        connection: { "iot:reachable": true },
+                    });
+
+                    assert.strictEqual(thing_1.reachable(), true);
+                });
+                it("reachable:weird", function() {
+                    const thing_1 = thing.make({
+                        connection: { "iot:reachable": "hello" },
+                    });
+
+                    assert.strictEqual(thing_1.reachable(), true);
+                });
+            });
             describe("thing-id", function() {
                 it("no meta", function() {
                     const thing_1 = thing.make();

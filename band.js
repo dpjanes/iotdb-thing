@@ -28,6 +28,7 @@ const _ = require("iotdb-helpers");
 
 const errors = require("iotdb-errors");
 const helpers = require("./helpers");
+const cast = require("./cast");
 
 const make = (_thing, d, _band_name) => {
     const self = Object.assign({});
@@ -118,7 +119,7 @@ const make = (_thing, d, _band_name) => {
 
     self.state = () => _.d.clone.deep(_d);
     self.get = (key, as_type) => self._cast(key, as_type, self._get(_d, self._transform_key(key)));
-    self.list = (key, as_type) => (self._list(_d, self._transform_key(key)) || []) 
+    self.list = (key, as_type) => (self._list(_d, self._transform_key(key)) || [])
         .map(item => self._cast(key, as_type, item))
         .filter(item => (item !== undefined));
     self.first = (key, as_type) => self._cast(key, as_type, self._first(_d, self._transform_key(key)));
@@ -128,7 +129,7 @@ const make = (_thing, d, _band_name) => {
     self.on = (key, listener) => _emitter.on(self._transform_key(key), listener);
 
     // dictionary manipulation - only for internal and descendents
-    self._cast = (key, as_type, value) => value;
+    self._cast = (key, as_type, value) => cast.cast(value, {}, as_type);
     self._get = (d, key) => _.d.get(d, key);
     self._first = (d, key) => _.d.first(d, key);
     self._list = (d, key) => _.d.list(d, key);

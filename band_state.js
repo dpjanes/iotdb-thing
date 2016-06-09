@@ -65,6 +65,7 @@ const make = (_thing, _d, _band) => {
         const rds = [];
         const thing = self.thing();
 
+
         const key = helpers.state_lookup_key(ukey, thing);
         if (!key) {
             rds.push({
