@@ -24,44 +24,32 @@
 
 const _ = require("iotdb-helpers");
 
-const _make_number = ( value, skey, svalue ) => {
+const _make_number = ( skey, svalue ) => {
     const rd = {
         "iot:type": "iot:type.number",
     }
 
-    if (!_.is.Undefined(value)) {
-        rd["@value"] = value;
-    }
-
-    if (skey) {
-        rd[skey] = svalue;
-    }
+    rd[skey] = svalue;
 
     return rd;
 };
 
-const _make_integer = ( value, skey, svalue ) => {
+const _make_integer = ( skey, svalue ) => {
     const rd = {
         "iot:type": "iot:type.integer",
     }
 
-    if (!_.is.Undefined(value)) {
-        rd["@value"] = value;
-    }
-
-    if (skey) {
-        rd[skey] = svalue;
-    }
+    rd[skey] = svalue;
 
     return rd;
 };
 
-exports.percent = value => _make_integer(value, "iot:unit", "iot-unit:math.percent.unit");
-exports.unit = value => _make_number(value, "iot:unit", "iot-unit:math.percent.unit");
+exports.percent = () => _make_integer("iot:unit", "iot-unit:math.fraction.percent");
+exports.unit = () => _make_number("iot:unit", "iot-unit:math.fraction.unit");
 
-exports.celsius = value => _make_number(value, "iot:unit", "iot-unit:temperature.si.celsius");
-exports.kelvin = value => _make_number(value, "iot:unit", "iot-unit:temperature.si.kelvin");
-exports.fahrenheit = value => _make_number(value, "iot:unit", "iot-unit:temperature.imperial.fahrenheit");
+exports.celsius = () => _make_number("iot:unit", "iot-unit:temperature.si.celsius");
+exports.kelvin = () => _make_number("iot:unit", "iot-unit:temperature.si.kelvin");
+exports.fahrenheit = () => _make_number("iot:unit", "iot-unit:temperature.imperial.fahrenheit");
 
 exports.null = () => ( { "iot:type": "iot:type.null" } );
 exports.boolean = () => ( { "iot:type": "iot:type.boolean" } );

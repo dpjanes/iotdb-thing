@@ -23,7 +23,6 @@
 "use strict";
 
 const events = require('events');
-const util = require('util');
 
 const _ = require("iotdb-helpers");
 
