@@ -105,22 +105,15 @@ Listen for a change non-semantically
 Because we have a strong idea of data types, you can parameterize
 values being passed into things; and you can coerce output values.
 
-### Raw parameterization
-
-    ostate_1.set("level", {
-        "@value": 80,
-        "iot:unit": "iot-unit:math.fraction.percent"
-    });
-
 ### Helper functions parametization
 
-    ostate_1.set("level", thing.type.percent(50));
-    ostate_1.set("level", thing.type.unit(.5));
-    ostate_1.set("temperature", thing.type.celsius(22));
+    ostate_1.set("level", 50, thing.as.percent());
+    ostate_1.set("level", .5, thing.as.unit());
+    ostate_1.set("temperature", 22, thing.as.celsius());
 
 ### Coercing output value
 
-    istate_1.get("temperature", thing.type.celsius());
+    istate_1.get("temperature", thing.as.celsius());
 
 ### Getting type definitions
 
@@ -131,7 +124,7 @@ particular **attribute** of the Thing.
 
 or with a coercion
 
-    thing_1.attribute("temperature", thing.type.celsius());
+    thing_1.attribute("temperature", thing.as.celsius());
 
 ## Shortcuts
 

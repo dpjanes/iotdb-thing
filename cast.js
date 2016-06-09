@@ -99,9 +99,6 @@ const _enumerate_value = (self) => {
 };
 
 const cast = ( value, from, to ) => {
-    if (_.is.Undefined(value)) {
-        return value
-    }
     if (!to) {
         return value;
     }
