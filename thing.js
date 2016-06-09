@@ -70,8 +70,8 @@ const make = (initd) => {
     
     // interface
     self.band = (band_name) => _bandd[band_name] || null;
-    self.model_id = () => self.band("meta").get("iot:model-id", null);
-    self.thing_id = () => self.band("meta").get("iot:thing-id", null);
+    self.model_id = () => self.band("meta").get("iot:model-id", null, null);
+    self.thing_id = () => self.band("meta").get("iot:thing-id", null, null);
     self.set = (key, value) => self.band("ostate").set(key, value);
 
     self.attribute = (o) => {

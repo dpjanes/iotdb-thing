@@ -85,7 +85,7 @@ describe("band", function() {
             const thing_1 = thing.make({ scratch: scratchd })
             const scratch_1 = thing_1.band("scratch");
 
-            assert.deepEqual(scratch_1.get("/xxx", "expected"), "expected");
+            assert.deepEqual(scratch_1.get("/xxx", null, "expected"), "expected");
         });
     });
     describe("first", function() {
@@ -129,7 +129,7 @@ describe("band", function() {
             const thing_1 = thing.make({ scratch: scratchd })
             const scratch_1 = thing_1.band("scratch");
 
-            assert.deepEqual(scratch_1.first("/xxx", "expected"), "expected");
+            assert.deepEqual(scratch_1.first("/xxx", null, "expected"), "expected");
         });
     });
     describe("list", function() {
@@ -173,7 +173,7 @@ describe("band", function() {
             const thing_1 = thing.make({ scratch: scratchd })
             const scratch_1 = thing_1.band("scratch");
 
-            assert.deepEqual(scratch_1.list("/xxx", "expected"), "expected");
+            assert.deepEqual(scratch_1.list("/xxx", null, "expected"), "expected");
         });
     });
 });

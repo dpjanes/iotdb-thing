@@ -186,7 +186,7 @@ describe("istate", function() {
                 });
                 const istate_1 = thing_1.band("istate");
 
-                const got = istate_1.get("temperature", "otherwise");
+                const got = istate_1.get("temperature", null, "otherwise");
                 const expect = "otherwise";
 
                 assert.strictEqual(got, expect);
@@ -210,7 +210,7 @@ describe("istate", function() {
                 });
                 const istate_1 = thing_1.band("istate");
 
-                const got = istate_1.first("temperature", "otherwise");
+                const got = istate_1.first("temperature", null, "otherwise");
                 const expect = "otherwise";
 
                 assert.strictEqual(got, expect);
@@ -234,7 +234,7 @@ describe("istate", function() {
                 });
                 const istate_1 = thing_1.band("istate");
 
-                const got = istate_1.list("temperature", "otherwise");
+                const got = istate_1.list("temperature", null, "otherwise");
                 const expect = "otherwise";
 
                 assert.strictEqual(got, expect);
