@@ -27,6 +27,7 @@ const events = require('events');
 const _ = require("iotdb-helpers");
 
 const helpers = require("./helpers");
+const as = require("./as");
 const band = require("./band");
 const band_meta = require("./band_meta");
 const band_model = require("./band_model");
@@ -69,15 +70,22 @@ const make = (initd) => {
     
     // interface
     self.band = (band_name) => _bandd[band_name] || null;
-    self.model_id = () => self.band("meta").get("iot:model-id", null, null);
-    self.thing_id = () => self.band("meta").get("iot:thing-id", null, null);
-    self.set = (key, value) => self.band("ostate").set(key, value);
+    self.model_id = () => self.band("meta").first("iot:model-id", null, null);
+    self.thing_id = () => self.band("meta").first("iot:thing-id", null, null);
+    self.reachable = () => self.band("connection").first("iot:reachable", as.boolean, false);
+    self.set = (key, value, as_type) => self.band("ostate").set(key, value, as_type);
+    self.get = (key, as_type, otherwise) => self.band("istate").set(key, as_type, otherwise);
 
-    self.attribute = (o) => {
-        const matchd = helpers.make_match_rule(o);
+    self.attribute = (key, as_type) => {
+        const matchd = helpers.make_match_rule(key);
         const ads = self.band("model").list("iot:attribute", []);
 
-        return _.find(ads, (ad) => _.d.is.superset(ad, matchd));
+        const ad = _.find(ads, (ad) => _.d.is.superset(ad, matchd));
+        if (ad && as_type) {
+            return _.d.compose.shallow(as_type, ad);
+        } else {
+            return ad;
+        }
     }
 
     return self;
