@@ -159,7 +159,7 @@ describe("cast", function() {
 
             it("null", function() {
                 const value = null;
-                const expect = false;
+                const expect = undefined;
                 const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
@@ -207,7 +207,7 @@ describe("cast", function() {
 
             it("null", function() {
                 const value = null;
-                const expect = 0;
+                const expect = undefined;
                 const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
@@ -255,7 +255,7 @@ describe("cast", function() {
 
             it("null", function() {
                 const value = null;
-                const expect = 0;
+                const expect = undefined;
                 const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);
@@ -303,7 +303,7 @@ describe("cast", function() {
 
             it("null", function() {
                 const value = null;
-                const expect = "";
+                const expect = undefined;
                 const got = cast.cast(value, attribute);
 
                 assert.strictEqual(got, expect);

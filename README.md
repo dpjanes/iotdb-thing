@@ -114,13 +114,13 @@ values being passed into things; and you can coerce output values.
 
 ### Helper functions parametization
 
-    ostate_1.set("level", thing.parameter.percent(50));
-    ostate_1.set("level", thing.parameter.unit(.5));
-    ostate_1.set("temperature", thing.parameter.celsius(22));
+    ostate_1.set("level", thing.type.percent(50));
+    ostate_1.set("level", thing.type.unit(.5));
+    ostate_1.set("temperature", thing.type.celsius(22));
 
 ### Coercing output value
 
-    istate_1.get("temperature", thing.parameter.celsius());
+    istate_1.get("temperature", thing.type.celsius());
 
 ### Getting type definitions
 
@@ -131,7 +131,7 @@ particular **attribute** of the Thing.
 
 or with a coercion
 
-    thing_1.attribute("temperature", thing.parameter.celsius());
+    thing_1.attribute("temperature", thing.type.celsius());
 
 ## Shortcuts
 

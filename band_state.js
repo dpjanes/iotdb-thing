@@ -42,8 +42,12 @@ const make = (_thing, _d, _band) => {
             return value;
         }
 
-        // console.log("HERE", key, parameter, value);
-        return cast.cast(value, parameter);
+        parameter = _.d.clone.shallow(parameter);
+
+        const attribute = _.d.clone.shallow(self.thing().attribute(key));
+        attribute["@value"] = value;
+
+        return cast.cast(attribute, parameter);
     };
 
     self._prepare_update = (ud) => {

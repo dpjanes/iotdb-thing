@@ -61,7 +61,7 @@ exports.unit = value => _make_number(value, "iot:unit", "iot-unit:math.percent.u
 
 exports.celsius = value => _make_number(value, "iot:unit", "iot-unit:temperature.si.celsius");
 exports.kelvin = value => _make_number(value, "iot:unit", "iot-unit:temperature.si.kelvin");
-exports.fahrenheit = value => _make_number(value, "iot:unit", "iot-unit:temperature.si.fahrenheit");
+exports.fahrenheit = value => _make_number(value, "iot:unit", "iot-unit:temperature.imperial.fahrenheit");
 
 exports.null = () => ( { "iot:type": "iot:type.null" } );
 exports.boolean = () => ( { "iot:type": "iot:type.boolean" } );
