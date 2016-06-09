@@ -117,15 +117,16 @@ const make = (_thing, d, _band_name) => {
     );
 
     self.state = () => _.d.clone.deep(_d);
-    self.get = (key, otherwise) => self._get(_d, self._transform_key(key), otherwise);
-    self.list = (key, otherwise) => self._list(_d, self._transform_key(key), otherwise);
-    self.first = (key, otherwise) => self._first(_d, self._transform_key(key), otherwise);
+    self.get = (key, otherwise, parameter) => self._cast(key, parameter, self._get(_d, self._transform_key(key), otherwise));
+    self.list = (key, otherwise, parameter) => self._cast(key, parameter, self._list(_d, self._transform_key(key), otherwise));
+    self.first = (key, otherwise, parameter) => self._cast(key, parameter, self._first(_d, self._transform_key(key), otherwise));
 
     // emitter section
     self.emitter = () => _emitter;
     self.on = (key, listener) => _emitter.on(self._transform_key(key), listener);
 
     // dictionary manipulation - only for internal and descendents
+    self._cast = (key, parameter, value) => value;
     self._get = (d, key, otherwise) => _.d.get(d, key, otherwise);
     self._first = (d, key, otherwise) => _.d.first(d, key, otherwise);
     self._list = (d, key, otherwise) => _.d.list(d, key, otherwise);

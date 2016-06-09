@@ -120,7 +120,7 @@ values being passed into things; and you can coerce output values.
 
 ### Coercing output value
 
-    istate_1.get("temperature", null, thing.parameter.celsius());
+    istate_1.get("temperature", thing.parameter.celsius());
 
 ### Getting type definitions
 

@@ -27,6 +27,7 @@ const helpers = require("./helpers");
 const _ = require("iotdb-helpers");
 
 const band = require("./band");
+const cast = require("./cast");
 
 const make = (_thing, _d, _band) => {
     const self = band.make(_thing, _d, _band);
@@ -35,6 +36,15 @@ const make = (_thing, _d, _band) => {
     self._first = helpers.state_first;
     self._list = helpers.state_list;
     self._transform_key = (key) => helpers.state_lookup_key(key, self.thing());
+
+    self._cast = (key, parameter, value) => {
+        if (!parameter) {
+            return value;
+        }
+
+        // console.log("HERE", key, parameter, value);
+        return cast.cast(value, parameter);
+    };
 
     self._prepare_update = (ud) => {
         const rds = [];

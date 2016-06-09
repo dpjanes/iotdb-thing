@@ -57,11 +57,11 @@ const _make_integer = ( value, skey, svalue ) => {
 };
 
 exports.percent = value => _make_integer(value, "iot:unit", "iot-unit:math.percent.unit");
-exports.unit = value => _make_unit(value, "iot:unit", "iot-unit:math.percent.unit");
+exports.unit = value => _make_number(value, "iot:unit", "iot-unit:math.percent.unit");
 
-exports.celsius = value => _make_unit(value, "iot:unit", "iot-unit:temperature.si.celsius");
-exports.kelvin = value => _make_unit(value, "iot:unit", "iot-unit:temperature.si.kelvin");
-exports.fahrenheit = value => _make_unit(value, "iot:unit", "iot-unit:temperature.si.fahrenheit");
+exports.celsius = value => _make_number(value, "iot:unit", "iot-unit:temperature.si.celsius");
+exports.kelvin = value => _make_number(value, "iot:unit", "iot-unit:temperature.si.kelvin");
+exports.fahrenheit = value => _make_number(value, "iot:unit", "iot-unit:temperature.si.fahrenheit");
 
 exports.null = () => ( { "iot:type": "iot:type.null" } );
 exports.boolean = () => ( { "iot:type": "iot:type.boolean" } );
