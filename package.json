@@ -4,8 +4,8 @@
         "url": "https://github.com/dpjanes/iotdb-thing/issues"
     }, 
     "dependencies": {
-        "iotdb-errors": "",
-        "iotdb-helpers": ""
+        "iotdb-errors": "~0.0.3", 
+        "iotdb-helpers": "~0.0.1"
     }, 
     "description": "Generic function for ", 
     "devDependencies": {
@@ -35,5 +35,5 @@
         "cover": "istanbul cover _mocha tests", 
         "test": "grunt"
     }, 
-    "version": "0.0.0"
+    "version": "0.0.1"
 }
