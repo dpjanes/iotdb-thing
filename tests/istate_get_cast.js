@@ -172,5 +172,147 @@ describe("istate", function() {
                 assert.strictEqual(got, expect);
             });
         });
+        describe("list functions", function() {
+            it("null", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.list("temperature", as.null());
+                const expect = [ null ];
+
+                assert.deepEqual(got, expect);
+            });
+            it("boolean", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.list("temperature", as.boolean());
+                const expect = [ true ];
+
+                assert.deepEqual(got, expect);
+            });
+            it("integer", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                istate_1.set("temperature", 23.345);
+                const got = istate_1.list("temperature", as.integer());
+                const expect = [ 23 ];
+
+                assert.deepEqual(got, expect);
+            });
+            it("integer with multiple items", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: {
+                        "temperature": [ 10.2, 20.2, 30.8 ],
+                    }
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.list("temperature", as.integer());
+                const expect = [ 10, 20, 31 ];
+
+                assert.deepEqual(got, expect);
+            });
+            it("number", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                istate_1.set("temperature", 23.345);
+                const got = istate_1.list("temperature", as.number());
+                const expect = [ 23.345 ];
+
+                assert.deepEqual(got, expect);
+            });
+            it("string", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.list("temperature", as.string());
+                const expect = [ "20" ];
+
+                assert.deepEqual(got, expect);
+            });
+        });
+        describe("first", function() {
+            it("null", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.first("temperature", as.null());
+                const expect = null;
+
+                assert.strictEqual(got, expect);
+            });
+            it("boolean", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.first("temperature", as.boolean());
+                const expect = true;
+
+                assert.strictEqual(got, expect);
+            });
+            it("integer", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                istate_1.set("temperature", 23.345);
+                const got = istate_1.first("temperature", as.integer());
+                const expect = 23;
+
+                assert.strictEqual(got, expect);
+            });
+            it("number", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                istate_1.set("temperature", 23.345);
+                const got = istate_1.first("temperature", as.number());
+                const expect = 23.345;
+
+                assert.strictEqual(got, expect);
+            });
+            it("string", function() {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const got = istate_1.first("temperature", as.string());
+                const expect = "20";
+
+                assert.strictEqual(got, expect);
+            });
+        });
     });
 });
