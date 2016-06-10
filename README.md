@@ -21,6 +21,9 @@ The goals are:
 
 # Examples
 
+For the most part, Thing objects will be created for you and you just
+manipulate them as per below.
+
 ## General Use
 
 There are much deeper ways of using these objects, but 
