@@ -75,6 +75,8 @@ const make = (initd) => {
     self.reachable = () => _.coerce.value(self.band("connection").first("iot:reachable", as.boolean()), false);
     self.set = (key, value, as_type) => self.band("ostate").set(key, value, as_type);
     self.get = (key, as_type) => self.band("istate").get(key, as_type);
+    self.update = (band, d) => self.band(band).update(d);
+    self.state = (band) => self.band(band).state();
 
     self.attribute = (key, as_type) => {
         const matchd = helpers.make_match_rule(key);
