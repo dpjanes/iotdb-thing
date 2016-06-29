@@ -89,13 +89,17 @@ const make = (_thing, d, _band_name) => {
             
             if (paramd.notify) {
                 // thing-level notifications are batched on ticks
-                _pending = _.d.compose.shallow(_pending, changed);
+                _pending = _.d.compose.shallow(changed, _pending);
 
-                process.nextTick(function() {
-                    const updated_keys = _.keys(_pending);
+                process.nextTick(() => {
+                    if (_.is.Empty(_pending)) {
+                        return;
+                    }
+
+                    const p = _pending;
                     _pending = {};
 
-                    _thing.emit(_band_name, _thing, self, updated_keys);
+                    _thing.emit(_band_name, _thing, self, p);
                 });
             }
 

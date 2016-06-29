@@ -131,7 +131,7 @@ describe("band - generic operations", function() {
                         assert.strictEqual(_thing, thing_1);
                         assert.strictEqual(_band, scratch_1);
 
-                        assert.deepEqual(_changed, [ "name", "friend" ]);
+                        assert.deepEqual(_changed, { name: 'Sponge Bob', friend: 'Sandy Bottom' });
                         done();
                     });
                     // assert.ok(update_promise);

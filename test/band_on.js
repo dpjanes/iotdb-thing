@@ -142,7 +142,7 @@ describe("band", function() {
                 thing_1.on("scratch", function(_thing, _band, _changed) {
                     assert.strictEqual(_thing, thing_1);
                     assert.strictEqual(_band, scratch_1);
-                    assert.deepEqual(_changed, [ "name" ]);
+                    assert.deepEqual(_changed, { name: 'David' });
                     done();
                 });
 
@@ -157,7 +157,7 @@ describe("band", function() {
                 thing_1.on("scratch", function(_thing, _band, _changed) {
                     assert.strictEqual(_thing, thing_1);
                     assert.strictEqual(_band, scratch_1);
-                    assert.deepEqual(_changed, [ "name" ]);
+                    assert.deepEqual(_changed, { name: 'John' });
                     done();
                 });
             });
@@ -170,7 +170,7 @@ describe("band", function() {
                     assert.strictEqual(_thing, thing_1);
                     assert.strictEqual(_band, scratch_1);
 
-                    assert.deepEqual(_changed, [ "age", "name" ]);
+                    assert.deepEqual(_changed, { age: 52, name: 'John' });
                     done();
                 });
 
@@ -187,9 +187,9 @@ describe("band", function() {
                     assert.strictEqual(_band, scratch_1);
 
                     if (count++ === 0) {
-                        assert.deepEqual(_changed, [ "age", ]);
+                        assert.deepEqual(_changed, { age: 52 });
                     } else {
-                        assert.deepEqual(_changed, [ "name" ]);
+                        assert.deepEqual(_changed, { name: 'John' });
                         done();
                     }
                 });
@@ -211,7 +211,7 @@ describe("band", function() {
                     assert.strictEqual(_thing, thing_1);
                     assert.strictEqual(_band, scratch_1);
 
-                    assert.deepEqual(_changed, [ "name" ]);
+                    assert.deepEqual(_changed, { name: 'Guido' });
                     count++;
                 });
 
@@ -223,7 +223,7 @@ describe("band", function() {
                     done();
                 });
             });
-            it("does emit two changes", function(done) {
+            it("emits one change (the latter)", function(done) {
                 const thing_1 = thing.make({ scratch: {} })
                 const scratch_1 = thing_1.band("scratch");
                 let count = 0;
@@ -232,6 +232,7 @@ describe("band", function() {
                     assert.strictEqual(_thing, thing_1);
                     assert.strictEqual(_band, scratch_1);
 
+                    assert.deepEqual(_changed, { name: 'Bottom' });
                     count++;
                 });
 
@@ -239,7 +240,7 @@ describe("band", function() {
                 scratch_1.set("name", "Bottom");
 
                 process.nextTick(function() {
-                    assert.strictEqual(count, 2);
+                    assert.strictEqual(count, 1);
                     done();
                 });
             });
