@@ -51,10 +51,20 @@ const make = (_thing, _d, _band) => {
                     is_validated: false,
                 });
             } else {
-                rds.push({
-                    key: key,
-                    value: uvalue,
-                });
+                const attribute = thing.attribute(ukey);
+                const value = cast.cast(uvalue, null, attribute);
+                if (_.is.Undefined(value)) {
+                    rds.push({
+                        key: key,
+                        value: uvalue,
+                        is_validated: false,
+                    });
+                } else {
+                    rds.push({
+                        key: key,
+                        value: value,
+                    });
+                }
             }
         });
 
@@ -65,7 +75,6 @@ const make = (_thing, _d, _band) => {
         const rds = [];
         const thing = self.thing();
 
-
         const key = helpers.state_lookup_key(ukey, thing);
         if (!key) {
             rds.push({
@@ -73,7 +82,7 @@ const make = (_thing, _d, _band) => {
                 value: uvalue,
                 is_validated: false,
             });
-        } else if (as_type) {
+        } else {
             const attribute = thing.attribute(ukey);
             const value = cast.cast(uvalue, as_type, attribute);
             if (_.is.Undefined(value)) {
@@ -88,11 +97,6 @@ const make = (_thing, _d, _band) => {
                     value: value,
                 });
             }
-        } else {
-            rds.push({
-                key: key,
-                value: uvalue,
-            });
         }
 
         return rds;

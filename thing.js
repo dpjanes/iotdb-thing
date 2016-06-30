@@ -69,6 +69,8 @@ const make = (initd) => {
     });
     
     // interface
+    self._isThing = true;
+
     self.band = (band_name) => _bandd[band_name] || null;
     self.model_id = () => self.band("meta").first("iot:model-id", null, null);
     self.thing_id = () => self.band("meta").first("iot:thing-id", null, null);

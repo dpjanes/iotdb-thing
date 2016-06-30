@@ -56,6 +56,7 @@ const make = (_thing, d, _band_name) => {
             if (paramd.validate) {
                 const invalids = _.map(_.filter(uds, (ud) => ud.is_validated === false), (ud) => ud.key);
                 if (invalids.length) {
+                    console.log("BAD.2", invalids);
                     return reject(new errors.Invalid("invalid updates"));
                 }
             }
