@@ -72,7 +72,7 @@ const make = (initd) => {
     self._isThing = true;
 
     self.band = (band_name) => _bandd[band_name] || null;
-    self.model_id = () => self.band("meta").first("iot:model-id", null, null);
+    self.model_id = () => self.band("model").first("iot:model-id", null, null);
     self.thing_id = () => self.band("meta").first("iot:thing-id", null, null);
     self.reachable = () => _.coerce.value(self.band("connection").first("iot:reachable", as.boolean()), false);
     self.set = (key, value, as_type) => self.band("ostate").set(key, value, as_type);

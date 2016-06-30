@@ -142,6 +142,18 @@ describe("thing", function() {
                         }
                     });
 
+                    assert.strictEqual(thing_1.model_id(), undefined);
+                });
+                it("meta", function() {
+                    const thing_1 = thing.make({
+                        model: {
+                            "iot:model-id": "some-model-id",
+                        },
+                        meta: {
+                            "iot:thing-id": "some-thing-id",
+                        }
+                    });
+
                     assert.strictEqual(thing_1.model_id(), "some-model-id");
                 });
             });
