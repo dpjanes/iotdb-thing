@@ -24,11 +24,15 @@
 
 const _ = require("iotdb-helpers");
 
+const assert = require("assert");
+
 const helpers = require("./helpers");
 const band = require("./band");
 
 const make = (_thing, _d, _band) => {
     const self = band.make(_thing, _d, _band);
+
+    assert.ok(_.is.Empty(_d) || !_.is.Empty(self.first("iot:model-id")));
 
     self._get = helpers.flat_get;
     self._first = helpers.flat_first;
