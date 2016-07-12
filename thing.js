@@ -79,6 +79,8 @@ const make = (initd) => {
     self.get = (key, as_type) => self.band("istate").get(key, as_type);
     self.update = (band, d) => self.band(band).update(d);
     self.state = (band) => self.band(band).state();
+    
+    self.disconnect = () => self.emit("disconnect");
 
     self.attribute = (key, as_type) => {
         const matchd = helpers.make_match_rule(key);
