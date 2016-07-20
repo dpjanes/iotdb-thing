@@ -51,21 +51,10 @@ const make = (_thing, _d, _band) => {
                     is_validated: false,
                 });
             } else {
-                    rds.push({
-                        key: key,
-                        value: uvalue,
-                    });
-                    /*
-                const attribute = thing.attribute(ukey);
-                if (!attribute) {
-                    rds.push({
-                        key: key,
-                        value: uvalue,
-                        is_validated: false,
-                    });
-                } else {
-                }
-                */
+                rds.push({
+                    key: key,
+                    value: uvalue,
+                });
             }
         });
 
