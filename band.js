@@ -45,6 +45,7 @@ const make = (_thing, d, _band_name) => {
                 check_timestamp: true,
                 notify: true,
                 validate: true,
+                replace: false,
             });
 
             var utimestamp = paramd.timestamp || _.timestamp.make();
@@ -60,31 +61,40 @@ const make = (_thing, d, _band_name) => {
                 }
             }
 
+            uds = uds
+                .filter(ud => !ud.key.match(/^@/))
+                .filter(ud => ud.is_validated !== false)
+                .filter(ud => !_.is.Equal(ud.value, _d[ud.key]));
+
             const changed = {};
 
-            uds.map(function(ud) {
-                if (ud.key.match(/^@/)) {
-                    return;
-                }
-                if (ud.is_validated === false) {
-                    return;
-                }
+            if (paramd.replace) {
+                const updating = _.keys(uds);
 
-                var ovalue = _d[ud.key];
-
-                if (_.is.Equal(ud.value, ovalue)) {
-                    return;
-                }
-
-                self._put(_d, ud.key, ud.value);
-                self._put(changed, ud.key, ud.value);
-
-                if (paramd.notify) {
-                    process.nextTick(function() {
-                        _emitter.emit(ud.key, _thing, self, ud.value);
+                _.pairs(_d)
+                    .filter(kv => kv[1] !== null)
+                    .map(kv => kv[0])
+                    .filter(key => !key.match(/^@/))
+                    .filter(key => updating.indexOf(key) === -1)
+                    .forEach(key => {
+                        uds.push({
+                            key: key,
+                            value: null,
+                        });
                     });
-                }
-            });
+            }
+
+            uds
+                .map(ud => {
+                    self._put(_d, ud.key, ud.value);
+                    self._put(changed, ud.key, ud.value);
+
+                    if (paramd.notify) {
+                        process.nextTick(() => {
+                            _emitter.emit(ud.key, _thing, self, ud.value);
+                        });
+                    }
+                });
 
             if (_.is.Empty(changed)) {
                 return resolve(changed);

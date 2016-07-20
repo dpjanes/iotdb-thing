@@ -44,6 +44,7 @@ const make = (initd) => {
         ostate: {},
         meta: {},
         connection: {},
+        transient: {},
     });
 
     const _bandd = {};
@@ -62,23 +63,38 @@ const make = (initd) => {
         case "istate": band_make = band_state.make; break;
         case "ostate": band_make = band_state.make; break;
         case "connection": band_make = band_connection.make; break;
+        case "transient": band_make = band.make; break;
         }
 
         _bandd[bkey] = band_make(self, bvalue, bkey);
 
     });
+
+    const _set_get = ( band_name, key, value, how ) => {
+        const band = self.band(band_name);
+        if (value !== undefined) {
+            band.set(key, value);
+        } else {
+            return band[how](key);
+        }
+    }
     
-    // interface
     self._isThing = true;
 
-    self.band = (band_name) => _bandd[band_name] || null;
-    self.model_id = () => self.band("model").first("iot:model-id", null, null);
-    self.thing_id = () => self.band("meta").first("iot:thing-id", null, null);
+    // interface
+    self.band = band_name => _bandd[band_name] || null;
+    self.model_id = () => self.band("model").first("iot:model-id");
+    self.thing_id = () => self.band("meta").first("iot:thing-id");
     self.reachable = () => _.coerce.value(self.band("connection").first("iot:reachable", as.boolean()), false);
     self.set = (key, value, as_type) => self.band("ostate").set(key, value, as_type);
     self.get = (key, as_type) => self.band("istate").get(key, as_type);
-    self.update = (band, d) => self.band(band).update(d);
-    self.state = (band) => self.band(band).state();
+    self.update = (band, d, paramd) => self.band(band).update(d, paramd);
+    self.state = band => self.band(band).state();
+
+    self.name = value => _set_get("meta", "schema:name", value, "first");
+    self.zones = value => _set_get("meta", "iot:zone", value, "list");
+    self.facets = value => _set_get("meta", "iot:facet", value, "list");
+    self.tag = value => _set_get("transient", "tag", value, "list"); 
     
     self.disconnect = () => self.emit("disconnect");
 
@@ -101,3 +117,4 @@ const make = (initd) => {
  *  API
  */
 exports.make = make;
+exports.as = as;

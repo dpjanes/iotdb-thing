@@ -121,6 +121,27 @@ describe("istate", function() {
                     "set-point": 21
                 });
             });
+            it("replace", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                assert.deepEqual(istate_1.state(), istated);
+                const promise = istate_1.update({}, { replace: true })
+                promise
+                    .then((ud) => {
+                        assert.deepEqual(ud, {
+                            "temperature": null,
+                            "set-point": null,
+                        });
+                        done();
+                    })
+                    .catch((error) => {
+                        done(error);
+                    });
+            });
             /*
              *  REVISIT THIS - make a new param called 'force' or something
             it("force bad value into array", function(done) {
