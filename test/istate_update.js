@@ -142,9 +142,7 @@ describe("istate", function() {
                         done(error);
                     });
             });
-            /*
-             *  REVISIT THIS - make a new param called 'force' or something
-            it("force bad value into array", function(done) {
+            it("bad value - force ignore checking", function(done) {
                 const thing_1 = thing.make({
                     model: model_document,
                     istate: istate_document,
@@ -159,12 +157,10 @@ describe("istate", function() {
                 promise
                     .then((ud) => {
                         assert.deepEqual(ud, {
-                            "bad": 12,
                         });
                         assert.deepEqual(istate_1.state(), {
                             "temperature": 20,
                             "set-point": 21,
-                            "bad": 12,
                         });
                         done()
                     })
@@ -172,7 +168,6 @@ describe("istate", function() {
                         done(error);
                     });
             });
-             */
         });
     });
 });
