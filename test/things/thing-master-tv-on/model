@@ -8,6 +8,22 @@
             "iot:write": true,
             "iot:sensor": false,
             "iot:actuator": false
+        },
+        {
+          "@id": "#band",
+          "@type": "iot:Attribute",
+          "iot:actuator": true,
+          "iot:enumeration": {
+            "iot-purpose:band.aux": "AUX",
+            "iot-purpose:band.bluray": "BLURAY",
+            "iot-purpose:band.tv": "TV"
+          },
+          "iot:purpose": "iot-purpose:band",
+          "iot:read": true,
+          "iot:sensor": true,
+          "iot:type": "iot:type.string",
+          "iot:write": true,
+          "schema:name": "band"
         }
     ]
 }
