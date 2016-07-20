@@ -117,6 +117,9 @@ const state_first = (d, key, otherwise) => {
 };
 
 const state_list = (d, key, otherwise) => {
+    console.log("HERE:B", _.d.list(d, key));
+    console.log("HERE:B.2", _.d.list);
+
     if (!key) {
         return undefined;
     }
