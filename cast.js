@@ -96,6 +96,16 @@ const _enumerate_value = (self) => {
         return;
     }
 
+    let enumeration = self.to["iot:enumeration"]
+    if (!enumeration) {
+        return;
+    }
+
+    if (_.is.Array(enumeration)) {
+        enumeration = _.object(enumeration, enumeration)
+    }
+
+    self.value = enumeration[self.value];
 };
 
 const cast = ( value, from, to ) => {

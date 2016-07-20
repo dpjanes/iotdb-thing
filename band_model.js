@@ -32,7 +32,7 @@ const band = require("./band");
 const make = (_thing, _d, _band) => {
     const self = band.make(_thing, _d, _band);
 
-    assert.ok(_.is.Empty(_d) || !_.is.Empty(self.first("iot:model-id")));
+    assert.ok(_.is.Empty(_d) || !_.is.Empty(self.first("iot:model-id")), "iot:model-id is required");
 
     self._get = helpers.flat_get;
     self._first = helpers.flat_first;
