@@ -29,13 +29,48 @@ const _ = require("iotdb-helpers");
 const band = require("./band");
 const cast = require("./cast");
 
+const _state_lookup_key = (key, thing) => {
+    const attribute = thing.attribute(key);
+    if (!attribute) {
+        return null;
+    }
+
+    const id = _.ld.first(attribute, "@id");
+    if (!id) {
+        return null;
+    }
+
+    return id.replace(/^.*#/, '');
+};
+
 const make = (_thing, _d, _band) => {
     const self = band.make(_thing, _d, _band);
 
-    self._get = helpers.state_get;
-    self._first = helpers.state_first;
-    self._list = helpers.state_list;
-    self._transform_key = (key) => helpers.state_lookup_key(key, self.thing());
+    self._get = (d, key, otherwise) => {
+        if (!key) {
+            return undefined;
+        }
+
+        return _.d.get(d, key, otherwise || null);
+    };
+
+    self._first = (d, key, otherwise) => {
+        if (!key) {
+            return undefined;
+        }
+
+        return _.d.first(d, key, otherwise || null);
+    };
+
+    self._list = (d, key, otherwise) => {
+        if (!key) {
+            return undefined;
+        }
+
+        return _.d.list(d, key, otherwise || null);
+    };
+
+    self._transform_key = (key) => _state_lookup_key(key, self.thing());
     self._cast = (key, as_type, value) => cast.cast(value, self.thing().attribute(key), as_type);
 
     self._prepare_update = (ud) => {
@@ -43,7 +78,7 @@ const make = (_thing, _d, _band) => {
         const thing = self.thing();
 
         _.mapObject(ud, ( uvalue, ukey ) => {
-            const key = helpers.state_lookup_key(ukey, thing);
+            const key = _state_lookup_key(ukey, thing);
             if (!key) {
                 rds.push({
                     key: ukey,
@@ -75,7 +110,7 @@ const make = (_thing, _d, _band) => {
         const rds = [];
         const thing = self.thing();
 
-        const key = helpers.state_lookup_key(ukey, thing);
+        const key = _state_lookup_key(ukey, thing);
         if (!key) {
             rds.push({
                 key: ukey,

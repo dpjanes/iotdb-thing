@@ -99,45 +99,6 @@ const make_match_rule = function(o) {
     }
 };
 
-// for istate and ostate
-const state_get = (d, key, otherwise) => {
-    if (!key) {
-        return undefined;
-    }
-
-    return _.d.get(d, key, otherwise || null);
-};
-
-const state_first = (d, key, otherwise) => {
-    if (!key) {
-        return undefined;
-    }
-
-    return _.d.first(d, key, otherwise || null);
-};
-
-const state_list = (d, key, otherwise) => {
-    if (!key) {
-        return undefined;
-    }
-
-    return _.d.list(d, key, otherwise || null);
-};
-
-const state_lookup_key = (key, thing) => {
-    const attribute = thing.attribute(key);
-    if (!attribute) {
-        return null;
-    }
-
-    const id = _.ld.first(attribute, "@id");
-    if (!id) {
-        return null;
-    }
-
-    return id.replace(/^.*#/, '');
-}
-
 /**
  *  API
  */
@@ -150,8 +111,3 @@ exports.flat_list = flat_list;
 exports.flat_put = flat_put;
 
 exports.make_match_rule = make_match_rule;
-
-exports.state_get = state_get;
-exports.state_first = state_first;
-exports.state_list = state_list;
-exports.state_lookup_key = state_lookup_key;
