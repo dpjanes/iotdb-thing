@@ -46,32 +46,34 @@ const _state_lookup_key = (key, thing) => {
 const make = (_thing, _d, _band) => {
     const self = band.make(_thing, _d, _band);
 
-    self._get = (d, key, otherwise) => {
+    const _retrieve = (d, key, otherwise, how) => {
         if (!key) {
-            return undefined;
+            return;
         }
 
-        return _.d.get(d, key, otherwise || null);
-    };
+        return _.d[how](d, key, otherwise || null);
+    }
 
-    self._first = (d, key, otherwise) => {
-        if (!key) {
-            return undefined;
-        }
-
-        return _.d.first(d, key, otherwise || null);
-    };
-
-    self._list = (d, key, otherwise) => {
-        if (!key) {
-            return undefined;
-        }
-
-        return _.d.list(d, key, otherwise || null);
-    };
+    self._get = (d, key, otherwise) => _retrieve(d, key, otherwise, "get");
+    self._first = (d, key, otherwise) => _retrieve(d, key, otherwise, "first");
+    self._list = (d, key, otherwise) => _retrieve(d, key, otherwise, "list");
 
     self._transform_key = (key) => _state_lookup_key(key, self.thing());
-    self._cast = (key, as_type, value) => cast.cast(value, self.thing().attribute(key), as_type);
+    self._cast = (key, as_type, value) => {
+        const attribute = self.thing().attribute(key);
+        if (!attribute) {
+            return;
+        }
+        
+        value = cast.cast(value, attribute, as_type);
+        if (_.is.Null(value)) {
+            return value;
+        } else if (!_.is.Array(value)) {
+            return cast.enumerate(value, attribute, true);
+        } else {
+            return value.map(v => cast.enumerate(v, attribute, true));
+        }
+    };
 
     self._prepare_update = (ud) => {
         const rds = [];

@@ -112,5 +112,161 @@ describe("ostate_enumeration", function() {
                     });
             });
         });
+        describe("get (non-semantic)", function() {
+            it("success - no value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {},
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.get("band");
+                assert.deepEqual(value, null);
+                done();
+            });
+            it("success - with value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {
+                        "band": "AUX",
+                    },
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.get("band");
+                assert.deepEqual(value, "iot-purpose:band.aux");
+                done();
+            });
+        });
+        describe("get (semantic)", function() {
+            it("success - no value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {},
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.get("iot-purpose:band");
+                assert.deepEqual(value, null);
+                done();
+            });
+            it("success - with value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {
+                        "band": "AUX",
+                    },
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.get("iot-purpose:band");
+                assert.deepEqual(value, "iot-purpose:band.aux");
+                done();
+            });
+        });
+        describe("first (non-semantic)", function() {
+            it("success - no value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {},
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.first("band");
+                assert.deepEqual(value, null);
+                done();
+            });
+            it("success - with value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {
+                        "band": "AUX",
+                    },
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.first("band");
+                assert.deepEqual(value, "iot-purpose:band.aux");
+                done();
+            });
+        });
+        describe("first (semantic)", function() {
+            it("success - no value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {},
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.first("iot-purpose:band");
+                assert.deepEqual(value, null);
+                done();
+            });
+            it("success - with value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {
+                        "band": "AUX",
+                    },
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.first("iot-purpose:band");
+                assert.deepEqual(value, "iot-purpose:band.aux");
+                done();
+            });
+        });
+        describe("list (non-semantic)", function() {
+            it("success - no value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {},
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.list("band");
+                assert.deepEqual(value, []);
+                done();
+            });
+            it("success - with value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {
+                        "band": "AUX",
+                    },
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.list("band");
+                assert.deepEqual(value, [ "iot-purpose:band.aux" ]);
+                done();
+            });
+        });
+        describe("list (semantic)", function() {
+            it("success - no value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {},
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.list("iot-purpose:band");
+                assert.deepEqual(value, []);
+                done();
+            });
+            it("success - with value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {
+                        "band": "AUX",
+                    },
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.list("iot-purpose:band");
+                assert.deepEqual(value, [ "iot-purpose:band.aux" ]);
+                done();
+            });
+        });
     });
 });
