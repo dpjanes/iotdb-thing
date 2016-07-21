@@ -38,7 +38,7 @@ const model_document = JSON.parse(fs.readFileSync(model_file, 'utf-8'));
 
 describe("ostate_enumeration", function() {
     describe("enumeration", function() {
-        describe("general function", function() {
+        describe("set", function() {
             it("success", function(done) {
                 const thing_1 = thing.make({
                     model: model_document,
@@ -66,7 +66,46 @@ describe("ostate_enumeration", function() {
                 const promise = ostate_1.set("band", "iot-purpose:band.unknown");
                 promise
                     .then((ud) => {
-                        assert.ok(false, "this should not work");
+                        done(new Error("this should not work"));
+                    })
+                    .catch((error) => {
+                        done();
+                    });
+            });
+        });
+        describe("update", function() {
+            it("success", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {},
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const promise = ostate_1.update({
+                    "band": "AUX",
+                });
+                promise
+                    .then((ud) => {
+                        assert.deepEqual(ud, { "band": "AUX" });
+                        done();
+                    })
+                    .catch((error) => {
+                        done(error);
+                    });
+            });
+            it("bad value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {},
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const promise = ostate_1.update({
+                    "band": "NOT-KNOWN",
+                });
+                promise
+                    .then((ud) => {
+                        done(new Error("this should not work"));
                     })
                     .catch((error) => {
                         done();

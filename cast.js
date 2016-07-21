@@ -91,23 +91,6 @@ const _format_value = (self) => {
 
 };
 
-const _enumerate_value = (self) => {
-    if (_.is.Undefined(self.value)) {
-        return;
-    }
-
-    let enumeration = self.to["iot:enumeration"]
-    if (!enumeration) {
-        return;
-    }
-
-    if (_.is.Array(enumeration)) {
-        enumeration = _.object(enumeration, enumeration)
-    }
-
-    self.value = enumeration[self.value];
-};
-
 const cast = ( value, from, to ) => {
     if (!to) {
         return value;
@@ -124,12 +107,33 @@ const cast = ( value, from, to ) => {
     _bound_minumum(self);
     _bound_maximum(self);
     _format_value(self);
-    _enumerate_value(self);
 
     return self.value;
+};
+
+// inbound: iot:UNIVERSAL -> THING-SPECIFIC
+// outbound: THING-SPECIFIC -> iot:UNIVERSAL
+const enumerate = ( value, to, inbound ) => {
+    if (_.is.Undefined(value)) {
+        return value;
+    }
+
+    let enumeration = to["iot:enumeration"]
+    if (!enumeration) {
+        return value;
+    }
+
+    if (_.is.Array(enumeration)) {
+        enumeration = _.object(enumeration, enumeration);
+    } else if (inbound) {
+        enumeration = _.invert(enumeration);
+    }
+
+    return enumeration[value];
 };
 
 /**
  *  API
  */
 exports.cast = cast;
+exports.enumerate = enumerate;

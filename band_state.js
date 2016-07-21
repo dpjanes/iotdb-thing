@@ -51,10 +51,20 @@ const make = (_thing, _d, _band) => {
                     is_validated: false,
                 });
             } else {
-                rds.push({
-                    key: key,
-                    value: uvalue,
-                });
+                const attribute = thing.attribute(ukey);
+                const enumerated_value = cast.enumerate(uvalue, attribute, true);
+                if (_.is.Undefined(enumerated_value)) {
+                    rds.push({
+                        key: key,
+                        value: uvalue,
+                        is_validated: false,
+                    });
+                } else {
+                    rds.push({
+                        key: key,
+                        value: uvalue,  
+                    });
+                }
             }
         });
 
@@ -74,7 +84,7 @@ const make = (_thing, _d, _band) => {
             });
         } else {
             const attribute = thing.attribute(ukey);
-            const value = cast.cast(uvalue, as_type, attribute);
+            const value = cast.enumerate(cast.cast(uvalue, as_type, attribute), attribute);
             if (_.is.Undefined(value)) {
                 rds.push({
                     key: key,
