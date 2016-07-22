@@ -25,6 +25,22 @@
           "iot:type": "iot:type.string",
           "iot:write": true,
           "schema:name": "band"
+        },
+        {
+          "@id": "#color-mode",
+          "@type": "iot:Attribute",
+          "iot:actuator": true,
+          "iot:enumeration": [
+            "NORMAL",
+            "BRIGHT",
+            "SPORTS"
+          ],
+          "iot:purpose": "iot-purpose:vendor.color-mode",
+          "iot:read": true,
+          "iot:sensor": true,
+          "iot:type": "iot:type.string",
+          "iot:write": true,
+          "schema:name": "color mode"
         }
     ]
 }

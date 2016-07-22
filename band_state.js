@@ -64,14 +64,12 @@ const make = (_thing, _d, _band) => {
         if (!attribute) {
             return;
         }
-        
+
         value = cast.cast(value, attribute, as_type);
         if (_.is.Null(value)) {
             return value;
-        } else if (!_.is.Array(value)) {
-            return cast.enumerate(value, attribute, true);
         } else {
-            return value.map(v => cast.enumerate(v, attribute, true));
+            return cast.enumerate(value, attribute, true);
         }
     };
 

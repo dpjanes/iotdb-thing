@@ -267,6 +267,54 @@ describe("ostate_enumeration", function() {
                 assert.deepEqual(value, [ "iot-purpose:band.aux" ]);
                 done();
             });
+            it("success - with list value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {
+                        "band": [ "AUX" ],
+                    },
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const value = ostate_1.list("iot-purpose:band");
+                assert.deepEqual(value, [ "iot-purpose:band.aux" ]);
+                done();
+            });
+        });
+        describe("set - with enum list rather than dictionary", function() {
+            it("success", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {},
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const promise = ostate_1.set("color-mode", "SPORTS");
+                promise
+                    .then((ud) => {
+                        assert.deepEqual(ud, { "color-mode": "SPORTS" });
+                        done();
+                    })
+                    .catch((error) => {
+                        done(error);
+                    });
+            });
+            it("bad value", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    ostate: {},
+                });
+                const ostate_1 = thing_1.band("ostate");
+
+                const promise = ostate_1.set("color-mode", "BAD");
+                promise
+                    .then((ud) => {
+                        done(new Error("this should not work"));
+                    })
+                    .catch((error) => {
+                        done();
+                    });
+            });
         });
     });
 });
