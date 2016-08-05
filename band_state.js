@@ -79,7 +79,8 @@ const make = (_thing, _d, _band) => {
 
         _.mapObject(ud, ( uvalue, ukey ) => {
             const key = _state_lookup_key(ukey, thing);
-            if (!key) {
+            if (ukey.match(/^@/)) {
+            } else if (!key) {
                 rds.push({
                     key: ukey,
                     value: uvalue,
@@ -87,8 +88,9 @@ const make = (_thing, _d, _band) => {
                 });
             } else {
                 const attribute = thing.attribute(ukey);
-                const enumerated_value = cast.enumerate(uvalue, attribute, true);
-                if (_.is.Undefined(enumerated_value)) {
+                // const value = cast.enumerate(uvalue, attribute, true);
+                const value = cast.enumerate(cast.cast(uvalue, null, attribute), attribute, true);
+                if (_.is.Undefined(value)) {
                     rds.push({
                         key: key,
                         value: uvalue,
@@ -97,7 +99,7 @@ const make = (_thing, _d, _band) => {
                 } else {
                     rds.push({
                         key: key,
-                        value: uvalue,  
+                        value: value,  
                     });
                 }
             }

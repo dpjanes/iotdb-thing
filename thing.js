@@ -83,6 +83,7 @@ const make = (initd) => {
 
     // interface
     self.band = band_name => _bandd[band_name] || null;
+    self.bands = () => _.keys(_bandd);
     self.model_id = () => self.band("model").first("iot:model-id");
     self.thing_id = () => self.band("meta").first("iot:thing-id");
     self.reachable = () => _.coerce.value(self.band("connection").first("iot:reachable", as.boolean()), false);

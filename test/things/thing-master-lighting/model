@@ -1,4 +1,5 @@
 {
+    "iot:model-id": "lighting",
     "iot:attribute": [
         {
             "@id": "#on",

@@ -51,25 +51,26 @@ const make = (_thing, d, _band_name) => {
             var utimestamp = paramd.timestamp || _.timestamp.make();
 
             if (paramd.check_timestamp && !_.timestamp.check.values(_timestamp, utimestamp)) {
+                console.log("IOTDB-THING: TIMESTAMP ERROR");
                 return reject(new errors.Timestamp());
             }
 
             if (paramd.validate) {
                 const invalids = _.map(_.filter(uds, (ud) => ud.is_validated === false), (ud) => ud.key);
                 if (invalids.length) {
-                    return reject(new errors.Invalid("invalid updates"));
+                    console.log("IOTDB-THING: INVALIDS");
+                    return reject(new errors.Invalid("invalid updates: " + invalids.join(",")));
                 }
             }
 
             uds = uds
                 .filter(ud => !ud.key.match(/^@/))
-                .filter(ud => ud.is_validated !== false)
-                .filter(ud => !_.is.Equal(ud.value, _d[ud.key]));
+                .filter(ud => ud.is_validated !== false);
 
             const changed = {};
 
             if (paramd.replace) {
-                const updating = _.keys(uds);
+                const updating = uds.map(ud => ud.key);
 
                 _.pairs(_d)
                     .filter(kv => kv[1] !== null)
@@ -85,6 +86,7 @@ const make = (_thing, d, _band_name) => {
             }
 
             uds
+                .filter(ud => !_.is.Equal(ud.value, _d[ud.key]))   // XXX use path
                 .map(ud => {
                     self._put(_d, ud.key, ud.value);
                     self._put(changed, ud.key, ud.value);
