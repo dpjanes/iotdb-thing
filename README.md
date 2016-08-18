@@ -7,7 +7,7 @@ IOTDB Module for Managing Things
 
 This is a total / radical rewriting of our Thing manipulation library.
 It has no knowledge of Things, per se - it's meant to plug into our
-other modules such [iotdb]() and [iotql]().
+other modules such [iotdb](https://github.com/dpjanes/node-iotdb) and [iotql](https://github.com/dpjanes/iotdb-iotql).
 
 The goals are:
 

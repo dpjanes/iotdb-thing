@@ -43,7 +43,6 @@ const make = (_thing, d, _band_name) => {
             paramd = _.d.compose.shallow(paramd, {
                 add_timestamp: true,
                 check_timestamp: true,
-                silent_timestamp: false,
                 notify: true,
                 validate: true,
                 replace: false,
@@ -52,18 +51,14 @@ const make = (_thing, d, _band_name) => {
             var utimestamp = paramd.timestamp || _.timestamp.make();
 
             if (paramd.check_timestamp && !_.timestamp.check.values(_timestamp, utimestamp)) {
-                if (paramd.silent_timestamp) {
-                    return resolve({});
-                }
-
-                console.log("IOTDB-THING: TIMESTAMP ERROR");
+                // console.log("IOTDB-THING: TIMESTAMP ERROR");
                 return reject(new errors.Timestamp());
             }
 
             if (paramd.validate) {
                 const invalids = _.map(_.filter(uds, (ud) => ud.is_validated === false), (ud) => ud.key);
                 if (invalids.length) {
-                    console.log("IOTDB-THING: INVALIDS");
+                    // console.log("IOTDB-THING: INVALIDS");
                     return reject(new errors.Invalid("invalid updates: " + invalids.join(",")));
                 }
             }
