@@ -122,4 +122,190 @@ describe("cast_format", function() {
             });
         });
     });
+    describe("datetime", function() {
+        const attributed = {
+            "@id": "#when",
+            "iot:purpose": "iot-purpose:when",
+            "iot:type": "iot:type.string",
+            "iot:format": "iot:format.datetime",
+        };
+        describe("bad", function() {
+            it("undefined", function() {
+                const value = undefined;
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("not a datetime", function() {
+                const value = "not a datetime";
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("bad month (low)", function() {
+                const value = "2016-00";
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("bad month (high)", function() {
+                const value = "2016-13";
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("bad day (low)", function() {
+                const value = "2016-01-00";
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("bad day (high)", function() {
+                const value = "2016-01-32";
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+        });
+        describe("good", function() {
+            it("just YYYY", function() {
+                const value = "2016"
+                const expect = "2016-01-01T00:00:00.000Z"; 
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("just YYYY-MM", function() {
+                const value = "2016-02";
+                const expect = "2016-02-01T00:00:00.000Z"; 
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("just YYYY-MM-DD", function() {
+                const value = "1983-12-25";
+                const expect = "1983-12-25T00:00:00.000Z"; 
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+        });
+    });
+    describe("date", function() {
+        const attributed = {
+            "@id": "#when",
+            "iot:purpose": "iot-purpose:when",
+            "iot:type": "iot:type.string",
+            "iot:format": "iot:format.date",
+        };
+        describe("bad", function() {
+            it("undefined", function() {
+                const value = undefined;
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("not a date", function() {
+                const value = "not a date";
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("bad month (low)", function() {
+                const value = "2016-00";
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("bad month (high)", function() {
+                const value = "2016-13";
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("bad day (low)", function() {
+                const value = "2016-01-00";
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("bad day (high)", function() {
+                const value = "2016-01-32";
+                const expect = undefined;
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+        });
+        describe("good", function() {
+            it("just YYYY", function() {
+                const value = "2016"
+                const expect = "2016-01-01";
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("just YYYY-MM", function() {
+                const value = "2016-02";
+                const expect = "2016-02-01";
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+            it("just YYYY-MM-DD", function() {
+                const value = "1983-12-25";
+                const expect = "1983-12-25";
+                const to = attributed;
+                const from = {};
+                const got = cast.cast(value, from, to);
+
+                assert.strictEqual(got, expect);
+            });
+        });
+    });
 });
