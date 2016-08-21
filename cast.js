@@ -89,6 +89,27 @@ const _format_value = (self) => {
         return;
     }
 
+    const to_format = _.d.first(self.to, "iot:format");
+    if (!to_format) {
+        return;
+    }
+
+    switch (to_format) {
+    case "iot:format.color":
+        return _format_color(self);
+    case "iot:format.date":
+        return _format_date(self);
+    case "iot:format.datetime":
+        return _format_datetime(self);
+    case "iot:format.iri":
+        return _format_iri(self);
+    case "iot:format.time":
+        return _format_time(self);
+    case "iot:format.timedelta":
+        return _format_timedelta(self);
+    default:
+        return null;
+    }
 };
 
 const cast = ( value, from, to ) => {
@@ -109,6 +130,78 @@ const cast = ( value, from, to ) => {
     _format_value(self);
 
     return self.value;
+};
+
+const _format_color = self => {
+    if (!_.is.String(self.value)) {
+        self.value = undefined;
+        return;
+    }
+
+    self.value = self.value.toUpperCase();
+    if (self.value.match(/^#[0-9A-F]{6}$/)) {
+        return;
+    }
+
+    self.value = _.color.color_to_hex(self.value, undefined);
+};
+
+const _make_date = (value) => {
+    let dt = null;
+    if (_.is.Number(value)) {
+        dt = new Date(value * 1000);
+    } else if (_.is.String(value)) {
+        dt = new Date(value);
+    } else {
+        return;
+    }
+
+    if (_.is.NaN(dt.getFullYear())) {
+        return;
+    }
+
+    return dt;
+}
+
+const _format_date = self => {
+    const dt = _make_date(self.value);
+    if (!dt) {
+        self.value = undefined;
+        return;
+    }
+
+    self.value = dt.toISOString().replace(/T.*$/, '');
+};
+
+const _format_datetime = self => {
+    const dt = _make_date(self.value);
+    if (!dt) {
+        self.value = undefined;
+        return;
+    }
+
+    self.value = dt.toISOString();
+};
+
+const _format_iri = self => {
+};
+
+const _format_time = self => {
+    if (!_.is.String(value)) {
+        self.value = undefined;
+        return;
+    }
+
+    const dt = _make_date("2000-01-01T" + self.value + "Z");
+    if (!dt) {
+        self.value = undefined;
+        return;
+    }
+
+    self.value = dt.toISOString().replace(/^.*T(.*)Z$/, "$1");
+};
+
+const _format_timedelta = self => {
 };
 
 // inbound: iot:UNIVERSAL -> THING-SPECIFIC
