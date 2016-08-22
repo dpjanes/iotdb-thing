@@ -7,7 +7,7 @@
         "iotdb-errors": "~3.0.2", 
         "iotdb-helpers": "~3.0.3"
     }, 
-    "description": "Generic function for ", 
+    "description": "IOTDB Module for Managing Things", 
     "devDependencies": {
         "grunt": "~1.0.1", 
         "grunt-contrib-jshint": "~1.0.0", 
@@ -35,5 +35,5 @@
         "cover": "istanbul cover _mocha", 
         "test": "grunt"
     }, 
-    "version": "3.0.1"
+    "version": "3.0.2"
 }
