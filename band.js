@@ -86,7 +86,7 @@ const make = (_thing, d, _band_name) => {
             }
 
             uds
-                .filter(ud => !_.is.Equal(ud.value, _.d.get(_d, ud.key)))   
+                .filter(ud => ud.is_null_type || !_.is.Equal(ud.value, _.d.get(_d, ud.key)))   
                 .map(ud => {
                     self._put(_d, ud.key, ud.value);
                     self._put(changed, ud.key, ud.value);
@@ -97,6 +97,7 @@ const make = (_thing, d, _band_name) => {
                         });
                     }
                 });
+
 
             if (_.is.Empty(changed)) {
                 return resolve(changed);

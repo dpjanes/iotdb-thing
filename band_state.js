@@ -129,9 +129,23 @@ const make = (_thing, _d, _band) => {
                     is_validated: false,
                 });
             } else {
+                let is_null_type = false;
+                if (value === null) {
+                    if (as_type) {
+                        if (as_type === "iot:type.null") {
+                            is_null_type = true;
+                        }
+                    } else if (attribute) {
+                        if (_.d.list(attribute, "iot:type", []).indexOf("iot:type.null") > -1) {
+                            is_null_type = true;
+                        }
+                    }
+                }
+
                 rds.push({
                     key: key,
                     value: value,
+                    is_null_type: is_null_type,
                 });
             }
         }
