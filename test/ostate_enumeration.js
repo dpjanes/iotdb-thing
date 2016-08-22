@@ -86,7 +86,8 @@ describe("ostate_enumeration", function() {
                 });
                 promise
                     .then((ud) => {
-                        assert.deepEqual(ud, { "band": "iot-purpose:band.aux" });
+                        // assert.deepEqual(ud, { "band": "iot-purpose:band.aux" });
+                        assert.deepEqual(ud, { "band": "AUX" });
                         done();
                     })
                     .catch((error) => {

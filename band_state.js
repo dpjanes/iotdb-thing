@@ -88,9 +88,9 @@ const make = (_thing, _d, _band) => {
                 });
             } else {
                 const attribute = thing.attribute(ukey);
-                // const value = cast.enumerate(uvalue, attribute, true);
-                const value = cast.enumerate(cast.cast(uvalue, null, attribute), attribute, true);
-                if (_.is.Undefined(value)) {
+                const value = cast.cast(uvalue, null, attribute);
+                const enum_value = cast.enumerate(value, attribute, true);
+                if (_.is.Undefined(enum_value)) {
                     rds.push({
                         key: key,
                         value: uvalue,
