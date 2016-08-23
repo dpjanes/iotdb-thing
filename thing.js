@@ -99,11 +99,11 @@ const make = (initd) => {
     
     self.disconnect = () => self.emit("disconnect");
 
+    self.attributes = () => self.band("model").list("iot:attribute");
     self.attribute = (key, as_type) => {
         const matchd = helpers.make_match_rule(key);
-        const ads = self.band("model").list("iot:attribute");
 
-        const ad = _.find(ads, (ad) => _.d.is.superset(ad, matchd));
+        const ad = _.find(self.attributes(), ad => _.d.is.superset(ad, matchd));
         if (ad && as_type) {
             return _.d.compose.shallow(as_type, ad);
         } else {

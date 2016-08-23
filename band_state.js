@@ -130,16 +130,8 @@ const make = (_thing, _d, _band) => {
                 });
             } else {
                 let is_null_type = false;
-                if (value === null) {
-                    if (as_type) {
-                        if (as_type === "iot:type.null") {
-                            is_null_type = true;
-                        }
-                    } else if (attribute) {
-                        if (_.d.list(attribute, "iot:type", []).indexOf("iot:type.null") > -1) {
-                            is_null_type = true;
-                        }
-                    }
+                if ((value === null) && (_.d.list(attribute, "iot:type", []).indexOf("iot:type.null") > -1)) {
+                    is_null_type = true;
                 }
 
                 rds.push({

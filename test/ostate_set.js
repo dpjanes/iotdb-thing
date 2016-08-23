@@ -1,9 +1,9 @@
 /*
- *  ostate_set_boolean.js
+ *  ostate_set.js
  *
  *  David Janes
  *  IOTDB
- *  2016-08-04
+ *  2016-08-22
  *
  *  Copyright [2013-2016] [David P. Janes]
  *
