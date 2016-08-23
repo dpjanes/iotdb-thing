@@ -38,6 +38,7 @@ const make = (_thing, d, _band_name) => {
     let _pending = {};
     let _emitter = new events.EventEmitter();
 
+
     const _update = (uds, paramd) => {
         return new Promise(( resolve, reject ) => {
             paramd = _.d.compose.shallow(paramd, {
@@ -51,14 +52,12 @@ const make = (_thing, d, _band_name) => {
             var utimestamp = paramd.timestamp || _.timestamp.make();
 
             if (paramd.check_timestamp && !_.timestamp.check.values(_timestamp, utimestamp)) {
-                // console.log("IOTDB-THING: TIMESTAMP ERROR");
                 return reject(new errors.Timestamp());
             }
 
             if (paramd.validate) {
                 const invalids = _.map(_.filter(uds, (ud) => ud.is_validated === false), (ud) => ud.key);
                 if (invalids.length) {
-                    // console.log("IOTDB-THING: INVALIDS");
                     return reject(new errors.Invalid("invalid updates: " + invalids.join(",")));
                 }
             }
@@ -83,10 +82,15 @@ const make = (_thing, d, _band_name) => {
                             value: null,
                         });
                     });
-            }
+            } 
+
+            uds.forEach(ud => {
+                ud.old = _.d.get(_d, ud.key);
+            });
 
             uds
-                .filter(ud => ud.is_null_type || !_.is.Equal(ud.value, _.d.get(_d, ud.key)))   
+                .filter(ud => !_.is.Equal(ud.value, ud.old))
+                .filter(ud => !ud.is_instantaneous || !ud.old || (ud.value >= ud.old))
                 .map(ud => {
                     self._put(_d, ud.key, ud.value);
                     self._put(changed, ud.key, ud.value);
@@ -98,6 +102,7 @@ const make = (_thing, d, _band_name) => {
                     }
                 });
 
+            //console.log("CHANGED", changed);
 
             if (_.is.Empty(changed)) {
                 return resolve(changed);

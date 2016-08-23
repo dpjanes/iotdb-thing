@@ -39,7 +39,8 @@ const model_document = {
         {
             "@id": "#on",
             "iot:purpose": "iot-purpose:on.true",
-            "iot:type": "iot:type.null",
+            "iot:type": "iot:type.string",
+            "iot:instantaneous": true,
             "iot:read": true,
             "iot:write": true,
             "iot:sensor": true,
@@ -50,6 +51,11 @@ const model_document = {
 const istate_document = { };
 
 describe("ostate", function() {
+    const now = _.timestamp.make();
+    const assert_now_or_later = ud => {
+        assert.ok(ud["on"] >= now);
+    };
+
     describe("set", function() {
         describe("semantic", function() {
             it("set with a null", function(done) {
@@ -62,7 +68,7 @@ describe("ostate", function() {
                 const promise = istate_1.set(":on.true", null);
                 promise
                     .then((ud) => {
-                        assert.deepEqual(ud, { "on": null });
+                        assert_now_or_later(ud);
                         done();
                     })
                     .catch((error) => {
@@ -79,7 +85,7 @@ describe("ostate", function() {
                 const promise = istate_1.set(":on.true", 1);
                 promise
                     .then((ud) => {
-                        assert.deepEqual(ud, { "on": null });
+                        assert_now_or_later(ud);
                         done();
                     })
                     .catch((error) => {
@@ -96,45 +102,7 @@ describe("ostate", function() {
                 const promise = istate_1.set(":on.true");
                 promise
                     .then((ud) => {
-                        done(new Error("setting with no argument is not defined"));
-                    })
-                    .catch((error) => {
-                        done();
-                    });
-            });
-            it("set twice", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set(":on.true", 1);
-                promise
-                    .then((ud) => {
-                        assert.deepEqual(ud, { "on": null });
-                        const promise_2 = istate_1.set(":on.true", 1);
-                        promise_2
-                            .then((ud) => {
-                                assert.deepEqual(ud, { "on": null });
-                                done();
-                            });
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
-            });
-            it("set with a cast", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set(":on.true", null);
-                promise
-                    .then((ud) => {
-                        assert.deepEqual(ud, { "on": null });
+                        assert_now_or_later(ud);
                         done();
                     })
                     .catch((error) => {
@@ -153,7 +121,7 @@ describe("ostate", function() {
                 const promise = istate_1.set("on", null);
                 promise
                     .then((ud) => {
-                        assert.deepEqual(ud, { "on": null });
+                        assert_now_or_later(ud);
                         done();
                     })
                     .catch((error) => {
@@ -170,7 +138,7 @@ describe("ostate", function() {
                 const promise = istate_1.set("on", 1);
                 promise
                     .then((ud) => {
-                        assert.deepEqual(ud, { "on": null });
+                        assert_now_or_later(ud);
                         done();
                     })
                     .catch((error) => {
@@ -187,45 +155,7 @@ describe("ostate", function() {
                 const promise = istate_1.set("on");
                 promise
                     .then((ud) => {
-                        done(new Error("setting with no argument is not defined"));
-                    })
-                    .catch((error) => {
-                        done();
-                    });
-            });
-            it("set twice", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set("on", 1);
-                promise
-                    .then((ud) => {
-                        assert.deepEqual(ud, { "on": null });
-                        const promise_2 = istate_1.set("on", 1);
-                        promise_2
-                            .then((ud) => {
-                                assert.deepEqual(ud, { "on": null });
-                                done();
-                            });
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
-            });
-            it("set with a cast", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set("on", null);
-                promise
-                    .then((ud) => {
-                        assert.deepEqual(ud, { "on": null });
+                        assert_now_or_later(ud);
                         done();
                     })
                     .catch((error) => {

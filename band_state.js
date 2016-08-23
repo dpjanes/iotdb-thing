@@ -121,24 +121,26 @@ const make = (_thing, _d, _band) => {
             });
         } else {
             const attribute = thing.attribute(ukey);
-            const value = cast.enumerate(cast.cast(uvalue, as_type, attribute), attribute);
-            if (_.is.Undefined(value)) {
+            if (_.d.first(attribute, "iot:instantaneous")) {
                 rds.push({
                     key: key,
-                    value: uvalue,
-                    is_validated: false,
+                    value: _.timestamp.make(),
+                    is_instantaneous: true,
                 });
             } else {
-                let is_null_type = false;
-                if ((value === null) && (_.d.list(attribute, "iot:type", []).indexOf("iot:type.null") > -1)) {
-                    is_null_type = true;
+                const value = cast.enumerate(cast.cast(uvalue, as_type, attribute), attribute);
+                if (_.is.Undefined(value)) {
+                    rds.push({
+                        key: key,
+                        value: uvalue,
+                        is_validated: false,
+                    });
+                } else {
+                    rds.push({
+                        key: key,
+                        value: value,
+                    });
                 }
-
-                rds.push({
-                    key: key,
-                    value: value,
-                    is_null_type: is_null_type,
-                });
             }
         }
 
