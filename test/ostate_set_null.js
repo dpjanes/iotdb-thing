@@ -142,9 +142,25 @@ describe("ostate", function() {
                     });
             });
         });
-        /*
         describe("non-semantic", function() {
-            it("promise success", function(done) {
+            it("set with a null", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const promise = istate_1.set("on", null);
+                promise
+                    .then((ud) => {
+                        assert.deepEqual(ud, { "on": null });
+                        done();
+                    })
+                    .catch((error) => {
+                        done(error);
+                    });
+            });
+            it("set with a 1", function(done) {
                 const thing_1 = thing.make({
                     model: model_document,
                     istate: istate_document,
@@ -154,34 +170,62 @@ describe("ostate", function() {
                 const promise = istate_1.set("on", 1);
                 promise
                     .then((ud) => {
-                        assert.deepEqual(ud, { "on": true });
-                        assert.ok(_.is.Boolean(ud["on"]))
-                        assert.ok(_.is.Boolean(istate_1.state()["on"]))
+                        assert.deepEqual(ud, { "on": null });
                         done();
                     })
                     .catch((error) => {
                         done(error);
                     });
             });
-        });
-    });
-    describe("update", function() {
-        describe("general function", function() {
-            it("promise success", function(done) {
+            it("set with nothing", function(done) {
                 const thing_1 = thing.make({
                     model: model_document,
                     istate: istate_document,
                 });
                 const istate_1 = thing_1.band("istate");
 
-                const promise = istate_1.update({
-                    "on": 1,
-                });
+                const promise = istate_1.set("on");
                 promise
                     .then((ud) => {
-                        assert.deepEqual(ud, { "on": true });
-                        assert.ok(_.is.Boolean(ud["on"]))
-                        assert.ok(_.is.Boolean(istate_1.state()["on"]))
+                        done(new Error("setting with no argument is not defined"));
+                    })
+                    .catch((error) => {
+                        done();
+                    });
+            });
+            it("set twice", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const promise = istate_1.set("on", 1);
+                promise
+                    .then((ud) => {
+                        assert.deepEqual(ud, { "on": null });
+                        const promise_2 = istate_1.set("on", 1);
+                        promise_2
+                            .then((ud) => {
+                                assert.deepEqual(ud, { "on": null });
+                                done();
+                            });
+                    })
+                    .catch((error) => {
+                        done(error);
+                    });
+            });
+            it("set with a cast", function(done) {
+                const thing_1 = thing.make({
+                    model: model_document,
+                    istate: istate_document,
+                });
+                const istate_1 = thing_1.band("istate");
+
+                const promise = istate_1.set("on", null);
+                promise
+                    .then((ud) => {
+                        assert.deepEqual(ud, { "on": null });
                         done();
                     })
                     .catch((error) => {
@@ -189,6 +233,5 @@ describe("ostate", function() {
                     });
             });
         });
-        */
     });
 });
