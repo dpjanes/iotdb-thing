@@ -48,120 +48,188 @@ const model_document = {
         },
     ]
 }
-const istate_document = { };
+const ostate_document = { };
+
+const TS_OLD = '2010-03-25T21:28:43.613Z';
+const TS_NEW = '2012-03-25T21:28:43.613Z';
+const TS_FUTURE = '2299-03-25T21:28:43.613Z';
 
 describe("ostate_update_instantaneous", function() {
-    const now = _.timestamp.make();
-    const assert_now_or_later = ud => {
-        assert.ok(ud["on"] >= now);
-    };
-
-    describe("set", function() {
-        describe("semantic", function() {
-            it("set with a null", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set(":on.true", null);
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
+    describe("no existing value", function() {
+        it("update with a nothing - nothing should happen", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {
+                    "on": null,
+                }
             });
-            it("set with a 1", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
+            const ostate_1 = thing_1.band("ostate");
 
-                const promise = istate_1.set(":on.true", 1);
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
-            });
-            it("set with nothing", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
+            const promise = ostate_1.update({}, {})
+            promise
+                .then((ud) => {
+                    assert.deepEqual(ud, {});
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
                 });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set(":on.true");
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
-            });
         });
-        describe("non-semantic", function() {
-            it("set with a null", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set("on", null);
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
+        it("update with a null - nothing should happen", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {
+                    "on": null,
+                }
             });
-            it("set with a 1", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
+            const ostate_1 = thing_1.band("ostate");
 
-                const promise = istate_1.set("on", 1);
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
-            });
-            it("set with nothing", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
+            const promise = ostate_1.update({ "on": null }, {})
+            promise
+                .then((ud) => {
+                    assert.deepEqual(ud, {});
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
                 });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set("on");
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
+        });
+        it("update with a timestamp - should get it back", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {
+                    "on": null,
+                }
             });
+            const ostate_1 = thing_1.band("ostate");
+
+            const promise = ostate_1.update({ "on": TS_NEW }, {})
+            promise
+                .then((ud) => {
+                    assert.deepEqual(ud, { "on": TS_NEW });
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+    });
+    describe("existing OLD value", function() {
+        it("update with a nothing - nothing should happen", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {
+                    "on": TS_OLD,
+                }
+            });
+            const ostate_1 = thing_1.band("ostate");
+
+            const promise = ostate_1.update({}, {})
+            promise
+                .then((ud) => {
+                    assert.deepEqual(ud, {});
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+        it("update with a null - nothing should happen", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {
+                    "on": TS_OLD,
+                }
+            });
+            const ostate_1 = thing_1.band("ostate");
+
+            const promise = ostate_1.update({ "on": null }, {})
+            promise
+                .then((ud) => {
+                    assert.deepEqual(ud, {});
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+        it("update with NEW timestamp - should get it back", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {
+                    "on": TS_OLD,
+                }
+            });
+            const ostate_1 = thing_1.band("ostate");
+
+            const promise = ostate_1.update({ "on": TS_NEW }, {})
+            promise
+                .then((ud) => {
+                    assert.deepEqual(ud, { "on": TS_NEW });
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+    });
+    describe("existing NEW value", function() {
+        it("update with OLD timestamp - should get NOTHING", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {
+                    "on": TS_NEW,
+                }
+            });
+            const ostate_1 = thing_1.band("ostate");
+
+            const promise = ostate_1.update({ "on": TS_OLD }, {})
+            promise
+                .then((ud) => {
+                    assert.deepEqual(ud, {});
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+        it("update with NEW timestamp - should get NOTHING", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {
+                    "on": TS_NEW,
+                }
+            });
+            const ostate_1 = thing_1.band("ostate");
+
+            const promise = ostate_1.update({ "on": TS_NEW }, {})
+            promise
+                .then((ud) => {
+                    assert.deepEqual(ud, {});
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+        it("update with FUTURE timestamp - should get FUTURE", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {
+                    "on": TS_NEW,
+                }
+            });
+            const ostate_1 = thing_1.band("ostate");
+
+            const promise = ostate_1.update({ "on": TS_FUTURE }, {})
+            promise
+                .then((ud) => {
+                    assert.deepEqual(ud, { "on": TS_FUTURE });
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
         });
     });
 });
