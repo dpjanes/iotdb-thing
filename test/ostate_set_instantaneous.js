@@ -1,5 +1,5 @@
 /*
- *  ostate_set_null.js
+ *  ostate_set_instananeous.js
  *
  *  David Janes
  *  IOTDB
@@ -50,118 +50,116 @@ const model_document = {
 }
 const istate_document = { };
 
-describe("ostate", function() {
+describe("ostate_set_instananeous", function() {
     const now = _.timestamp.make();
     const assert_now_or_later = ud => {
         assert.ok(ud["on"] >= now);
     };
 
-    describe("set", function() {
-        describe("semantic", function() {
-            it("set with a null", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set(":on.true", null);
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
+    describe("semantic", function() {
+        it("set with a null", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                istate: istate_document,
             });
-            it("set with a 1", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
+            const istate_1 = thing_1.band("istate");
 
-                const promise = istate_1.set(":on.true", 1);
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
-            });
-            it("set with nothing", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
+            const promise = istate_1.set(":on.true", null);
+            promise
+                .then((ud) => {
+                    assert_now_or_later(ud);
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
                 });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set(":on.true");
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
-            });
         });
-        describe("non-semantic", function() {
-            it("set with a null", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set("on", null);
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
+        it("set with a 1", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                istate: istate_document,
             });
-            it("set with a 1", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
-                });
-                const istate_1 = thing_1.band("istate");
+            const istate_1 = thing_1.band("istate");
 
-                const promise = istate_1.set("on", 1);
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
-            });
-            it("set with nothing", function(done) {
-                const thing_1 = thing.make({
-                    model: model_document,
-                    istate: istate_document,
+            const promise = istate_1.set(":on.true", 1);
+            promise
+                .then((ud) => {
+                    assert_now_or_later(ud);
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
                 });
-                const istate_1 = thing_1.band("istate");
-
-                const promise = istate_1.set("on");
-                promise
-                    .then((ud) => {
-                        assert_now_or_later(ud);
-                        done();
-                    })
-                    .catch((error) => {
-                        done(error);
-                    });
+        });
+        it("set with nothing", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                istate: istate_document,
             });
+            const istate_1 = thing_1.band("istate");
+
+            const promise = istate_1.set(":on.true");
+            promise
+                .then((ud) => {
+                    assert_now_or_later(ud);
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+    });
+    describe("non-semantic", function() {
+        it("set with a null", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                istate: istate_document,
+            });
+            const istate_1 = thing_1.band("istate");
+
+            const promise = istate_1.set("on", null);
+            promise
+                .then((ud) => {
+                    assert_now_or_later(ud);
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+        it("set with a 1", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                istate: istate_document,
+            });
+            const istate_1 = thing_1.band("istate");
+
+            const promise = istate_1.set("on", 1);
+            promise
+                .then((ud) => {
+                    assert_now_or_later(ud);
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+        it("set with nothing", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                istate: istate_document,
+            });
+            const istate_1 = thing_1.band("istate");
+
+            const promise = istate_1.set("on");
+            promise
+                .then((ud) => {
+                    assert_now_or_later(ud);
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
         });
     });
 });
