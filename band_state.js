@@ -29,12 +29,8 @@ const _ = require("iotdb-helpers");
 const band = require("./band");
 const cast = require("./cast");
 
-const _state_lookup_key = (key, thing) => {
-    const attribute = thing.attribute(key);
-    if (!attribute) {
-        return null;
-    }
 
+const _key = attribute => {
     const id = _.ld.first(attribute, "@id");
     if (!id) {
         return null;
@@ -58,7 +54,7 @@ const make = (_thing, _d, _band) => {
     self._first = (d, key, otherwise) => _retrieve(d, key, otherwise, "first");
     self._list = (d, key, otherwise) => _retrieve(d, key, otherwise, "list");
 
-    self._transform_key = (key) => _state_lookup_key(key, self.thing());
+    self._transform_key = key => _key(self.thing().attribute(key));
     self._cast = (key, as_type, value) => {
         const attribute = self.thing().attribute(key);
         if (!attribute) {
@@ -78,16 +74,16 @@ const make = (_thing, _d, _band) => {
         const thing = self.thing();
 
         _.mapObject(ud, ( uvalue, ukey ) => {
-            const key = _state_lookup_key(ukey, thing);
+            const attribute = thing.attribute(ukey);
             if (ukey.match(/^@/)) {
-            } else if (!key) {
+            } else if (!attribute) {
                 rds.push({
                     key: ukey,
                     value: uvalue,
                     is_validated: false,
                 });
             } else {
-                const attribute = thing.attribute(ukey);
+                const key = _key(attribute);
                 if (_.d.first(attribute, "iot:instantaneous")) {
                     rds.push({
                         key: key,
@@ -116,19 +112,48 @@ const make = (_thing, _d, _band) => {
         return rds;
     };
 
+    const _alternate = ( ukey, uvalue ) => {
+        if (!_.is.String(ukey)) {
+            return;
+        } else if (ukey.indexOf(':') === -1) {
+            return;
+        }
+
+        const thing = self.thing();
+
+        const bvalue = _.coerce.coerce(uvalue, [ "iot:type.boolean" ])
+        if (bvalue) {
+            const nkey = ukey + ".true";
+            const attribute = thing.attribute(nkey)
+            if (attribute) {
+                return attribute
+            }
+        } else {
+            const nkey = ukey + ".false";
+            const attribute = thing.attribute(nkey)
+            if (attribute) {
+                return attribute
+            }
+        }
+    }
+
     self._prepare_set = ( ukey, uvalue, as_type ) => {
         const rds = [];
         const thing = self.thing();
 
-        const key = _state_lookup_key(ukey, thing);
-        if (!key) {
+        let attribute = thing.attribute(ukey);
+        if (!attribute) {
+            attribute = _alternate(ukey, uvalue);
+        }
+
+        if (!attribute) {
             rds.push({
                 key: ukey,
                 value: uvalue,
                 is_validated: false,
             });
         } else {
-            const attribute = thing.attribute(ukey);
+            const key = _key(attribute);
             if (_.d.first(attribute, "iot:instantaneous")) {
                 rds.push({
                     key: key,
