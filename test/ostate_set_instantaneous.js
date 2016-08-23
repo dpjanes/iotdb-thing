@@ -48,7 +48,7 @@ const model_document = {
         },
     ]
 }
-const istate_document = { };
+const ostate_document = { };
 
 describe("ostate_set_instananeous", function() {
     const now = _.timestamp.make();
@@ -60,11 +60,11 @@ describe("ostate_set_instananeous", function() {
         it("set with a null", function(done) {
             const thing_1 = thing.make({
                 model: model_document,
-                istate: istate_document,
+                ostate: ostate_document,
             });
-            const istate_1 = thing_1.band("istate");
+            const ostate_1 = thing_1.band("ostate");
 
-            const promise = istate_1.set(":on.true", null);
+            const promise = ostate_1.set(":on.true", null);
             promise
                 .then((ud) => {
                     assert_now_or_later(ud);
@@ -77,11 +77,11 @@ describe("ostate_set_instananeous", function() {
         it("set with a 1", function(done) {
             const thing_1 = thing.make({
                 model: model_document,
-                istate: istate_document,
+                ostate: ostate_document,
             });
-            const istate_1 = thing_1.band("istate");
+            const ostate_1 = thing_1.band("ostate");
 
-            const promise = istate_1.set(":on.true", 1);
+            const promise = ostate_1.set(":on.true", 1);
             promise
                 .then((ud) => {
                     assert_now_or_later(ud);
@@ -94,11 +94,11 @@ describe("ostate_set_instananeous", function() {
         it("set with nothing", function(done) {
             const thing_1 = thing.make({
                 model: model_document,
-                istate: istate_document,
+                ostate: ostate_document,
             });
-            const istate_1 = thing_1.band("istate");
+            const ostate_1 = thing_1.band("ostate");
 
-            const promise = istate_1.set(":on.true");
+            const promise = ostate_1.set(":on.true");
             promise
                 .then((ud) => {
                     assert_now_or_later(ud);
@@ -113,11 +113,11 @@ describe("ostate_set_instananeous", function() {
         it("set with a null", function(done) {
             const thing_1 = thing.make({
                 model: model_document,
-                istate: istate_document,
+                ostate: ostate_document,
             });
-            const istate_1 = thing_1.band("istate");
+            const ostate_1 = thing_1.band("ostate");
 
-            const promise = istate_1.set("on", null);
+            const promise = ostate_1.set("on", null);
             promise
                 .then((ud) => {
                     assert_now_or_later(ud);
@@ -130,11 +130,11 @@ describe("ostate_set_instananeous", function() {
         it("set with a 1", function(done) {
             const thing_1 = thing.make({
                 model: model_document,
-                istate: istate_document,
+                ostate: ostate_document,
             });
-            const istate_1 = thing_1.band("istate");
+            const ostate_1 = thing_1.band("ostate");
 
-            const promise = istate_1.set("on", 1);
+            const promise = ostate_1.set("on", 1);
             promise
                 .then((ud) => {
                     assert_now_or_later(ud);
@@ -147,11 +147,11 @@ describe("ostate_set_instananeous", function() {
         it("set with nothing", function(done) {
             const thing_1 = thing.make({
                 model: model_document,
-                istate: istate_document,
+                ostate: ostate_document,
             });
-            const istate_1 = thing_1.band("istate");
+            const ostate_1 = thing_1.band("ostate");
 
-            const promise = istate_1.set("on");
+            const promise = ostate_1.set("on");
             promise
                 .then((ud) => {
                     assert_now_or_later(ud);
