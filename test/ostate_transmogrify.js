@@ -134,4 +134,54 @@ describe("ostate_transmogrify", function() {
                 });
         });
     });
+    describe("on.true/on.false -> on", function() {
+        const model_document = {
+            "iot:model-id": "lighting",
+            "iot:attribute": [
+                {
+                    "@id": "#on",
+                    "iot:purpose": "iot-purpose:on",
+                    "iot:type": "iot:type.boolean",
+                    "iot:read": true,
+                    "iot:write": true,
+                    "iot:sensor": true,
+                    "iot:actuator": true
+                },
+            ]
+        }
+        it("on.true", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {},
+            });
+            const ostate_1 = thing_1.band("ostate");
+
+            const promise = ostate_1.set(":on.true");
+            promise
+                .then((ud) => {
+                    assert.ok(ud["on"] === true);
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+        it("on.false", function(done) {
+            const thing_1 = thing.make({
+                model: model_document,
+                ostate: {},
+            });
+            const ostate_1 = thing_1.band("ostate");
+
+            const promise = ostate_1.set(":on.false");
+            promise
+                .then((ud) => {
+                    assert.ok(ud["on"] === false);
+                    done();
+                })
+                .catch((error) => {
+                    done(error);
+                });
+        });
+    });
 });

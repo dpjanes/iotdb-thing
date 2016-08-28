@@ -29,16 +29,6 @@ const _ = require("iotdb-helpers");
 const band = require("./band");
 const cast = require("./cast");
 
-
-const _key = attribute => {
-    const id = _.ld.first(attribute, "@id");
-    if (!id) {
-        return null;
-    }
-
-    return id.replace(/^.*#/, '');
-};
-
 const make = (_thing, _d, _band) => {
     const self = band.make(_thing, _d, _band);
 
@@ -54,7 +44,7 @@ const make = (_thing, _d, _band) => {
     self._first = (d, key, otherwise) => _retrieve(d, key, otherwise, "first");
     self._list = (d, key, otherwise) => _retrieve(d, key, otherwise, "list");
 
-    self._transform_key = key => _key(self.thing().attribute(key));
+    self._transform_key = key => _.id.code.from.attribute(self.thing().attribute(key));
     self._cast = (key, as_type, value) => {
         const attribute = self.thing().attribute(key);
         if (!attribute) {
@@ -83,7 +73,7 @@ const make = (_thing, _d, _band) => {
                     is_validated: false,
                 });
             } else {
-                const key = _key(attribute);
+                const key = _.id.code.from.attribute(attribute);
                 if (_.d.first(attribute, "iot:instantaneous")) {
                     rds.push({
                         key: key,
@@ -126,13 +116,39 @@ const make = (_thing, _d, _band) => {
             const nkey = ukey + ".true";
             const attribute = thing.attribute(nkey)
             if (attribute) {
-                return attribute
+                return {
+                    attribute: attribute,
+                    value: true,
+                }
             }
         } else {
             const nkey = ukey + ".false";
             const attribute = thing.attribute(nkey)
             if (attribute) {
-                return attribute
+                return {
+                    attribute: attribute,
+                    value: true,
+                }
+            }
+        }
+
+        if (ukey.match(/[.]true$/)) {
+            const attribute = thing.attribute(ukey.replace(/[.]true$/, ''))
+            if (attribute) {
+                return {
+                    attribute: attribute,
+                    value: true,
+                }
+            }
+        }
+
+        if (ukey.match(/[.]false$/)) {
+            const attribute = thing.attribute(ukey.replace(/[.]false$/, ''))
+            if (attribute) {
+                return {
+                    attribute: attribute,
+                    value: false,
+                }
             }
         }
     }
@@ -143,7 +159,11 @@ const make = (_thing, _d, _band) => {
 
         let attribute = thing.attribute(ukey);
         if (!attribute) {
-            attribute = _alternate(ukey, uvalue);
+            const ad = _alternate(ukey, uvalue);
+            if (ad) {
+                attribute = ad.attribute;
+                uvalue = ad.value;
+            }
         }
 
         if (!attribute) {
@@ -153,7 +173,7 @@ const make = (_thing, _d, _band) => {
                 is_validated: false,
             });
         } else {
-            const key = _key(attribute);
+            const key = _.id.code.from.attribute(attribute);
             if (_.d.first(attribute, "iot:instantaneous")) {
                 rds.push({
                     key: key,
