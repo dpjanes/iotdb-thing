@@ -1,12 +1,10 @@
 'use strict';
 
 module.exports = function (grunt) {
-    // Show elapsed time at the end
-    // require('time-grunt')(grunt);
-    // Load all grunt tasks
     require('load-grunt-tasks')(grunt);
 
-    // Project configuration.
+    grunt.loadNpmTasks('grunt-mocha-istanbul');
+
     grunt.initConfig({
         nodeunit: {
             files: []
@@ -53,10 +51,7 @@ module.exports = function (grunt) {
         },
         jsbeautifier: {
             files: [
-                '*.js',
-                'libs/*.js',
-                'stores/*.js',
-                'transmogrifiers/*.js',
+                '*.js'
             ],
             options: {
                 js: {
@@ -65,10 +60,14 @@ module.exports = function (grunt) {
                     indentSize: 4
                 }
             },
+        },
+        mocha_istanbul: {
+            coverage: {
+                // src: 'test', // a folder works nicely 
+            }
         }
     });
 
-    // Default task.
-    grunt.registerTask('default', ['jsbeautifier', 'jshint']);
-
+    grunt.registerTask('default', ['jsbeautifier', 'jshint', 'coverage']);
+    grunt.registerTask('coverage', ['mocha_istanbul:coverage']);
 };

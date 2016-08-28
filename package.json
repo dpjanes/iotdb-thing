@@ -5,7 +5,7 @@
     }, 
     "dependencies": {
         "iotdb-errors": "~3.0.2", 
-        "iotdb-helpers": "~3.0.4"
+        "iotdb-helpers": "~3.0.5"
     }, 
     "description": "IOTDB Module for Managing Things", 
     "devDependencies": {
@@ -15,6 +15,7 @@
         "grunt-contrib-uglify": "~2.0.0", 
         "grunt-contrib-watch": "~1.0.0", 
         "grunt-jsbeautifier": "~0.2.13", 
+        "grunt-mocha-istanbul": "~5.0.2", 
         "jshint-stylish": "~2.2.1", 
         "load-grunt-tasks": "~3.5.2", 
         "request": "~2.74.0"
