@@ -34,7 +34,7 @@
     }, 
     "scripts": {
         "cover": "istanbul cover _mocha", 
-        "test": "grunt"
+        "test": "grunt && istanbul cover _mocha"
     }, 
     "version": "3.0.4"
 }
