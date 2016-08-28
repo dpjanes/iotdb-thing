@@ -3,6 +3,8 @@
 module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt);
 
+    grunt.loadNpmTasks('grunt-mocha');
+
     grunt.initConfig({
         nodeunit: {
             files: []
@@ -59,12 +61,9 @@ module.exports = function (grunt) {
                 }
             },
         },
-        mocha_istanbul: {
-            coverage: {
-                // src: 'test', // a folder works nicely 
-            }
+        mocha: {
         }
     });
 
-    grunt.registerTask('default', ['jsbeautifier', 'jshint', ]);
+    grunt.registerTask('default', ['jsbeautifier', 'jshint', 'mocha' ]);
 };
