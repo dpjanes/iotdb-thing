@@ -50,7 +50,7 @@ const make = (initd) => {
     const _bandd = {};
 
     // make a band object for every band in initd
-    _.mapObject(_initd, ( bvalue, bkey ) => {
+    _.mapObject(_initd, (bvalue, bkey) => {
         if (!_.is.Object(bvalue)) {
             return;
         }
@@ -58,19 +58,31 @@ const make = (initd) => {
         let band_make = band.make;
 
         switch (bkey) {
-        case "meta": band_make = band_meta.make; break;
-        case "model": band_make = band_model.make; break;
-        case "istate": band_make = band_state.make; break;
-        case "ostate": band_make = band_state.make; break;
-        case "connection": band_make = band_connection.make; break;
-        case "transient": band_make = band.make; break;
+        case "meta":
+            band_make = band_meta.make;
+            break;
+        case "model":
+            band_make = band_model.make;
+            break;
+        case "istate":
+            band_make = band_state.make;
+            break;
+        case "ostate":
+            band_make = band_state.make;
+            break;
+        case "connection":
+            band_make = band_connection.make;
+            break;
+        case "transient":
+            band_make = band.make;
+            break;
         }
 
         _bandd[bkey] = band_make(self, bvalue, bkey);
 
     });
 
-    const _set_get = ( band_name, key, value, how ) => {
+    const _set_get = (band_name, key, value, how) => {
         const band = self.band(band_name);
         if (value !== undefined) {
             band.set(key, value);
@@ -78,7 +90,7 @@ const make = (initd) => {
             return band[how](key);
         }
     }
-    
+
     self._isThing = true;
 
     // interface
@@ -95,8 +107,8 @@ const make = (initd) => {
     self.name = value => _set_get("meta", "schema:name", value, "first");
     self.zones = value => _set_get("meta", "iot:zone", value, "list");
     self.facets = value => _set_get("meta", "iot:facet", value, "list");
-    self.tag = value => _set_get("transient", "tag", value, "list"); 
-    
+    self.tag = value => _set_get("transient", "tag", value, "list");
+
     self.disconnect = () => self.emit("disconnect");
 
     self.attributes = () => self.band("model").list("iot:attribute");

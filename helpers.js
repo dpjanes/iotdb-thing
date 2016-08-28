@@ -40,7 +40,7 @@ const unroll_deep = (d) => {
             return;
         }
 
-        _.mapObject(o, ( _value, _key ) => {
+        _.mapObject(o, (_value, _key) => {
             const npath = path.slice(0);
             npath.push(_key);
 
@@ -56,7 +56,7 @@ const unroll_deep = (d) => {
 const unroll_shallow = (d) => {
     const rds = [];
 
-    _.mapObject(d, ( _value, _key ) => {
+    _.mapObject(d, (_value, _key) => {
         rds.push({
             key: _key,
             value: _value,
@@ -69,25 +69,25 @@ const unroll_shallow = (d) => {
 const flat_get = (d, key, otherwise) => _.coerce.value(d[key], otherwise);
 const flat_first = (d, key, otherwise) => _.coerce.first(d[key], otherwise);
 const flat_list = (d, key, otherwise) => _.coerce.list(d[key], otherwise);
-const flat_put = function(d, key, value) {
+const flat_put = function (d, key, value) {
     d[key] = value;
 };
 
-const make_match_rule = function(o) {
+const make_match_rule = function (o) {
     if (_.is.String(o)) {
-        if (o.match(/^:/)) {                 // :on
+        if (o.match(/^:/)) { // :on
             return {
                 "iot:purpose": "iot-purpose:" + o.substring(1),
             };
-        } else if (o.match(/^\//)) {         // /powered
+        } else if (o.match(/^\//)) { // /powered
             return {
                 "@id": "#" + o.substring(1),
             };
-        } else if (o.match(/^[^\/]*:/)) {    // iot-purpose:on
+        } else if (o.match(/^[^\/]*:/)) { // iot-purpose:on
             return {
                 "iot:purpose": o,
             };
-        } else {                            // powered
+        } else { // powered
             return {
                 "@id": "#" + o,
             };

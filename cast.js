@@ -112,7 +112,7 @@ const _format_value = (self) => {
     }
 };
 
-const cast = ( value, from, to ) => {
+const cast = (value, from, to) => {
     if (!to) {
         return value;
     }
@@ -183,8 +183,7 @@ const _format_datetime = self => {
     self.value = dt.toISOString();
 };
 
-const _format_iri = self => {
-};
+const _format_iri = self => {};
 
 const _format_time = self => {
     if (!_.is.String(value)) {
@@ -201,12 +200,11 @@ const _format_time = self => {
     self.value = dt.toISOString().replace(/^.*T(.*)Z$/, "$1");
 };
 
-const _format_timedelta = self => {
-};
+const _format_timedelta = self => {};
 
 // inbound: iot:UNIVERSAL -> THING-SPECIFIC
 // outbound: THING-SPECIFIC -> iot:UNIVERSAL
-const enumerate = ( value, to, inbound ) => {
+const enumerate = (value, to, inbound) => {
     if (_.is.Undefined(value)) {
         return value;
     }

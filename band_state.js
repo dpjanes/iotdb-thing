@@ -63,10 +63,9 @@ const make = (_thing, _d, _band) => {
         const rds = [];
         const thing = self.thing();
 
-        _.mapObject(ud, ( uvalue, ukey ) => {
+        _.mapObject(ud, (uvalue, ukey) => {
             const attribute = thing.attribute(ukey);
-            if (ukey.match(/^@/)) {
-            } else if (!attribute) {
+            if (ukey.match(/^@/)) {} else if (!attribute) {
                 rds.push({
                     key: ukey,
                     value: uvalue,
@@ -77,7 +76,7 @@ const make = (_thing, _d, _band) => {
                 if (_.d.first(attribute, "iot:instantaneous")) {
                     rds.push({
                         key: key,
-                        value: uvalue,  
+                        value: uvalue,
                         is_instantaneous: true,
                     });
                 } else {
@@ -92,7 +91,7 @@ const make = (_thing, _d, _band) => {
                     } else {
                         rds.push({
                             key: key,
-                            value: value,  
+                            value: value,
                         });
                     }
                 }
@@ -102,7 +101,7 @@ const make = (_thing, _d, _band) => {
         return rds;
     };
 
-    const _alternate = ( ukey, uvalue ) => {
+    const _alternate = (ukey, uvalue) => {
         if (!_.is.String(ukey)) {
             return;
         } else if (ukey.indexOf(':') === -1) {
@@ -111,7 +110,7 @@ const make = (_thing, _d, _band) => {
 
         const thing = self.thing();
 
-        const bvalue = _.coerce.coerce(uvalue, [ "iot:type.boolean" ])
+        const bvalue = _.coerce.coerce(uvalue, ["iot:type.boolean"])
         if (bvalue) {
             const nkey = ukey + ".true";
             const attribute = thing.attribute(nkey)
@@ -153,7 +152,7 @@ const make = (_thing, _d, _band) => {
         }
     }
 
-    self._prepare_set = ( ukey, uvalue, as_type ) => {
+    self._prepare_set = (ukey, uvalue, as_type) => {
         const rds = [];
         const thing = self.thing();
 

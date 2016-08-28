@@ -40,7 +40,7 @@ const make = (_thing, d, _band_name) => {
 
 
     const _update = (uds, paramd) => {
-        return new Promise(( resolve, reject ) => {
+        return new Promise((resolve, reject) => {
             paramd = _.d.compose.shallow(paramd, {
                 add_timestamp: true,
                 check_timestamp: true,
@@ -82,7 +82,7 @@ const make = (_thing, d, _band_name) => {
                             value: null,
                         });
                     });
-            } 
+            }
 
             uds.forEach(ud => {
                 ud.old = _.d.get(_d, ud.key);
@@ -107,7 +107,7 @@ const make = (_thing, d, _band_name) => {
             if (_.is.Empty(changed)) {
                 return resolve(changed);
             }
-            
+
             if (paramd.notify) {
                 // thing-level notifications are batched on ticks
                 _pending = _.d.compose.shallow(changed, _pending);
@@ -138,8 +138,10 @@ const make = (_thing, d, _band_name) => {
 
     self.set = (key, value, as_type) => _update(self._prepare_set(key, value, as_type));
     self.update = (updated, paramd) => _update(
-        self._prepare_update(updated), 
-        _.d.compose.shallow({ timestamp: updated["@timestamp"] }, paramd)
+        self._prepare_update(updated),
+        _.d.compose.shallow({
+            timestamp: updated["@timestamp"]
+        }, paramd)
     );
 
     self.state = () => _.d.clone.deep(_d);

@@ -24,7 +24,7 @@
 
 const _ = require("iotdb-helpers");
 
-const _make_number = ( skey, svalue ) => {
+const _make_number = (skey, svalue) => {
     const rd = {
         "iot:type": "iot:type.number",
     }
@@ -34,7 +34,7 @@ const _make_number = ( skey, svalue ) => {
     return rd;
 };
 
-const _make_integer = ( skey, svalue ) => {
+const _make_integer = (skey, svalue) => {
     const rd = {
         "iot:type": "iot:type.integer",
     }
@@ -51,8 +51,18 @@ exports.celsius = () => _make_number("iot:unit", "iot-unit:temperature.si.celsiu
 exports.kelvin = () => _make_number("iot:unit", "iot-unit:temperature.si.kelvin");
 exports.fahrenheit = () => _make_number("iot:unit", "iot-unit:temperature.imperial.fahrenheit");
 
-exports.null = () => ( { "iot:type": "iot:type.null" } );
-exports.boolean = () => ( { "iot:type": "iot:type.boolean" } );
-exports.integer = () => ( { "iot:type": "iot:type.integer" } );
-exports.number = () => ( { "iot:type": "iot:type.number" } );
-exports.string = () => ( { "iot:type": "iot:type.string" } );
+exports.null = () => ({
+    "iot:type": "iot:type.null"
+});
+exports.boolean = () => ({
+    "iot:type": "iot:type.boolean"
+});
+exports.integer = () => ({
+    "iot:type": "iot:type.integer"
+});
+exports.number = () => ({
+    "iot:type": "iot:type.number"
+});
+exports.string = () => ({
+    "iot:type": "iot:type.string"
+});
