@@ -92,7 +92,11 @@ const make = (_thing, d, _band_name) => {
                 .filter(ud => !_.is.Equal(ud.value, ud.old))
                 .filter(ud => !ud.is_instantaneous || !ud.old || (ud.value >= ud.old))
                 .map(ud => {
-                    self._put(_d, ud.key, ud.value);
+                    if (ud.value === null) {
+                        delete _d[ud.key];
+                    } else {
+                        self._put(_d, ud.key, ud.value);
+                    }
                     self._put(changed, ud.key, ud.value);
 
                     if (paramd.notify) {
@@ -101,8 +105,6 @@ const make = (_thing, d, _band_name) => {
                         });
                     }
                 });
-
-            //console.log("CHANGED", changed);
 
             if (_.is.Empty(changed)) {
                 return resolve(changed);
