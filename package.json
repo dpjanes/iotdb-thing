@@ -5,7 +5,7 @@
     }, 
     "dependencies": {
         "iotdb-errors": "~3.0.2", 
-        "iotdb-helpers": "~3.0.6"
+        "iotdb-helpers": "~3.0.8"
     }, 
     "description": "IOTDB Module for Managing Things", 
     "devDependencies": {
@@ -36,5 +36,5 @@
         "cover": "istanbul cover _mocha", 
         "test": "grunt"
     }, 
-    "version": "3.0.6"
+    "version": "3.0.7"
 }
