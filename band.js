@@ -38,7 +38,6 @@ const make = (_thing, d, _band_name) => {
     let _pending = {};
     let _emitter = new events.EventEmitter();
 
-
     const _update = (uds, paramd) => {
         return new Promise((resolve, reject) => {
             paramd = _.d.compose.shallow(paramd, {
@@ -49,7 +48,7 @@ const make = (_thing, d, _band_name) => {
                 replace: false,
             });
 
-            var utimestamp = paramd.timestamp || _.timestamp.make();
+            var utimestamp = paramd.timestamp || _.timestamp.advance(_timestamp);
 
             if (paramd.check_timestamp && !_.timestamp.check.values(_timestamp, utimestamp)) {
                 return reject(new errors.Timestamp());
