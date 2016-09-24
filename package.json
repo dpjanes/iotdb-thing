@@ -5,7 +5,7 @@
     }, 
     "dependencies": {
         "iotdb-errors": "~3.0.2", 
-        "iotdb-helpers": "~3.0.9"
+        "iotdb-helpers": "~3.0.12"
     }, 
     "description": "IOTDB Module for Managing Things", 
     "devDependencies": {
@@ -18,7 +18,7 @@
         "grunt-mocha": "~1.0.2", 
         "jshint-stylish": "~2.2.1", 
         "load-grunt-tasks": "~3.5.2", 
-        "request": "~2.74.0"
+        "request": "~2.75.0"
     }, 
     "homepage": "https://iotdb.org", 
     "keywords": [
@@ -36,5 +36,5 @@
         "cover": "istanbul cover _mocha", 
         "test": "grunt"
     }, 
-    "version": "3.0.8"
+    "version": "3.0.9"
 }
