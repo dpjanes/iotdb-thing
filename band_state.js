@@ -109,8 +109,35 @@ const make = (_thing, _d, _band) => {
         }
 
         const thing = self.thing();
+        const bvalue = _.coerce.to.Boolean(uvalue, false);
 
-        const bvalue = _.coerce.coerce(uvalue, ["iot:type.boolean"])
+        return [
+            { require: true, suffix: ".true", value: true },
+            { require: false, suffix: ".false", value: false },
+        ].map(ruled => {
+            if (bvalue === ruled.require) {
+                const nkey = ukey + ruled.suffix;
+                const attribute = thing.attribute(nkey)
+                if (attribute) {
+                    return {
+                        attribute: attribute,
+                        value: ruled.value,
+                    }
+                }
+            }
+
+            if (ukey.endsWith(ruled.suffix)) {
+                const attribute = thing.attribute(ukey.substring(0, ukey.length - ruled.suffix.length));
+                if (attribute) {
+                    return {
+                        attribute: attribute,
+                        value: ruled.value,
+                    }
+                }
+            }
+        }).find(d => d);
+
+    /*
         if (bvalue) {
             const nkey = ukey + ".true";
             const attribute = thing.attribute(nkey)
@@ -126,7 +153,7 @@ const make = (_thing, _d, _band) => {
             if (attribute) {
                 return {
                     attribute: attribute,
-                    value: true,
+                    value: false,
                 }
             }
         }
@@ -150,6 +177,7 @@ const make = (_thing, _d, _band) => {
                 }
             }
         }
+*/
     }
 
     self._prepare_set = (ukey, uvalue, as_type) => {

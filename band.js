@@ -48,7 +48,7 @@ const make = (_thing, d, _band_name) => {
                 replace: false,
             });
 
-            var utimestamp = paramd.timestamp || _.timestamp.advance(_timestamp);
+            let utimestamp = paramd.timestamp || _.timestamp.advance(_timestamp);
 
             if (paramd.check_timestamp && !_.timestamp.check.values(_timestamp, utimestamp)) {
                 return reject(new errors.Timestamp());
